@@ -2,7 +2,7 @@
 
 '''
 import numpy as np
-from sklearn.metrics import roc_curve, roc_auc_score, confusion_matrix
+from sklearn.metrics import roc_curve, confusion_matrix
 from scipy.spatial import ConvexHull
 
 
