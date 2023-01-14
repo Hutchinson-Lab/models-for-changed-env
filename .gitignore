@@ -1,0 +1,8 @@
+/__pycache__/
+*.py[cod]
+
+/.vscode/
+
+/experiments/datasets/
+/experiments/tables/
+/experiments/plots/all/
