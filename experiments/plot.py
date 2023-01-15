@@ -29,10 +29,10 @@ def plot_cost_boxplots (df, plot_metadata, ds_keys):
             current_df, 
             id_vars=[plot_metadata['varying']], 
             value_vars=[
-                'Optimal Point Cost (Actual)',
-                'Optimal Point Cost (ROCCH Method)',
-                'Optimal Point Cost (Accuracy-Max)', 
-                'Optimal Point Cost (F1-score-Max)',
+                'Avg. Optimal Point Cost (Actual)',
+                'Avg. Optimal Point Cost (ROCCH Method)',
+                'Avg. Optimal Point Cost (Accuracy-Max)', 
+                'Avg. Optimal Point Cost (F1-score-Max)',
                 ]
         )
 

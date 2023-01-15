@@ -18,7 +18,9 @@ sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__
 from rocchmethod import rocch_method, classifiers_on_rocch, impose_class_distr, unique_cls_distr, expected_cost
 
 # Experiment over different values of K (No of repeats/splits)
-K_range = [3, 5, 10] 
+K_range = [3, 5, 10, 20, 30] 
+
+
 
 # split_ratios[i] = [train_ratio, separated_ratio, test_ratio]
 split_ratio_range = [ 
@@ -29,11 +31,15 @@ split_ratio_range = [
     [0.2, 0.2, 0.6], # train=20%, separated=20%, test=60%
     [0.2, 0.4, 0.4], # train=20%, separated=40%, test=40%
 ]
+
+# K_range = [2]
+
+# split_ratio_range = [ 
+#     [0.2, 0.6, 0.2], # train=20%, separated=60%, test=20%
+# ]
+
 # sep_to_train_ratio_range = [0.1, 0.25, 0.5, 0.75, 0.9] # Experiment over different values of sep_to_train_ratio
 random_state = 0
-
-# K_range = [3] # Experiment over different values of K
-# sep_to_train_ratio_range = [0.25, 0.5,] # Experiment over different values of sep_to_train_ratio
 
 
 
@@ -90,6 +96,7 @@ def run_experiments():
         'Separated Ratio',
         'Test Ratio',
         'Data Set',
+        'Test Size',
         'Train Class Distr.',
         'Test to Train Class Distr. Ratio',
         'Test Class Distr.',
@@ -206,6 +213,7 @@ def run_experiments():
                                     separated_ratio,
                                     test_ratio,
                                     ds_key,
+                                    predictions_hard.shape[0],
                                     original_cls_distr[ds_key],
                                     environment[0],
                                     original_cls_distr[ds_key] * environment[0],
@@ -250,20 +258,19 @@ def run_experiments():
             'Split No.',
             'Optimal FPR (ROCCH Method)',
             'Optimal TPR (ROCCH Method)',
-            'Optimal Point Cost (ROCCH Method)',
+            'Avg. Optimal Point Cost (ROCCH Method)',
             'Optimal FPR (Accuracy-Max)',
             'Optimal TPR (Accuracy-Max)',
-            'Optimal Point Cost (Accuracy-Max)',
+            'Avg. Optimal Point Cost (Accuracy-Max)',
             'Optimal FPR (F1-score-Max)',
             'Optimal TPR (F1-score-Max)',
-            'Optimal Point Cost (F1-score-Max)',
+            'Avg. Optimal Point Cost (F1-score-Max)',
             'Optimal FPR (Actual)',
             'Optimal TPR (Actual)',
-            'Optimal Point Cost (Actual)',
+            'Avg. Optimal Point Cost (Actual)',
             'Distance between ROCCHM and Actual',
             'Distance between Accuracy-Max and Actual',
             'Distance between F1-score-Max and Actual',
-            # 'Cost Difference (ROCCHM-Actual)',
             )
         )
 
@@ -273,7 +280,7 @@ def run_experiments():
     original_cls_distr = dict(zip(dataset_descriptions['Data Set'], dataset_descriptions['Class Balance']))
     ds_keys = list(dataset_descriptions['Data Set'])
     
-    print("\Summarizing and saving results.")
+    print("\nSummarizing and saving results.")
     for K in K_range:
         for split_ratio in split_ratio_range:
 
@@ -335,6 +342,8 @@ def run_experiments():
                         # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
                         distance_fonemax_actual = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_optimal))
 
+                        # Test set size, for calculating avg. exp. cost
+                        test_size = current_df['Test Size'].iloc[0]
                         
 
                         performance_summarized_df.loc[c] = [
@@ -351,16 +360,16 @@ def run_experiments():
                                     split_num,
                                     current_df['Optimal FPR (ROCCH Method)'].iloc[0],
                                     current_df['Optimal TPR (ROCCH Method)'].iloc[0],
-                                    rocchm_optimal_point_cost,
+                                    rocchm_optimal_point_cost/test_size,
                                     accumax_optimal[0],
                                     accumax_optimal[1],
-                                    accumax_optimal_point_cost,
+                                    accumax_optimal_point_cost/test_size,
                                     fonemax_optimal[0],
                                     fonemax_optimal[1],
-                                    fonemax_optimal_point_cost,
+                                    fonemax_optimal_point_cost/test_size,
                                     actual_optimal[0],
                                     actual_optimal[1],
-                                    actual_optimal_point_cost,
+                                    actual_optimal_point_cost/test_size,
                                     distance_rocchm_actual,
                                     distance_accumax_actual,
                                     distance_fonemax_actual,

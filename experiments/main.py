@@ -16,4 +16,4 @@ download_datasets(ds_meta) # Comment out this line if data sets have previously 
 run_experiments()
 
 # Plot results from experiments
-plot_results()
+# plot_results()

@@ -1,9 +1,13 @@
 '''
 
 '''
+import warnings
 import numpy as np
 from sklearn.metrics import roc_curve, confusion_matrix
 from scipy.spatial import ConvexHull
+from imblearn.pipeline import make_pipeline
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import NearMiss
 
 
 
@@ -21,7 +25,9 @@ def unique_cls_distr(environments):
 
     return unique_cls_distr
 
-def impose_class_distr(X, y, imposed_class_distr):
+
+
+def impose_class_distr(X, y, imposed_class_distr, random_state=1):
     """
     @author: Nahian Ahmed
     ROC Convex Hull (ROCCH) Method (Provost and Fawcett, 1997, 1998, 2001)
@@ -43,36 +49,46 @@ def impose_class_distr(X, y, imposed_class_distr):
             optimals: list of optimal points with each element having the format (optimal_fpr, optimal_tpr)
     """
 
-    
     n_pos = y.sum()
     n_neg = y.shape[0] - n_pos
     n_total = y.shape[0]
     original_class_distr = n_pos/n_total
 
-    positives_idx = np.where(y==1)
-    negatives_idx = np.where(y==0)
-
     n_pos_imposed = int(n_total * imposed_class_distr)
     n_neg_imposed = n_total - n_pos_imposed
 
-    if (imposed_class_distr < original_class_distr): # Positives are to be removed
+    # if negative, make zero
+    n_pos_imposed = max(0, n_pos_imposed)
+    n_neg_imposed = max(0, n_neg_imposed) 
+    
+    smote_strategy = None
+    nearmiss_strategy = None
+    if (imposed_class_distr < original_class_distr): # Positives are to be undersampled, negatives are to be oversampled
                 
-        n_pos_removed = n_pos - n_pos_imposed
+       smote_strategy = {0: n_neg_imposed}
+       nearmiss_strategy = {1: n_pos_imposed}
+
+    elif (imposed_class_distr > original_class_distr): # Negatives are to be undersampled, positives are to be oversampled
         
-        idx = np.concatenate((positives_idx[0][:n_pos_imposed],negatives_idx[0],negatives_idx[0][:n_pos_removed])) # removed positives are replaced by oversampled negatives
-
-        return X[idx,:], y[idx]
-
-    elif (imposed_class_distr > original_class_distr): # Negatives are to be removed
+        smote_strategy = {1: n_pos_imposed}
+        nearmiss_strategy = {0: n_neg_imposed}
         
-        n_neg_removed = n_neg - n_neg_imposed
-
-        idx = np.concatenate((positives_idx[0],positives_idx[0][:n_neg_removed], negatives_idx[0][:n_neg_imposed]))
-
-        return X[idx,:], y[idx]    
-
     else: # Imposed class distribution is equal to original class distribution
+        
         return X, y
+
+    pipe = make_pipeline(
+            SMOTE(sampling_strategy=smote_strategy, random_state=random_state, n_jobs=-1),
+            NearMiss(sampling_strategy=nearmiss_strategy)
+        )
+
+    # imblearn.over_sampling will throw user warning.
+    # This is not an issue for use because we might oversample the majority class as well (and not just the minority class).
+    with warnings.catch_warnings(): 
+        warnings.simplefilter("ignore") 
+        X, y = pipe.fit_resample(X, y)
+    
+    return X, y
 
 
 
