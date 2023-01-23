@@ -27,6 +27,7 @@ def unique_cls_distr(environments):
 
 
 
+
 def impose_class_distr(X, y, imposed_class_distr, random_state=1):
     """
     @author: Nahian Ahmed
@@ -50,7 +51,6 @@ def impose_class_distr(X, y, imposed_class_distr, random_state=1):
     """
 
     n_pos = y.sum()
-    n_neg = y.shape[0] - n_pos
     n_total = y.shape[0]
     original_class_distr = n_pos/n_total
 
@@ -79,7 +79,7 @@ def impose_class_distr(X, y, imposed_class_distr, random_state=1):
 
     pipe = make_pipeline(
             SMOTE(sampling_strategy=smote_strategy, random_state=random_state, n_jobs=-1),
-            NearMiss(sampling_strategy=nearmiss_strategy)
+            NearMiss(sampling_strategy=nearmiss_strategy, n_jobs=-1)
         )
 
     # imblearn.over_sampling will throw user warning.

@@ -17,7 +17,7 @@ def plot_cost_boxplots (df, plot_metadata, ds_keys):
     nrow = 3
     ncol = 5
     sns.set_style('darkgrid')
-    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize=(16, 8))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize=(8, 5))
     
     handles = None
 
@@ -40,11 +40,17 @@ def plot_cost_boxplots (df, plot_metadata, ds_keys):
         # current_df.to_csv(f'{output_table_dir}current_{plot_metadata["identifier"]}_{ds_keys[i]}.csv')
 
         # Plot boxplots
-        sns.boxplot(y='value', x=plot_metadata['varying'], hue='variable', data=current_df,  orient='v' , ax=ax)
+        sns.boxplot(y='value', x=plot_metadata['varying'], hue='variable', data=current_df,  orient='v', linewidth=0.5, fliersize=1, ax=ax)
         
         # Format subplot labels and title
         ax.set(xlabel=None, ylabel=None)
-        ax.set_title(ds_keys[i], fontsize=14)
+        ax.set_title(ds_keys[i], fontsize=8)
+
+        ax.tick_params(axis='both', which='major', labelsize=6)
+
+        ax.patch.set_edgecolor('black')  
+
+        # ax.patch.set_linewidth('1') 
 
         # Save subplot legend hangles and labels for suplegend
         handles,_ = ax.get_legend_handles_labels()
@@ -57,16 +63,16 @@ def plot_cost_boxplots (df, plot_metadata, ds_keys):
         handles, 
         ['Actual', 'ROCCH Method', 'Accuracy Max', 'F1-score Max'],
         title='Cost Incurred by Optimal Points',
-        title_fontsize=16,
+        title_fontsize=8,
         loc='lower center', 
-        bbox_to_anchor=(0.5, -0.1), 
+        bbox_to_anchor=(0.5, - 0.075), 
         ncol=4, 
-        fontsize=14)
+        fontsize=7)
 
     # Format suplabels and title
-    fig.supylabel('Expected Cost', x=0.01, fontsize=16)
-    fig.supxlabel(plot_metadata['varying'], y=0.02, fontsize=16)
-    fig.suptitle(f'Incurred Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}', fontsize=18)
+    fig.supylabel('Average Expected Cost', x=0.02, fontsize=8)
+    fig.supxlabel(plot_metadata['varying'], y=0.04, fontsize=8)
+    fig.suptitle(f'Average Incurred Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}', fontsize=9)
     fig.tight_layout()
 
     fig.savefig(f'{output_plot_dir}cost_{plot_metadata["identifier"]}.png', bbox_inches='tight', dpi=300)
@@ -80,7 +86,7 @@ def plot_dist_boxplots(df, plot_metadata, ds_keys):
     nrow = 3
     ncol = 5
     sns.set_style('darkgrid')
-    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize=(16, 8))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize=(8, 5))
     
     handles = None
 
@@ -103,11 +109,17 @@ def plot_dist_boxplots(df, plot_metadata, ds_keys):
 
         # Plot boxplots
         palette = {"Distance between ROCCHM and Actual": "orange", "Distance between Accuracy-Max and Actual": "green",  "Distance between F1-score-Max and Actual": "red",}
-        sns.boxplot(y='value', x=plot_metadata['varying'], hue='variable', data=current_df,  orient='v' , ax=ax, palette=palette)
+        sns.boxplot(y='value', x=plot_metadata['varying'], hue='variable', data=current_df,  orient='v' , linewidth=0.5,  fliersize=1, ax=ax, palette=palette)
         
         # Format subplot labels and title
         ax.set(xlabel=None, ylabel=None)
-        ax.set_title(ds_keys[i], fontsize=14)
+        ax.set_title(ds_keys[i], fontsize=8)
+
+        ax.tick_params(axis='both', which='major', labelsize=6)
+
+        ax.patch.set_edgecolor('black')  
+
+        # ax.patch.set_linewidth('1') 
 
         # Save subplot legend hangles and labels for suplegend
         handles,_ = ax.get_legend_handles_labels()
@@ -120,16 +132,16 @@ def plot_dist_boxplots(df, plot_metadata, ds_keys):
         handles, 
         ['ROCCH Method', 'Accuracy Max', 'F1-score Max'],
         title='Distance to Actual Optimal Point',
-        title_fontsize=16,
+        title_fontsize=8,
         loc='lower center', 
-        bbox_to_anchor=(0.5, -0.1), 
+        bbox_to_anchor=(0.5, -0.075), 
         ncol=4, 
-        fontsize=14)
+        fontsize=7)
 
     # Format suplabels and title
-    fig.supylabel('Distance', x=0.01, fontsize=16)
-    fig.supxlabel(plot_metadata['varying'], y=0.02, fontsize=16)
-    fig.suptitle(f'Distance to Actual Optimal Point while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}', fontsize=18)
+    fig.supylabel('Distance', x=0.02, fontsize=8)
+    fig.supxlabel(plot_metadata['varying'], y=0.04, fontsize=8)
+    fig.suptitle(f'Distance to Actual Optimal Point while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}', fontsize=9)
     fig.tight_layout()
 
     fig.savefig(f'{output_plot_dir}dist_{plot_metadata["identifier"]}.png', bbox_inches='tight', dpi=300)
@@ -175,6 +187,6 @@ def plot_results():
         shutil.copyfile(f'{output_plot_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
     
     arr = os.listdir(f'{output_plot_dir}')
-    print(len(arr))
+    # print(len(arr))
     
     print("Plotting completed.")

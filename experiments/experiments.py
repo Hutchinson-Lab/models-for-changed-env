@@ -2,6 +2,7 @@
 Experiment: Evaluate practicality and applicability of the ROC Convex Hull Method.
 
 '''
+
 import tqdm
 import numpy as np
 import pandas as pd
@@ -9,18 +10,22 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
+from scipy.stats import wasserstein_distance
 
-from preprocess import run_preprocessing
-from datasets import ds_meta
+
+# from datasets import ds_meta
+from preprocess import split_data
+
 
 import sys, os
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rocchmethod')))
+
 from rocchmethod import rocch_method, classifiers_on_rocch, impose_class_distr, unique_cls_distr, expected_cost
+
+# from plot_descriptions import selected_causal_graphs
 
 # Experiment over different values of K (No of repeats/splits)
 K_range = [3, 5, 10, 20, 30] 
-
-
 
 # split_ratios[i] = [train_ratio, separated_ratio, test_ratio]
 split_ratio_range = [ 
@@ -31,22 +36,6 @@ split_ratio_range = [
     [0.2, 0.2, 0.6], # train=20%, separated=20%, test=60%
     [0.2, 0.4, 0.4], # train=20%, separated=40%, test=40%
 ]
-
-# K_range = [2]
-
-# split_ratio_range = [ 
-#     [0.2, 0.6, 0.2], # train=20%, separated=60%, test=20%
-# ]
-
-# sep_to_train_ratio_range = [0.1, 0.25, 0.5, 0.75, 0.9] # Experiment over different values of sep_to_train_ratio
-random_state = 0
-
-
-
-# NEED TO CREATE 3 CONCEPTUAL DIAGRAMS
-#   1. Conceptual diagram of training, separated, testing
-#   2. Conceptual diagram of threshold density (unique posteriors = f(classifier, data))
-#   3. Conceptual diagram of metrics
 
 
 # environment = ["%/100 of original clas distr.", "FP cost", "FN cost"]
@@ -80,16 +69,53 @@ environments = [
     
 ]
 
+random_state = 0
+
+
+# ----------------------------------------------------------------------------------------
+# For temporary experimentation only
+# ----------------------------------------------------------------------------------------
+
+K_range = [3]
+
+split_ratio_range = [ 
+    [0.4, 0.2, 0.4], # train=40%, separated=20%, test=40%
+]
+environments = [
+
+    [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
+   
+]
+# ----------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------
+
+
+
 environments_cls_distr = unique_cls_distr(environments)
 
 
 output_table_dir = './experiments/tables/'
 
 
-def run_experiments():
-    '''
-    '''
+def average_wasserstein_distance(X_1, X_2):
+    
+    n_features = X_1.shape[1]
 
+    avg_w_dist = 0
+    for i in range(n_features):
+        avg_w_dist += wasserstein_distance(X_1[:,i], X_2[:,i])
+    
+    avg_w_dist /= n_features
+
+    return avg_w_dist 
+
+def run_experiments(ds_meta):
+    '''
+    '''
+    dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing
+    original_cls_distr = dict(zip(dataset_descriptions['Data Set'], dataset_descriptions['Class Balance']))
+    ds_keys = list(dataset_descriptions['Data Set'])
+    
     performance_df = pd.DataFrame(columns=(
         'K',
         'Train Ratio',
@@ -102,8 +128,8 @@ def run_experiments():
         'Test Class Distr.',
         'FP cost',
         'FN cost',
-        'Original Test Instances',
-        'Environment Test Instances',          
+        'Avg. Wasserstein Dist.',
+        'No. Test Instances',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',
@@ -120,7 +146,6 @@ def run_experiments():
         'F1-score (Separated, T=0.5)',
         )
     )
-
     c = 0
 
     print("\nExperiment: Evaluate practicality and applicability of the ROC Convex Hull Method.")
@@ -133,14 +158,9 @@ def run_experiments():
             train_ratio, separated_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
 
             print(f'\nK: {K}, Train Ratio: {train_ratio}, Separated Ratio: {separated_ratio}, Test Ratio: {test_ratio}')    
-            preprocessed_ds = run_preprocessing(ds_meta, K, train_ratio, separated_ratio, test_ratio, random_state=random_state)
-
-            dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing
-            original_cls_distr = dict(zip(dataset_descriptions['Data Set'], dataset_descriptions['Class Balance']))
-            ds_keys = list(dataset_descriptions['Data Set'])
-
             
-
+            preprocessed_ds = split_data(ds_meta, K, train_ratio, separated_ratio, test_ratio, random_state=random_state)
+            
             for ds_key in (pbar := tqdm.tqdm(preprocessed_ds.keys())):
                 
                 pbar.set_description(f'Running experiment on "{ds_key}"')
@@ -150,6 +170,8 @@ def run_experiments():
 
                     X_train, X_test, X_separated, y_train, y_test, y_separated = preprocessed_ds[ds_key][split_num]
                     
+                     
+
                     # print('Split No.',split_num,
                     #     'train_ratio',train_ratio,'train_size',y_train.shape[0],
                     #     'separated_ratio',separated_ratio,'separated_size',y_separated.shape[0],
@@ -188,6 +210,10 @@ def run_experiments():
                     for i, environment in enumerate(environments):
 
                         X_test_env, y_test_env = test_cls_distr[environment[0]]
+
+                        avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
+                        
+                        # train2test_causal_summary = analyze_causality(X_train, X_separated, X_test_env, y_train, y_separated, y_test_env, ds_key, exp_settings, graphviz)
                         
                         # print('original_cls_distr', original_cls_distr[ds_key],'env_cls_distr',environment[0], 'y_test_env.sum()/y_test_env.shape[0]', y_test_env.sum()/y_test_env.shape[0], 'y_test.shape[0]',y_test_env.shape[0])                
                         
@@ -219,7 +245,7 @@ def run_experiments():
                                     original_cls_distr[ds_key] * environment[0],
                                     environment[1], 
                                     environment[2],
-                                    y_test.shape[0],
+                                    avg_w_dist,
                                     y_test_env.shape[0],
                                     split_num,
                                     optimals[i][0],
@@ -244,42 +270,40 @@ def run_experiments():
 
     # performance_df = pd.read_csv(f'{output_table_dir}performance.csv')
 
+    
     performance_summarized_df = pd.DataFrame(columns=(
-            'K',
-            'Train Ratio',
-            'Separated Ratio',
-            'Test Ratio',
-            'Data Set',
-            'Train Class Distr.',
-            'Test to Train Class Distr. Ratio',
-            'Test Class Distr.',
-            'FP cost',
-            'FN cost',
-            'Split No.',
-            'Optimal FPR (ROCCH Method)',
-            'Optimal TPR (ROCCH Method)',
-            'Avg. Optimal Point Cost (ROCCH Method)',
-            'Optimal FPR (Accuracy-Max)',
-            'Optimal TPR (Accuracy-Max)',
-            'Avg. Optimal Point Cost (Accuracy-Max)',
-            'Optimal FPR (F1-score-Max)',
-            'Optimal TPR (F1-score-Max)',
-            'Avg. Optimal Point Cost (F1-score-Max)',
-            'Optimal FPR (Actual)',
-            'Optimal TPR (Actual)',
-            'Avg. Optimal Point Cost (Actual)',
-            'Distance between ROCCHM and Actual',
-            'Distance between Accuracy-Max and Actual',
-            'Distance between F1-score-Max and Actual',
-            )
+        'K',
+        'Train Ratio',
+        'Separated Ratio',
+        'Test Ratio',
+        'Data Set',
+        'Train Class Distr.',
+        'Test to Train Class Distr. Ratio',
+        'Test Class Distr.',
+        'FP cost',
+        'FN cost',
+        'Avg. Wasserstein Dist.',
+        'Split No.',
+        'Optimal FPR (ROCCH Method)',
+        'Optimal TPR (ROCCH Method)',
+        'Avg. Optimal Point Cost (ROCCH Method)',
+        'Optimal FPR (Accuracy-Max)',
+        'Optimal TPR (Accuracy-Max)',
+        'Avg. Optimal Point Cost (Accuracy-Max)',
+        'Optimal FPR (F1-score-Max)',
+        'Optimal TPR (F1-score-Max)',
+        'Avg. Optimal Point Cost (F1-score-Max)',
+        'Optimal FPR (Actual)',
+        'Optimal TPR (Actual)',
+        'Avg. Optimal Point Cost (Actual)',
+        'Distance between ROCCHM and Actual',
+        'Distance between Accuracy-Max and Actual',
+        'Distance between F1-score-Max and Actual',
         )
+    )
 
     c = 0
 
-    dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing
-    original_cls_distr = dict(zip(dataset_descriptions['Data Set'], dataset_descriptions['Class Balance']))
-    ds_keys = list(dataset_descriptions['Data Set'])
-    
     print("\nSummarizing and saving results.")
     for K in K_range:
         for split_ratio in split_ratio_range:
@@ -357,6 +381,7 @@ def run_experiments():
                                     original_cls_distr[ds_key] * environment[0],
                                     environment[1], 
                                     environment[2],
+                                    current_df['Avg. Wasserstein Dist.'].iloc[0],
                                     split_num,
                                     current_df['Optimal FPR (ROCCH Method)'].iloc[0],
                                     current_df['Optimal TPR (ROCCH Method)'].iloc[0],
