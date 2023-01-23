@@ -76,16 +76,16 @@ random_state = 0
 # For temporary experimentation only
 # ----------------------------------------------------------------------------------------
 
-K_range = [3]
+# K_range = [3]
 
-split_ratio_range = [ 
-    [0.4, 0.2, 0.4], # train=40%, separated=20%, test=40%
-]
-environments = [
+# split_ratio_range = [ 
+#     [0.4, 0.2, 0.4], # train=40%, separated=20%, test=40%
+# ]
+# environments = [
 
-    [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
+#     [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
    
-]
+# ]
 # ----------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------
 
