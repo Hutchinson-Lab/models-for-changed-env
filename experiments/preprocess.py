@@ -28,8 +28,7 @@ def analyze_causality(X, y, ds_key, graphviz=False):
     if not os.path.isdir(output_plot_main_dir):
         os.makedirs(output_plot_main_dir)
     
-    if not os.path.isdir(output_plot_causal_dir):
-        os.makedirs(output_plot_causal_dir)
+
 
     cg = pc(np.hstack((X,y[:, np.newaxis])), indep_test='gsq', show_progress=False)
     
@@ -37,6 +36,10 @@ def analyze_causality(X, y, ds_key, graphviz=False):
     np.savetxt(f'{output_table_causal_dir}{ds_key}.csv', cg.G.graph, delimiter=',')
 
     if graphviz:
+
+        if not os.path.isdir(output_plot_causal_dir):
+            os.makedirs(output_plot_causal_dir)
+        
         pyd_train = GraphUtils.to_pydot(cg.G)
         pyd_train.write_png(f'{output_plot_causal_dir}{ds_key}.png')
 

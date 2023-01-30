@@ -10,7 +10,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
-from scipy.stats import wasserstein_distance
+from scipy.stats import wasserstein_distance, energy_distance
 
 
 # from datasets import ds_meta
@@ -109,6 +109,18 @@ def average_wasserstein_distance(X_1, X_2):
 
     return avg_w_dist 
 
+def average_energy_distance(X_1, X_2):
+    
+    n_features = X_1.shape[1]
+
+    avg_w_dist = 0
+    for i in range(n_features):
+        avg_w_dist += energy_distance(X_1[:,i], X_2[:,i])
+    
+    avg_w_dist /= n_features
+
+    return avg_w_dist 
+
 def run_experiments(ds_meta):
     '''
     '''
@@ -129,6 +141,7 @@ def run_experiments(ds_meta):
         'FP cost',
         'FN cost',
         'Avg. Wasserstein Dist.',
+        'Avg. Energy Dist.',
         'No. Test Instances',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
@@ -212,6 +225,7 @@ def run_experiments(ds_meta):
                         X_test_env, y_test_env = test_cls_distr[environment[0]]
 
                         avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
+                        avg_e_dist = average_wasserstein_distance(X_train, X_test_env)
                         
                         # train2test_causal_summary = analyze_causality(X_train, X_separated, X_test_env, y_train, y_separated, y_test_env, ds_key, exp_settings, graphviz)
                         
@@ -246,6 +260,7 @@ def run_experiments(ds_meta):
                                     environment[1], 
                                     environment[2],
                                     avg_w_dist,
+                                    avg_e_dist,
                                     y_test_env.shape[0],
                                     split_num,
                                     optimals[i][0],
@@ -283,6 +298,7 @@ def run_experiments(ds_meta):
         'FP cost',
         'FN cost',
         'Avg. Wasserstein Dist.',
+        'Avg. Energy Dist.',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',
@@ -382,6 +398,7 @@ def run_experiments(ds_meta):
                                     environment[1], 
                                     environment[2],
                                     current_df['Avg. Wasserstein Dist.'].iloc[0],
+                                    current_df['Avg. Energy Dist.'].iloc[0],
                                     split_num,
                                     current_df['Optimal FPR (ROCCH Method)'].iloc[0],
                                     current_df['Optimal TPR (ROCCH Method)'].iloc[0],

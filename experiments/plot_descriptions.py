@@ -1,87 +1,127 @@
 
 
-selected_plots = {
-    'cost_fncost_k=30_train=0.4_test=0.4_test2train=1.0.png',
-    'cost_k_train=0.4_test=0.2_test2train=0.5_fnc=1.0.png',
-    'cost_separated_k=30_test=0.2_test2train=0.25_fnc=1.0.png',
-    'cost_separated_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
-    'cost_separated_k=30_test=0.2_test2train=0.75_fnc=1.0.png',
-    'cost_separated_k=30_test=0.2_test2train=1.0_fnc=1.0.png',
-    'cost_test2train_k=30_train=0.4_test=0.4_fnc=1.0.png',
-    'cost_test_k=30_test=0.2_test2train=0.25_fnc=1.0.png',
-    'cost_test_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
-    'cost_test_k=30_test=0.2_test2train=0.75_fnc=1.0.png',
-    'dist_fncost_k=30_train=0.4_test=0.4_test2train=1.0.png',
-    'dist_k_train=0.4_test=0.2_test2train=0.5_fnc=1.0.png',
-    'dist_separated_k=30_test=0.2_test2train=0.25_fnc=1.0.png',
-    'dist_separated_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
-    'dist_separated_k=30_test=0.2_test2train=0.75_fnc=1.0.png',
-    'dist_separated_k=30_test=0.2_test2train=1.0_fnc=1.0.png',
-    'dist_test2train_k=30_train=0.4_test=0.4_fnc=1.0.png',
-    'dist_test_k=30_test=0.2_test2train=0.25_fnc=1.0.png',
-    'dist_test_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
-    'dist_test_k=30_test=0.2_test2train=0.75_fnc=1.0.png',
+
+ds_plots_metadata = {
+    'k=30_train=0.4_separated=0.2_test=0.4_test2train=0.5_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "Test to Train Class Distr. Ratio" : 0.5,
+        "FN cost" : 1.0,
+    },
+    'k=30_train=0.4_separated=0.2_test=0.4_k=30_test2train=0.75_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "Test to Train Class Distr. Ratio" : 0.75,
+        "FN cost" : 1.0,
+    },
+    'k=30_train=0.4_separated=0.2_test=0.4_k=30_test2train=1.25_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "Test to Train Class Distr. Ratio" : 1.25,
+        "FN cost" : 1.0,
+    },
+    'k=30_train=0.4_separated=0.2_test=0.4_k=30_test2train=1.0_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "Test to Train Class Distr. Ratio" : 1.0,
+        "FN cost" : 1.0,
+    },
+
+    'k=30_train=0.4_separated=0.4_test=0.2_test2train=0.5_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "Test to Train Class Distr. Ratio" : 0.5,
+        "FN cost" : 1.0,
+    },
+    'k=30_train=0.4_separated=0.4_test=0.2_k=30_test2train=0.75_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "Test to Train Class Distr. Ratio" : 0.75,
+        "FN cost" : 1.0,
+    },
+    'k=30_train=0.4_separated=0.4_test=0.2_k=30_test2train=1.25_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "Test to Train Class Distr. Ratio" : 1.25,
+        "FN cost" : 1.0,
+    },
+    'k=30_train=0.4_separated=0.4_test=0.2_k=30_test2train=1.0_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "Test to Train Class Distr. Ratio" : 1.0,
+        "FN cost" : 1.0,
+    },
+
 }
 
-# selected_causal_graphs = {
-#     # 'train=0.4_separated=0.2_test=0.4_k=30_test2train=0.5_fnc=1.0_repeat=1': {
-#     #     'train' : 0.4,
-#     #     'separated' : 0.2,
-#     #     'test' : 0.4,
-#     #     'k' : 30,
-#     #     'test2train' : 0.5,
-#     #     'fnc' : 1.0,
-#     #     'repeat' : 1
-#     # },
-#     # 'train=0.4_separated=0.2_test=0.4_k=30_test2train=0.5_fnc=1.0_repeat=5': {
-#     #     'train' : 0.4,
-#     #     'separated' : 0.2,
-#     #     'test' : 0.4,
-#     #     'k' : 30,
-#     #     'test2train' : 0.5,
-#     #     'fnc' : 1.0,
-#     #     'repeat' : 5
-#     # },
-#     # 'train=0.4_separated=0.2_test=0.4_k=30_test2train=0.5_fnc=1.0_repeat=10': {
-#     #     'train' : 0.4,
-#     #     'separated' : 0.2,
-#     #     'test' : 0.4,
-#     #     'k' : 30,
-#     #     'test2train' : 0.5,
-#     #     'fnc' : 1.0,
-#     #     'repeat' : 10
-#     # },
+dsdist_plots_metadata = {
+    'k=30_train=0.4_separated=0.4_test=0.2_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "FN cost" : 1.0,
+    },
 
-#     'train=0.4_separated=0.2_test=0.4_k=3_test2train=0.5_fnc=1.0_repeat=1': {
-#         'train' : 0.4,
-#         'separated' : 0.2,
-#         'test' : 0.4,
-#         'k' : 3,
-#         'test2train' : 0.5,
-#         'fnc' : 1.0,
-#         'repeat' : 1
-#     },
-#     'train=0.4_separated=0.2_test=0.4_k=3_test2train=0.5_fnc=1.0_repeat=2': {
-#         'train' : 0.4,
-#         'separated' : 0.2,
-#         'test' : 0.4,
-#         'k' : 3,
-#         'test2train' : 0.5,
-#         'fnc' : 1.0,
-#         'repeat' : 2
-#     },
-#     'train=0.4_separated=0.2_test=0.4_k=3_test2train=0.5_fnc=1.0_repeat=3': {
-#         'train' : 0.4,
-#         'separated' : 0.2,
-#         'test' : 0.4,
-#         'k' : 3,
-#         'test2train' : 0.5,
-#         'fnc' : 1.0,
-#         'repeat' : 3
-#     },
-# }
+    'k=30_train=0.2_separated=0.4_test=0.4_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.2,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 1.0,
+    },
 
-plots_metadata = {
+    'k=30_train=0.4_separated=0.2_test=0.4_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 1.0,
+    },
+
+    'k=30_train=0.2_separated=0.2_test=0.6_fnc=1.0': {
+        "K" : 30,
+        "Train Ratio" : 0.2,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.6,        
+        "FN cost" : 1.0,
+    },
+
+}
+
+
+selected_varying_plots = {
+    'cost_fncost_k=30_train=0.4_test=0.4_test2train=1.0.png',
+    'cost_k_train=0.4_test=0.2_test2train=0.5_fnc=1.0.png',
+    'cost_separated_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
+    'cost_test2train_k=30_train=0.4_test=0.4_fnc=1.0.png',
+    'cost_test_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
+    'dist_fncost_k=30_train=0.4_test=0.4_test2train=1.0.png',
+    'dist_k_train=0.4_test=0.2_test2train=0.5_fnc=1.0.png',
+    'dist_separated_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
+    'dist_test2train_k=30_train=0.4_test=0.4_fnc=1.0.png',
+    'dist_test_k=30_test=0.2_test2train=0.5_fnc=1.0.png',
+}
+
+
+
+varying_plots_metadata = {
 
     # Varies "Separated Ratio"/"Train Ratio" while keeping "Test Ratio" constant
     "Separated Ratio 1" : { 

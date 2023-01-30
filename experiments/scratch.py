@@ -183,25 +183,32 @@
 # print("Area of maximum rectangle is",
 #         maxRectangle(A))
 
-from scipy.stats import wasserstein_distance
+# from scipy.stats import wasserstein_distance
 
-arr1 = [[1,2],
-        [1,2],
-        [1,2],
-        [1,2],]
+# arr1 = [[1,2],
+#         [1,2],
+#         [1,2],
+#         [1,2],]
 
 
-arr2 = [[1,2],
-        [1,2],
-        [1,2],]
+# arr2 = [[1,2],
+#         [1,2],
+#         [1,2],]
         
 
-print(wasserstein_distance([0, 1, 3], [5, 6, 8,6]))
+# print(wasserstein_distance([0, 1, 3], [5, 6, 8,6]))
 
-print(wasserstein_distance([5, 6, 8,6],[0, 1, 3],))
+# print(wasserstein_distance([5, 6, 8,6],[0, 1, 3],))
 
-print(wasserstein_distance(arr1,arr2))
-# print(wasserstein_distance([0, 1], [0, 1], [3, 1], [2, 2]))
+# print(wasserstein_distance(arr1,arr2))
+# # print(wasserstein_distance([0, 1], [0, 1], [3, 1], [2, 2]))
 
-# print(wasserstein_distance([3.4, 3.9, 7.5, 7.8], [4.5, 1.4],
-                    #  [1.4, 0.9, 3.1, 7.2], [3.2, 3.5]))
+# # print(wasserstein_distance([3.4, 3.9, 7.5, 7.8], [4.5, 1.4],
+#                     #  [1.4, 0.9, 3.1, 7.2], [3.2, 3.5]))
+
+from scipy.stats import energy_distance
+
+
+# d = mahalanobis([1,2],[2,2,3])
+
+# print(d)

@@ -4,7 +4,7 @@
 from datasets import ds_meta # contains dataset metadata, such as columns that need one-hot encoding, label identifiers, etc.
 from preprocess import download_datasets, preprocess_datasets
 from experiments import run_experiments
-# from plot import plot_results
+from plot import plot_results
 
 
 # Download all datasets
