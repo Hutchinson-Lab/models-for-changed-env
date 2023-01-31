@@ -10,6 +10,8 @@ output_table_dir = './experiments/tables/'
 output_plot_main_dir = './experiments/plots/'
 output_plot_dscomp_dir = './experiments/plots/all_dscomp/'
 output_plot_dsdist_dir = './experiments/plots/all_dsdist/'
+output_plot_dsdist_w_dir = './experiments/plots/all_dsdist/wasserstein/'
+output_plot_dsdist_e_dir = './experiments/plots/all_dsdist/energy/'
 output_plot_varying_dir = './experiments/plots/all_varying/'
 
 
@@ -107,10 +109,7 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
     plt.close()
         
 
-
-
-
-def plot_ds_distances_pointplot(df, descriptions_df, plot_metadata, identifier):
+def plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identifier):
 
     subplot_titles = [1.0, 0.5, 0.75, 1.25]
 
@@ -133,18 +132,6 @@ def plot_ds_distances_pointplot(df, descriptions_df, plot_metadata, identifier):
     for i, ax in enumerate(fig.axes):
         
         current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]]
-
-        # current_df = pd.melt(
-        #     current_df, 
-        #     id_vars=[plot_metadata['varying']], 
-        #     value_vars=[
-        #         'Avg. Optimal Point Cost (Actual)',
-        #         'Avg. Optimal Point Cost (ROCCH Method)',
-        #         'Avg. Optimal Point Cost (Accuracy-Max)', 
-        #         'Avg. Optimal Point Cost (F1-score-Max)',
-        #         ]
-        # )
-
 
 
         sns.pointplot(
@@ -195,10 +182,92 @@ def plot_ds_distances_pointplot(df, descriptions_df, plot_metadata, identifier):
     fig.tight_layout()
 
 
-    fig.savefig(f'{output_plot_dsdist_dir}ds_dist_{identifier}.png', bbox_inches='tight', dpi=300)
+    fig.savefig(f'{output_plot_dsdist_w_dir}ds_dist_w_{identifier}.png', bbox_inches='tight', dpi=300)
     plt.close()
         
 
+def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier):
+
+    subplot_titles = [1.0, 0.5, 0.75, 1.25]
+
+    df.reset_index(drop=True)
+
+    col_names = list(plot_metadata.keys())
+
+    nrow = 2
+    ncol = 2
+
+
+    sns.set_style('white')
+
+
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
+
+        
+    handles = None
+
+    for i, ax in enumerate(fig.axes):
+        
+        current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]]
+
+        sns.pointplot(
+            y='Avg. Energy Dist.', 
+            x='Data Set', 
+            hue='Data Set',
+            hue_order= descriptions_df['Data Set'],
+            markers=ds_markers,
+            data=current_df,
+            palette=sns.color_palette("husl", 15), 
+            errorbar='sd',
+            scale=0.75,
+            errwidth=0.75,
+            ax=ax,
+            )
+
+        
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_title(f'Test to Train Cls. Distr. = {subplot_titles[i]}', fontsize=6)
+
+
+        ax.set_xticklabels([])
+        ax.set_xticks([]) 
+        ax.tick_params(axis='y', labelsize=4)
+
+        # Save subplot legend hangles and labels for suplegend
+        if handles == None:
+            handles,_ = ax.get_legend_handles_labels()
+        ax.get_legend().remove()
+
+    # handles,_ = ax.get_legend_handles_labels()
+    
+    # Format legend
+    fig.legend(
+        handles, 
+        descriptions_df['Data Set'],
+        title='Data Sets',
+        title_fontsize=6,
+        loc='lower center', 
+        bbox_to_anchor=(0.5, - 0.15), 
+        ncol=3, 
+        fontsize=6)
+
+    # Format suplabels and title
+    fig.supylabel('Energy Distance (averaged over all features)', x=0.05, fontsize=7)
+    fig.supxlabel('', fontsize=1)
+    fig.suptitle(f'Energy Distance between Training and Testing Data\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}\n{col_names[4]}={plot_metadata[col_names[4]]}', y =0.95, fontsize=7)
+    fig.tight_layout()
+
+
+    fig.savefig(f'{output_plot_dsdist_e_dir}ds_dist_e_{identifier}.png', bbox_inches='tight', dpi=300)
+    plt.close()
+        
+
+
+def plot_ds_distances_pointplot(df, descriptions_df, plot_metadata, identifier):
+
+    plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identifier)
+    plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
+    
         
 
 
@@ -351,13 +420,18 @@ def plot_results():
     if not os.path.exists(output_plot_varying_dir):
         os.makedirs(output_plot_varying_dir)
 
-    
     if not os.path.exists(output_plot_dscomp_dir):
         os.makedirs(output_plot_dscomp_dir)
 
-    
     if not os.path.exists(output_plot_dsdist_dir):
         os.makedirs(output_plot_dsdist_dir)
+
+    if not os.path.exists(output_plot_dsdist_w_dir):
+        os.makedirs(output_plot_dsdist_w_dir)
+
+    if not os.path.exists(output_plot_dsdist_e_dir):
+        os.makedirs(output_plot_dsdist_e_dir)
+
 
     dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing
     ds_keys = list(dataset_descriptions['Data Set'])
@@ -365,34 +439,28 @@ def plot_results():
     performance_df_summarized = pd.read_csv(f'{output_table_dir}performance_summarized.csv')
 
 
-    # # Compare dataset-specific metrics
+    # Compare dataset-specific metrics
 
-    # dataset_descriptions = dataset_descriptions.rename(
-    #     columns={
-    #         'Non-missing Instances' : 'Data Set Size',
-    #         'Class Balance' : 'Class Distribution',
-    #         'Features' : 'No. of Features',
-    #         'Causal Graph Connectivity Score' : 'Causal Graph Connectivity',
-    #     }
-    # )
+    dataset_descriptions = dataset_descriptions.rename(
+        columns={
+            'Non-missing Instances' : 'Data Set Size',
+            'Class Balance' : 'Class Distribution',
+            'Features' : 'No. of Features',
+            'Causal Graph Connectivity Score' : 'Causal Graph Connectivity',
+        }
+    )
     
 
-    # for k in ds_plots_metadata:
-    #     col_names = list(ds_plots_metadata[k].keys())
+    for k in ds_plots_metadata:
+        col_names = list(ds_plots_metadata[k].keys())
 
-    #     current_slice_idx = True
-    #     for j in col_names:
-    #         current_slice_idx &=  (performance_df_summarized[j]==ds_plots_metadata[k][j])
+        current_slice_idx = True
+        for j in col_names:
+            current_slice_idx &=  (performance_df_summarized[j]==ds_plots_metadata[k][j])
 
-    #     current_df = performance_df_summarized[current_slice_idx].copy()
+        current_df = performance_df_summarized[current_slice_idx].copy()
 
-
-    #     # print(current_df.shape)
-    #     # print(current_df.head)
-    #     # current_df = current_df.round(4)
-    #     # current_df.to_csv(f'{output_table_dir}current_ds_plot_{k}.csv')
-
-    #     plot_ds_cost_pointplots(current_df, dataset_descriptions.copy(), ds_plots_metadata[k], k)
+        plot_ds_cost_pointplots(current_df, dataset_descriptions.copy(), ds_plots_metadata[k], k)
 
 
     # Relationship between prior class probability shift and covariate shift
@@ -407,18 +475,8 @@ def plot_results():
 
         current_df = performance_df_summarized[current_slice_idx].copy()
 
-
-        # print(current_df.shape)
-        # print(current_df.head)
-        # current_df = current_df.round(4)
-        # current_df.to_csv(f'{output_table_dir}current_ds_plot_{k}.csv')
-
         plot_ds_distances_pointplot(current_df, dataset_descriptions, dsdist_plots_metadata[k], k)
 
-
-
-
-    return 0
 
 
     # Effects of varying settings/configurations
@@ -433,9 +491,6 @@ def plot_results():
 
         current_df = performance_df_summarized[current_slice_idx].copy()
 
-        # print(current_df.shape)
-        # current_df = current_df.round(4)
-        # current_df.to_csv(f'{output_table_dir}current_{varying_plots_metadata[k]["identifier"]}.csv')
 
         plot_varying_cost_boxplots(current_df, varying_plots_metadata[k], ds_keys)
         plot_varying_dist_boxplots(current_df, varying_plots_metadata[k], ds_keys)
@@ -443,14 +498,6 @@ def plot_results():
     # Save selected plots of interest to a separate directory
     for plot_filename in selected_varying_plots:
         shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
-    
-    # arr = os.listdir(f'{output_plot_dir}')
-    # print(len(arr))
-
-
-
-
-
 
     
     print("Plotting completed.")

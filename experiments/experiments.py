@@ -225,7 +225,7 @@ def run_experiments(ds_meta):
                         X_test_env, y_test_env = test_cls_distr[environment[0]]
 
                         avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
-                        avg_e_dist = average_wasserstein_distance(X_train, X_test_env)
+                        avg_e_dist = average_energy_distance(X_train, X_test_env)
                         
                         # train2test_causal_summary = analyze_causality(X_train, X_separated, X_test_env, y_train, y_separated, y_test_env, ds_key, exp_settings, graphviz)
                         
