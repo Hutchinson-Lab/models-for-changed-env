@@ -1,8 +1,10 @@
 import os
 import shutil
 import pandas as pd
+import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
+import statsmodels.api as sm
 
 from plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
 
@@ -46,6 +48,12 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
 
     sns.set_style('white')
 
+    matplotlib.rcParams['legend.handlelength'] = 0
+    matplotlib.rcParams['legend.numpoints'] = 1
+    matplotlib.rcParams['legend.borderpad'] = 1.0
+    matplotlib.rcParams['legend.handletextpad'] = 1.0
+    matplotlib.rcParams['legend.borderaxespad'] = 0.8   
+    
 
     fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
 
@@ -64,12 +72,12 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
             style_order= descriptions_df[subplot_titles[i]], 
             markers=ds_markers,
             data=df,
-            dashes=None,
             palette=sns.color_palette("husl", 15),
             sort=False,
             err_style='bars',
             errorbar='sd',
             err_kws={'elinewidth':0.75},
+            dashes=False,
             ax=ax,
             )
 
@@ -94,7 +102,7 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
         title='Data Sets',
         title_fontsize=6,
         loc='lower center', 
-        bbox_to_anchor=(0.5, - 0.15), 
+        bbox_to_anchor=(0.5, - 0.17), 
         ncol=3, 
         fontsize=6)
 
@@ -106,12 +114,21 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
 
 
     fig.savefig(f'{output_plot_dscomp_dir}ds_cost_{identifier}.png', bbox_inches='tight', dpi=300)
+    
+    matplotlib.rcParams.update(matplotlib.rcParamsDefault)
+    
     plt.close()
         
 
+
+
+
+
+
+
 def plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identifier):
 
-    subplot_titles = [1.0, 0.5, 0.75, 1.25]
+    subplot_titles = [1.0, 1.25, 0.75, 0.5]
 
     df.reset_index(drop=True)
 
@@ -123,39 +140,90 @@ def plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identi
 
     sns.set_style('white')
 
+    matplotlib.rcParams['legend.handlelength'] = 0
+    matplotlib.rcParams['legend.numpoints'] = 1
+    matplotlib.rcParams['legend.borderpad'] = 1.0
+    matplotlib.rcParams['legend.handletextpad'] = 1.0
+    matplotlib.rcParams['legend.borderaxespad'] = 0.8   
 
-    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
+    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
 
         
     handles = None
 
     for i, ax in enumerate(fig.axes):
         
-        current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]]
+        current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]].copy()
+
+        current_df['Cost Difference'] =  current_df['Avg. Optimal Point Cost (ROCCH Method)'] - current_df['Avg. Optimal Point Cost (Actual)']
+        current_df.reset_index(drop=True)
+
+        
+        current_df['Double Avg. Wasserstein Dist.'] = 0
+        # current_df['Avg. Cost Difference'] = 0
+        dist_order = []
+        # cost_order = []
+        for ds_key in list(descriptions_df['Data Set']):
+
+            dist_order.append(current_df.loc[df['Data Set']==ds_key, 'Avg. Wasserstein Dist.'].mean())
+            current_df.loc[df['Data Set']==ds_key, 'Double Avg. Wasserstein Dist.'] = dist_order[-1]
+
+            # cost_order.append(current_df.loc[df['Data Set']==ds_key, 'Cost Difference'].mean())
+            # current_df.loc[df['Data Set']==ds_key, 'Avg. Cost Difference'] = cost_order[-1]
 
 
-        sns.pointplot(
-            y='Avg. Wasserstein Dist.', 
-            x='Data Set', 
-            hue='Data Set',
-            hue_order= descriptions_df['Data Set'],
+        sns.lineplot(
+            y='Cost Difference', 
+            x='Double Avg. Wasserstein Dist.', 
+            hue='Double Avg. Wasserstein Dist.',
+            hue_order=dist_order,
+            style='Double Avg. Wasserstein Dist.',
+            style_order=dist_order,
             markers=ds_markers,
             data=current_df,
             palette=sns.color_palette("husl", 15), 
+            sort=False,
+            err_style='bars',
             errorbar='sd',
-            scale=0.75,
-            errwidth=0.75,
+            err_kws={'elinewidth':0.75},
+            dashes=False,
             ax=ax,
             )
+
+
+        sns.regplot(
+            data=current_df, 
+            x="Double Avg. Wasserstein Dist.", 
+            y="Cost Difference",
+            scatter=False,
+            line_kws={"lw":0.75, "ls":"--", "color":"grey"},
+            ax=ax,
+            )
+
+        model = sm.OLS(current_df["Cost Difference"], sm.add_constant(current_df['Double Avg. Wasserstein Dist.'])).fit()
+
+        # print(model.params)
+        intercept, slope = round(model.params[0],2), round(model.params[1],2)
+        r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc['Double Avg. Wasserstein Dist.'], 2) 
+        ax.text(
+            0.75, 
+            0.85, 
+            f'y = {slope} x + {intercept}\n$r^{2}$={r_squared}, p-value={p_value}',
+            bbox=dict(boxstyle='square,pad=0.4', facecolor='white', edgecolor='black', alpha=0.5, linewidth=0.5), 
+            horizontalalignment='center', 
+            verticalalignment='center', 
+            transform=ax.transAxes, 
+            fontsize=5)
 
         
         ax.set(xlabel=None, ylabel=None)
         ax.set_title(f'Test to Train Cls. Distr. = {subplot_titles[i]}', fontsize=6)
 
 
-        ax.set_xticklabels([])
-        ax.set_xticks([]) 
+        # ax.set_xticklabels([])
+        # ax.set_xticks([]) 
         ax.tick_params(axis='y', labelsize=4)
+        ax.tick_params(axis='x', labelsize=4)
 
         # Save subplot legend hangles and labels for suplegend
         if handles == None:
@@ -171,24 +239,30 @@ def plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identi
         title='Data Sets',
         title_fontsize=6,
         loc='lower center', 
-        bbox_to_anchor=(0.5, - 0.15), 
+        bbox_to_anchor=(0.5, - 0.19), 
         ncol=3, 
         fontsize=6)
 
     # Format suplabels and title
-    fig.supylabel('Wasserstein Distance (averaged over all features)', x=0.05, fontsize=7)
-    fig.supxlabel('', fontsize=1)
-    fig.suptitle(f'Wasserstein Distance between Training and Testing Data\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}\n{col_names[4]}={plot_metadata[col_names[4]]}', y =0.95, fontsize=7)
+    fig.supylabel('Cost Difference (ROCCH - Actual)', x=0.05, fontsize=7)
+    fig.supxlabel('Double Avg. Wasserstein Distance between Training and Testing Features', y=0.05,fontsize=7)
+    fig.suptitle(f'Effect of Covariate Shift on Efficacy of ROCCH Method\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}\n{col_names[4]}={plot_metadata[col_names[4]]}', y =0.95, fontsize=7)
     fig.tight_layout()
 
 
     fig.savefig(f'{output_plot_dsdist_w_dir}ds_dist_w_{identifier}.png', bbox_inches='tight', dpi=300)
+
+    matplotlib.rcParams.update(matplotlib.rcParamsDefault)
+    
     plt.close()
-        
+
+
+
+
 
 def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier):
 
-    subplot_titles = [1.0, 0.5, 0.75, 1.25]
+    subplot_titles = [1.0, 1.25, 0.75, 0.5]
 
     df.reset_index(drop=True)
 
@@ -200,38 +274,90 @@ def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
 
     sns.set_style('white')
 
+    matplotlib.rcParams['legend.handlelength'] = 0
+    matplotlib.rcParams['legend.numpoints'] = 1
+    matplotlib.rcParams['legend.borderpad'] = 1.0
+    matplotlib.rcParams['legend.handletextpad'] = 1.0
+    matplotlib.rcParams['legend.borderaxespad'] = 0.8   
 
-    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
+    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
 
         
     handles = None
 
     for i, ax in enumerate(fig.axes):
         
-        current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]]
+        current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]].copy()
 
-        sns.pointplot(
-            y='Avg. Energy Dist.', 
-            x='Data Set', 
-            hue='Data Set',
-            hue_order= descriptions_df['Data Set'],
+        current_df['Cost Difference'] =  current_df['Avg. Optimal Point Cost (ROCCH Method)'] - current_df['Avg. Optimal Point Cost (Actual)']
+        current_df.reset_index(drop=True)
+
+        
+        current_df['Double Avg. Energy Dist.'] = 0
+        # current_df['Avg. Cost Difference'] = 0
+        dist_order = []
+        # cost_order = []
+        for ds_key in list(descriptions_df['Data Set']):
+
+            dist_order.append(current_df.loc[df['Data Set']==ds_key, 'Avg. Energy Dist.'].mean())
+            current_df.loc[df['Data Set']==ds_key, 'Double Avg. Energy Dist.'] = dist_order[-1]
+
+            # cost_order.append(current_df.loc[df['Data Set']==ds_key, 'Cost Difference'].mean())
+            # current_df.loc[df['Data Set']==ds_key, 'Avg. Cost Difference'] = cost_order[-1]
+
+
+        sns.lineplot(
+            y='Cost Difference', 
+            x='Double Avg. Energy Dist.', 
+            hue='Double Avg. Energy Dist.',
+            hue_order=dist_order,
+            style='Double Avg. Energy Dist.',
+            style_order=dist_order,
             markers=ds_markers,
             data=current_df,
             palette=sns.color_palette("husl", 15), 
+            sort=False,
+            err_style='bars',
             errorbar='sd',
-            scale=0.75,
-            errwidth=0.75,
+            err_kws={'elinewidth':0.75},
+            dashes=False,
             ax=ax,
             )
+
+
+        sns.regplot(
+            data=current_df, 
+            x="Double Avg. Energy Dist.", 
+            y="Cost Difference",
+            scatter=False,
+            line_kws={"lw":0.75, "ls":"--", "color":"grey"},
+            ax=ax,
+            )
+
+        model = sm.OLS(current_df["Cost Difference"], sm.add_constant(current_df['Double Avg. Energy Dist.'])).fit()
+
+        # print(model.params)
+        intercept, slope = round(model.params[0],2), round(model.params[1],2)
+        r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc['Double Avg. Energy Dist.'], 2) 
+        ax.text(
+            0.75, 
+            0.85, 
+            f'y = {slope} x + {intercept}\n$r^{2}$={r_squared}, p-value={p_value}',
+            bbox=dict(boxstyle='square,pad=0.4', facecolor='white', edgecolor='black', alpha=0.5, linewidth=0.5), 
+            horizontalalignment='center', 
+            verticalalignment='center', 
+            transform=ax.transAxes, 
+            fontsize=5)
 
         
         ax.set(xlabel=None, ylabel=None)
         ax.set_title(f'Test to Train Cls. Distr. = {subplot_titles[i]}', fontsize=6)
 
 
-        ax.set_xticklabels([])
-        ax.set_xticks([]) 
+        # ax.set_xticklabels([])
+        # ax.set_xticks([]) 
         ax.tick_params(axis='y', labelsize=4)
+        ax.tick_params(axis='x', labelsize=4)
 
         # Save subplot legend hangles and labels for suplegend
         if handles == None:
@@ -247,20 +373,23 @@ def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
         title='Data Sets',
         title_fontsize=6,
         loc='lower center', 
-        bbox_to_anchor=(0.5, - 0.15), 
+        bbox_to_anchor=(0.5, - 0.19), 
         ncol=3, 
         fontsize=6)
 
     # Format suplabels and title
-    fig.supylabel('Energy Distance (averaged over all features)', x=0.05, fontsize=7)
-    fig.supxlabel('', fontsize=1)
-    fig.suptitle(f'Energy Distance between Training and Testing Data\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}\n{col_names[4]}={plot_metadata[col_names[4]]}', y =0.95, fontsize=7)
+    fig.supylabel('Cost Difference (ROCCH - Actual)', x=0.05, fontsize=7)
+    fig.supxlabel('Double Avg. Energy Distance between Training and Testing Features', y=0.05,fontsize=7)
+    fig.suptitle(f'Effect of Covariate Shift on Efficacy of ROCCH Method\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}\n{col_names[4]}={plot_metadata[col_names[4]]}', y =0.95, fontsize=7)
     fig.tight_layout()
 
 
     fig.savefig(f'{output_plot_dsdist_e_dir}ds_dist_e_{identifier}.png', bbox_inches='tight', dpi=300)
+
+    matplotlib.rcParams.update(matplotlib.rcParamsDefault)
+    
     plt.close()
-        
+
 
 
 def plot_ds_distances_pointplot(df, descriptions_df, plot_metadata, identifier):
@@ -479,25 +608,25 @@ def plot_results():
 
 
 
-    # Effects of varying settings/configurations
+    # # Effects of varying settings/configurations
 
-    for k in varying_plots_metadata:
+    # for k in varying_plots_metadata:
 
-        col_names = list(varying_plots_metadata[k].keys())[1:-1]
+    #     col_names = list(varying_plots_metadata[k].keys())[1:-1]
  
-        current_slice_idx = True
-        for j in col_names:
-            current_slice_idx &=  (performance_df_summarized[j]==varying_plots_metadata[k][j])
+    #     current_slice_idx = True
+    #     for j in col_names:
+    #         current_slice_idx &=  (performance_df_summarized[j]==varying_plots_metadata[k][j])
 
-        current_df = performance_df_summarized[current_slice_idx].copy()
+    #     current_df = performance_df_summarized[current_slice_idx].copy()
 
 
-        plot_varying_cost_boxplots(current_df, varying_plots_metadata[k], ds_keys)
-        plot_varying_dist_boxplots(current_df, varying_plots_metadata[k], ds_keys)
+    #     plot_varying_cost_boxplots(current_df, varying_plots_metadata[k], ds_keys)
+    #     plot_varying_dist_boxplots(current_df, varying_plots_metadata[k], ds_keys)
 
-    # Save selected plots of interest to a separate directory
-    for plot_filename in selected_varying_plots:
-        shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
+    # # Save selected plots of interest to a separate directory
+    # for plot_filename in selected_varying_plots:
+    #     shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
 
     
     print("Plotting completed.")

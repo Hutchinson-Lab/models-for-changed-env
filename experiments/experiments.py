@@ -97,6 +97,31 @@ environments_cls_distr = unique_cls_distr(environments)
 output_table_dir = './experiments/tables/'
 
 
+
+"""
+Written by Jindong Wang
+Retrieved from https://github.com/jindongwang/transferlearning
+transferlearning/code/distance/mmd_numpy_sklearn.py 
+"""
+def mmd_linear(X, Y):
+    """MMD using linear kernel (i.e., k(x,y) = <x,y>)
+    Note that this is not the original linear MMD, only the reformulated and faster version.
+    The original version is:
+        def mmd_linear(X, Y):
+            XX = np.dot(X, X.T)
+            YY = np.dot(Y, Y.T)
+            XY = np.dot(X, Y.T)
+            return XX.mean() + YY.mean() - 2 * XY.mean()
+    Arguments:
+        X {[n_sample1, dim]} -- [X matrix]
+        Y {[n_sample2, dim]} -- [Y matrix]
+    Returns:
+        [scalar] -- [MMD value]
+    """
+    delta = X.mean(0) - Y.mean(0)
+    return delta.dot(delta.T)
+
+
 def average_wasserstein_distance(X_1, X_2):
     
     n_features = X_1.shape[1]
@@ -119,7 +144,8 @@ def average_energy_distance(X_1, X_2):
     
     avg_w_dist /= n_features
 
-    return avg_w_dist 
+    return avg_w_dist
+
 
 def run_experiments(ds_meta):
     '''
@@ -142,6 +168,7 @@ def run_experiments(ds_meta):
         'FN cost',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
+        'MMD',
         'No. Test Instances',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
@@ -226,6 +253,7 @@ def run_experiments(ds_meta):
 
                         avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
                         avg_e_dist = average_energy_distance(X_train, X_test_env)
+                        mmd = mmd_linear(X_train, X_test_env)
                         
                         # train2test_causal_summary = analyze_causality(X_train, X_separated, X_test_env, y_train, y_separated, y_test_env, ds_key, exp_settings, graphviz)
                         
@@ -261,6 +289,7 @@ def run_experiments(ds_meta):
                                     environment[2],
                                     avg_w_dist,
                                     avg_e_dist,
+                                    mmd,
                                     y_test_env.shape[0],
                                     split_num,
                                     optimals[i][0],
@@ -299,6 +328,7 @@ def run_experiments(ds_meta):
         'FN cost',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
+        'MMD',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',
@@ -399,6 +429,7 @@ def run_experiments(ds_meta):
                                     environment[2],
                                     current_df['Avg. Wasserstein Dist.'].iloc[0],
                                     current_df['Avg. Energy Dist.'].iloc[0],
+                                    current_df['MMD'].iloc[0],
                                     split_num,
                                     current_df['Optimal FPR (ROCCH Method)'].iloc[0],
                                     current_df['Optimal TPR (ROCCH Method)'].iloc[0],

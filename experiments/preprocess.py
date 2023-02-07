@@ -8,9 +8,12 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, normalize
+# from scipy.stats import differential_entropy
+
 from causallearn.search.ConstraintBased.PC import pc
 from causallearn.utils.GraphUtils import GraphUtils
+
 
 ds_main_dir = './experiments/datasets/'
 ds_raw_dir = './experiments/datasets/raw/'
@@ -48,6 +51,21 @@ def analyze_causality(X, y, ds_key, graphviz=False):
 
     return cgcs
 
+# def class_entropy_ratio (X, y):
+
+#     # X = normalize(X)
+#     pos_idx = np.transpose((y==1).nonzero()).flatten()
+#     neg_idx = np.transpose((y==0).nonzero()).flatten()
+
+#     print(pos_idx.shape, neg_idx.shape)
+#     print(differential_entropy(X[pos_idx,:]))
+#     print(differential_entropy(X[neg_idx,:]))
+#     # print()
+#     # print(X[neg_idx, :])
+#     # entropy_ratio = (np.sum(entropy(X[pos_idx, :]))/pos_idx.shape[0])/(np.sum(entropy(X[neg_idx, :]))/neg_idx.shape[0])
+
+#     entropy_ratio=0
+#     return entropy_ratio
 
 
 def download_datasets (ds_meta):

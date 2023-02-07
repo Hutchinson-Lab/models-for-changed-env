@@ -206,9 +206,59 @@
 # # print(wasserstein_distance([3.4, 3.9, 7.5, 7.8], [4.5, 1.4],
 #                     #  [1.4, 0.9, 3.1, 7.2], [3.2, 3.5]))
 
-from scipy.stats import energy_distance
+# from scipy.stats import energy_distance
 
 
 # d = mahalanobis([1,2],[2,2,3])
 
 # print(d)
+
+
+
+from scipy.stats import entropy
+from scipy.stats import wasserstein_distance
+# P = [.05, .1, .2, .05, .15, .25, .08, .12]
+# P = [.05, .1, .2, .05, .15, .25, .08, .12]
+# Q = [.3, .1, .2, .1, .1, .02, .18, ]
+# Q = [.3, .1, .2, .1, .1, .02, .18, ]
+
+
+P = [
+    [.01,4.9],
+    [.01,4.9],
+    [.01,4.9]
+]
+
+P = [
+    [.01,4.9],
+    [.01,4.9],
+
+]
+
+# Q = [
+#     [.01,4.5],
+#     [.01,4.9],
+#     [.01,4.5]
+# ]
+Q= [0.01,0.02,0.02]
+
+print(entropy(P))
+# Q = [
+#     [.01],
+#     [.02],
+#     [.02]
+# ]
+
+import numpy as np
+
+# P= np.array(P)
+# Q=np.array(Q)
+
+
+# idx = np.transpose((Q>0.01).nonzero())
+# # print(idx)
+
+# print(idx.flatten())
+# print(P[idx.flatten(),:])
+
+# print(P[np.transpose((Q>0.01).nonzero())])
