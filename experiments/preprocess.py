@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import StandardScaler, normalize
-# from scipy.stats import differential_entropy
+from scipy.stats import differential_entropy
 
 from causallearn.search.ConstraintBased.PC import pc
 from causallearn.utils.GraphUtils import GraphUtils
@@ -51,21 +51,21 @@ def analyze_causality(X, y, ds_key, graphviz=False):
 
     return cgcs
 
-# def class_entropy_ratio (X, y):
+def class_entropy_ratio (X, y):
 
-#     # X = normalize(X)
-#     pos_idx = np.transpose((y==1).nonzero()).flatten()
-#     neg_idx = np.transpose((y==0).nonzero()).flatten()
+    X = normalize(X, norm='max')
+    pos_idx = np.transpose((y==1).nonzero()).flatten()
+    neg_idx = np.transpose((y==0).nonzero()).flatten()
 
-#     print(pos_idx.shape, neg_idx.shape)
-#     print(differential_entropy(X[pos_idx,:]))
-#     print(differential_entropy(X[neg_idx,:]))
-#     # print()
-#     # print(X[neg_idx, :])
-#     # entropy_ratio = (np.sum(entropy(X[pos_idx, :]))/pos_idx.shape[0])/(np.sum(entropy(X[neg_idx, :]))/neg_idx.shape[0])
+    # print(pos_idx.shape, neg_idx.shape)
+    # print(differential_entropy(X[pos_idx,:1]))
+    # print(differential_entropy(X[neg_idx,:1]))
+    # print()
+    # print(X[neg_idx, :])
+    # entropy_ratio = (np.sum(entropy(X[pos_idx, :]))/pos_idx.shape[0])/(np.sum(entropy(X[neg_idx, :]))/neg_idx.shape[0])
 
-#     entropy_ratio=0
-#     return entropy_ratio
+    entropy_ratio=0
+    return entropy_ratio
 
 
 def download_datasets (ds_meta):
@@ -151,7 +151,11 @@ def preprocess_datasets (ds_meta, graphviz=False):
         np.save(f'{ds_preprocessed_dir}{c}_X.npy', X)
         np.save(f'{ds_preprocessed_dir}{c}_y.npy', y)
 
-        cgcs = analyze_causality(X, y, c, graphviz=graphviz)
+        # cgcs = analyze_causality(X, y, c, graphviz=graphviz)
+        cgcs = 1
+
+        entr_ratio = class_entropy_ratio(X,y)
+        # print(entr_ratio)
 
         dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, class_distr, cgcs]
         i+=1

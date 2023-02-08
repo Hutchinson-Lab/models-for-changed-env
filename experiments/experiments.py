@@ -168,7 +168,7 @@ def run_experiments(ds_meta):
         'FN cost',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
-        'MMD',
+        'Avg. MMD',
         'No. Test Instances',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
@@ -253,7 +253,7 @@ def run_experiments(ds_meta):
 
                         avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
                         avg_e_dist = average_energy_distance(X_train, X_test_env)
-                        mmd = mmd_linear(X_train, X_test_env)
+                        avg_mmd = mmd_linear(X_train, X_test_env)/X_train.shape[1]
                         
                         # train2test_causal_summary = analyze_causality(X_train, X_separated, X_test_env, y_train, y_separated, y_test_env, ds_key, exp_settings, graphviz)
                         
@@ -289,7 +289,7 @@ def run_experiments(ds_meta):
                                     environment[2],
                                     avg_w_dist,
                                     avg_e_dist,
-                                    mmd,
+                                    avg_mmd,
                                     y_test_env.shape[0],
                                     split_num,
                                     optimals[i][0],
@@ -328,7 +328,7 @@ def run_experiments(ds_meta):
         'FN cost',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
-        'MMD',
+        'Avg. MMD',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',

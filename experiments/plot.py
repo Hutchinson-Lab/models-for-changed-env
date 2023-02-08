@@ -14,6 +14,7 @@ output_plot_dscomp_dir = './experiments/plots/all_dscomp/'
 output_plot_dsdist_dir = './experiments/plots/all_dsdist/'
 output_plot_dsdist_w_dir = './experiments/plots/all_dsdist/wasserstein/'
 output_plot_dsdist_e_dir = './experiments/plots/all_dsdist/energy/'
+output_plot_dsdist_m_dir = './experiments/plots/all_dsdist/mmd/'
 output_plot_varying_dir = './experiments/plots/all_varying/'
 
 
@@ -391,11 +392,145 @@ def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
     plt.close()
 
 
+def plot_dsdist_mmd_pointplot(df, descriptions_df, plot_metadata, identifier):
+
+    subplot_titles = [1.0, 1.25, 0.75, 0.5]
+
+    df.reset_index(drop=True)
+
+    col_names = list(plot_metadata.keys())
+
+    nrow = 2
+    ncol = 2
+
+
+    sns.set_style('white')
+
+    matplotlib.rcParams['legend.handlelength'] = 0
+    matplotlib.rcParams['legend.numpoints'] = 1
+    matplotlib.rcParams['legend.borderpad'] = 1.0
+    matplotlib.rcParams['legend.handletextpad'] = 1.0
+    matplotlib.rcParams['legend.borderaxespad'] = 0.8   
+
+    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
+
+        
+    handles = None
+
+    for i, ax in enumerate(fig.axes):
+        
+        current_df = df[df['Test to Train Class Distr. Ratio']==subplot_titles[i]].copy()
+
+        current_df['Cost Difference'] =  current_df['Avg. Optimal Point Cost (ROCCH Method)'] - current_df['Avg. Optimal Point Cost (Actual)']
+        current_df.reset_index(drop=True)
+
+        
+        current_df['Double Avg. MMD'] = 0
+        # current_df['Avg. Cost Difference'] = 0
+        dist_order = []
+        # cost_order = []
+        for ds_key in list(descriptions_df['Data Set']):
+
+            dist_order.append(current_df.loc[df['Data Set']==ds_key, 'Avg. MMD'].mean())
+            current_df.loc[df['Data Set']==ds_key, 'Double Avg. MMD'] = dist_order[-1]
+
+            # cost_order.append(current_df.loc[df['Data Set']==ds_key, 'Cost Difference'].mean())
+            # current_df.loc[df['Data Set']==ds_key, 'Avg. Cost Difference'] = cost_order[-1]
+
+
+        sns.lineplot(
+            y='Cost Difference', 
+            x='Double Avg. MMD', 
+            hue='Double Avg. MMD',
+            hue_order=dist_order,
+            style='Double Avg. MMD',
+            style_order=dist_order,
+            markers=ds_markers,
+            data=current_df,
+            palette=sns.color_palette("husl", 15), 
+            sort=False,
+            err_style='bars',
+            errorbar='sd',
+            err_kws={'elinewidth':0.75},
+            dashes=False,
+            ax=ax,
+            )
+
+
+        sns.regplot(
+            data=current_df, 
+            x="Double Avg. MMD", 
+            y="Cost Difference",
+            scatter=False,
+            line_kws={"lw":0.75, "ls":"--", "color":"grey"},
+            ax=ax,
+            )
+
+        model = sm.OLS(current_df["Cost Difference"], sm.add_constant(current_df['Double Avg. MMD'])).fit()
+
+        # print(model.params)
+        intercept, slope = round(model.params[0],2), round(model.params[1],2)
+        r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc['Avg. MMD'], 2) 
+        
+        ax.text(
+            0.75, 
+            0.85, 
+            f'y = {slope} x + {intercept}\n$r^{2}$={r_squared}, p-value={p_value}',
+            bbox=dict(boxstyle='square,pad=0.4', facecolor='white', edgecolor='black', alpha=0.5, linewidth=0.5), 
+            horizontalalignment='center', 
+            verticalalignment='center', 
+            transform=ax.transAxes, 
+            fontsize=5)
+
+        
+        ax.set(xlabel=None, ylabel=None)
+        ax.set_title(f'Test to Train Cls. Distr. = {subplot_titles[i]}', fontsize=6)
+
+
+        # ax.set_xticklabels([])
+        # ax.set_xticks([]) 
+        ax.tick_params(axis='y', labelsize=4)
+        ax.tick_params(axis='x', labelsize=4)
+
+        # Save subplot legend hangles and labels for suplegend
+        if handles == None:
+            handles,_ = ax.get_legend_handles_labels()
+        ax.get_legend().remove()
+
+    # handles,_ = ax.get_legend_handles_labels()
+    
+    # Format legend
+    fig.legend(
+        handles, 
+        descriptions_df['Data Set'],
+        title='Data Sets',
+        title_fontsize=6,
+        loc='lower center', 
+        bbox_to_anchor=(0.5, - 0.19), 
+        ncol=3, 
+        fontsize=6)
+
+    # Format suplabels and title
+    fig.supylabel('Cost Difference (ROCCH - Actual)', x=0.05, fontsize=7)
+    fig.supxlabel('Double Avg. Maximum Mean Discrepancy', y=0.05,fontsize=7)
+    fig.suptitle(f'Effect of Covariate Shift on Efficacy of ROCCH Method\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}, {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}\n{col_names[4]}={plot_metadata[col_names[4]]}', y =0.95, fontsize=7)
+    fig.tight_layout()
+
+
+    fig.savefig(f'{output_plot_dsdist_m_dir}ds_dist_m_{identifier}.png', bbox_inches='tight', dpi=300)
+
+    matplotlib.rcParams.update(matplotlib.rcParamsDefault)
+    
+    plt.close()
+
+
+
 
 def plot_ds_distances_pointplot(df, descriptions_df, plot_metadata, identifier):
 
     plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identifier)
     plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
+    plot_dsdist_mmd_pointplot(df, descriptions_df, plot_metadata, identifier)
     
         
 
@@ -560,6 +695,9 @@ def plot_results():
 
     if not os.path.exists(output_plot_dsdist_e_dir):
         os.makedirs(output_plot_dsdist_e_dir)
+
+    if not os.path.exists(output_plot_dsdist_m_dir):
+        os.makedirs(output_plot_dsdist_m_dir)
 
 
     dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing

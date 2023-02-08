@@ -230,17 +230,19 @@ P = [
 ]
 
 P = [
-    [.01,4.9],
-    [.01,4.9],
+    [.01,4.9,.01,4.9],
+    [.01,4.9,.01,4.9],
+
 
 ]
 
-# Q = [
-#     [.01,4.5],
-#     [.01,4.9],
-#     [.01,4.5]
-# ]
-Q= [0.01,0.02,0.02]
+Q = [
+    [.01,4.5,.01,4.5,],
+    [.01,4.9,.01,4.9],
+    [.01,4.5,.01,4.5],
+    [.01,4.9,.01,4.9],
+]
+# Q= [0.01,0.02,0.02]
 
 print(entropy(P))
 # Q = [
@@ -251,8 +253,31 @@ print(entropy(P))
 
 import numpy as np
 
-# P= np.array(P)
-# Q=np.array(Q)
+
+
+
+def mmd_linear(X, Y):
+    """MMD using linear kernel (i.e., k(x,y) = <x,y>)
+    Note that this is not the original linear MMD, only the reformulated and faster version.
+    The original version is:
+        def mmd_linear(X, Y):
+            XX = np.dot(X, X.T)
+            YY = np.dot(Y, Y.T)
+            XY = np.dot(X, Y.T)
+            return XX.mean() + YY.mean() - 2 * XY.mean()
+    Arguments:
+        X {[n_sample1, dim]} -- [X matrix]
+        Y {[n_sample2, dim]} -- [Y matrix]
+    Returns:
+        [scalar] -- [MMD value]
+    """
+    delta = X.mean(0) - Y.mean(0)
+    return delta.dot(delta.T)
+
+
+P= np.array(P)
+Q=np.array(Q)
+print(mmd_linear(P,Q))
 
 
 # idx = np.transpose((Q>0.01).nonzero())
