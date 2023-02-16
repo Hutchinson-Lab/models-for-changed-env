@@ -157,7 +157,7 @@ def average_energy_distance(X_1, X_2):
     return avg_w_dist
 
 
-def average_auc_phi (X_1, X_2, repeats=3, test_ratio=0.2, random_state=0):
+def average_auc_phi (X_1, X_2, repeats=5, test_ratio=0.2, random_state=0):
     
     min_samples = min(X_1.shape[0], X_2.shape[0])
     X_1, X_2 = X_1[:min_samples, :], X_2[:min_samples, :]
@@ -183,9 +183,10 @@ def average_auc_phi (X_1, X_2, repeats=3, test_ratio=0.2, random_state=0):
 
         model = RandomForestClassifier(random_state=0)
         model.fit(X_train, y_train)
-        y_score = model.predict(X_test)
+        y_score = model.predict_proba(X_test)[:,1]
+        y_hat = model.predict(X_test)
 
-        phi_avg += matthews_corrcoef(y_test, y_score)
+        phi_avg += matthews_corrcoef(y_test, y_hat)
         auc_avg += roc_auc_score(y_test, y_score)
         
     auc_avg /= repeats

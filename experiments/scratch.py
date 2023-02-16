@@ -244,7 +244,7 @@ Q = [
 ]
 Q= [0.01,0.02,0.02]
 
-print(entropy(P))
+# print(entropy(P))
 # Q = [
 #     [.01],
 #     [.02],
@@ -279,7 +279,7 @@ from scipy.stats import cramervonmises_2samp
 
 P= np.array(P)
 Q=np.array(Q)
-print(cramervonmises_2samp(Q,Q))
+# print(cramervonmises_2samp(Q,Q))
 
 
 # idx = np.transpose((Q>0.01).nonzero())
@@ -289,3 +289,17 @@ print(cramervonmises_2samp(Q,Q))
 # print(P[idx.flatten(),:])
 
 # print(P[np.transpose((Q>0.01).nonzero())])
+
+from sklearn.metrics import matthews_corrcoef, roc_auc_score
+
+y_true = [+1, +1, +1, -1]
+
+y_pred = [+1, -1, +1, +1]
+
+
+y_true = [1.0, 1.0, 1.0, 0.0]
+y_pred = [0.4, 0.49, .51, .51]
+# y_pred = [0, 0, 1, 1]
+# m = matthews_corrcoef(y_true, y_pred)
+a = roc_auc_score(y_true, y_pred)
+print(a)
