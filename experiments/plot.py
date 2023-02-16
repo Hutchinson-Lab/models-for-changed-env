@@ -25,7 +25,7 @@ ds_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', 'P', '*', 'h', 'H', 'X','d
 
 def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
 
-    subplot_titles = ['Data Set Size', 'Class Distribution', 'No. of Features', 'Causal Graph Connectivity']
+    subplot_titles = ['Data Set Size', 'No. of Features', 'Class Distribution', 'Class Distance Ratio']
 
     df['Cost Difference'] =  df['Avg. Optimal Point Cost (ROCCH Method)'] - df['Avg. Optimal Point Cost (Actual)']
     df.reset_index(drop=True)
@@ -47,7 +47,7 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
     ncol = 2
 
 
-    sns.set_style('white')
+    sns.set_style('whitegrid', {"grid.color": "silver", "grid.linestyle": "dotted"})
 
     matplotlib.rcParams['legend.handlelength'] = 0
     matplotlib.rcParams['legend.numpoints'] = 1
@@ -56,7 +56,7 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
     matplotlib.rcParams['legend.borderaxespad'] = 0.8   
     
 
-    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
 
         
     handles = None
@@ -81,6 +81,31 @@ def plot_ds_cost_pointplots (df, descriptions_df, plot_metadata, identifier):
             dashes=False,
             ax=ax,
             )
+
+        sns.regplot(
+            data=df, 
+            x=subplot_titles[i], 
+            y="Cost Difference",
+            scatter=False,
+            line_kws={"lw":0.75, "ls":"--", "color":"grey"},
+            ax=ax,
+            )
+
+        model = sm.OLS(df["Cost Difference"], sm.add_constant(df[subplot_titles[i]])).fit()
+
+        # print(model.params)
+        intercept, slope = round(model.params[0],2), round(model.params[1],2)
+        r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc[subplot_titles[i]], 2) 
+        ax.text(
+            0.75, 
+            0.85, 
+            f'y = {slope} x + {intercept}\n$r^{2}$={r_squared}, p-value={p_value}',
+            bbox=dict(boxstyle='square,pad=0.4', facecolor='white', edgecolor='black', alpha=0.5, linewidth=0.5), 
+            horizontalalignment='center', 
+            verticalalignment='center', 
+            transform=ax.transAxes, 
+            fontsize=5)
+
 
         
         ax.set(xlabel=None, ylabel=None)
@@ -139,7 +164,7 @@ def plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identi
     ncol = 2
 
 
-    sns.set_style('white')
+    sns.set_style('whitegrid', {"grid.color": "silver", "grid.linestyle": "dotted"})
 
     matplotlib.rcParams['legend.handlelength'] = 0
     matplotlib.rcParams['legend.numpoints'] = 1
@@ -147,7 +172,7 @@ def plot_dsdist_wasserstein_pointplot(df, descriptions_df, plot_metadata, identi
     matplotlib.rcParams['legend.handletextpad'] = 1.0
     matplotlib.rcParams['legend.borderaxespad'] = 0.8   
 
-    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
 
         
     handles = None
@@ -273,7 +298,7 @@ def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
     ncol = 2
 
 
-    sns.set_style('white')
+    sns.set_style('whitegrid', {"grid.color": "silver", "grid.linestyle": "dotted"})
 
     matplotlib.rcParams['legend.handlelength'] = 0
     matplotlib.rcParams['legend.numpoints'] = 1
@@ -281,7 +306,7 @@ def plot_dsdist_energy_pointplot(df, descriptions_df, plot_metadata, identifier)
     matplotlib.rcParams['legend.handletextpad'] = 1.0
     matplotlib.rcParams['legend.borderaxespad'] = 0.8   
 
-    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
 
         
     handles = None
@@ -404,7 +429,7 @@ def plot_dsdist_mmd_pointplot(df, descriptions_df, plot_metadata, identifier):
     ncol = 2
 
 
-    sns.set_style('white')
+    sns.set_style('whitegrid',  {"grid.color": "silver", "grid.linestyle": "dotted"})
 
     matplotlib.rcParams['legend.handlelength'] = 0
     matplotlib.rcParams['legend.numpoints'] = 1
@@ -412,7 +437,7 @@ def plot_dsdist_mmd_pointplot(df, descriptions_df, plot_metadata, identifier):
     matplotlib.rcParams['legend.handletextpad'] = 1.0
     matplotlib.rcParams['legend.borderaxespad'] = 0.8   
 
-    fig, _ = plt.subplots(nrow, ncol, sharey=False, figsize = (5,4))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize = (5,4))
 
         
     handles = None
@@ -470,7 +495,7 @@ def plot_dsdist_mmd_pointplot(df, descriptions_df, plot_metadata, identifier):
 
         # print(model.params)
         intercept, slope = round(model.params[0],2), round(model.params[1],2)
-        r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc['Avg. MMD'], 2) 
+        r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc['Double Avg. MMD'], 2) 
         
         ax.text(
             0.75, 

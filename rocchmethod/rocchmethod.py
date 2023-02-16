@@ -6,8 +6,8 @@ import numpy as np
 from sklearn.metrics import roc_curve, confusion_matrix
 from scipy.spatial import ConvexHull
 from imblearn.pipeline import make_pipeline
-from imblearn.over_sampling import SMOTE
-from imblearn.under_sampling import NearMiss
+from imblearn.over_sampling import RandomOverSampler, SMOTE
+from imblearn.under_sampling import RandomUnderSampler, NearMiss
 
 
 
@@ -28,7 +28,7 @@ def unique_cls_distr(environments):
 
 
 
-def impose_class_distr(X, y, imposed_class_distr, random_state=1):
+def impose_class_distr(X, y, imposed_class_distr, oversampling, undersampling, random_state=0):
     """
     @author: Nahian Ahmed
     ROC Convex Hull (ROCCH) Method (Provost and Fawcett, 1997, 1998, 2001)
@@ -61,29 +61,40 @@ def impose_class_distr(X, y, imposed_class_distr, random_state=1):
     n_pos_imposed = max(0, n_pos_imposed)
     n_neg_imposed = max(0, n_neg_imposed) 
     
-    smote_strategy = None
-    nearmiss_strategy = None
-    if (imposed_class_distr < original_class_distr): # Positives are to be undersampled, negatives are to be oversampled
-                
-       smote_strategy = {0: n_neg_imposed}
-       nearmiss_strategy = {1: n_pos_imposed}
+    oversampling_strategy = None
+    undersampling_strategy = None
 
-    elif (imposed_class_distr > original_class_distr): # Negatives are to be undersampled, positives are to be oversampled
+    if (imposed_class_distr < original_class_distr): # Positives are to be undersampled, negatives are to be oversampled            
+       oversampling_strategy = {0: n_neg_imposed}
+       undersampling_strategy = {1: n_pos_imposed}
+
+    elif (imposed_class_distr > original_class_distr): # Negatives are to be undersampled, positives are to be oversampled        
+        oversampling_strategy = {1: n_pos_imposed}
+        undersampling_strategy = {0: n_neg_imposed}
         
-        smote_strategy = {1: n_pos_imposed}
-        nearmiss_strategy = {0: n_neg_imposed}
-        
-    else: # Imposed class distribution is equal to original class distribution
-        
+    else: # Imposed class distribution is equal to original class distribution 
         return X, y
 
+    oversampling_method = None
+    undersampling_method = None
+
+    if oversampling == 'Random':
+        oversampling_method = RandomOverSampler(sampling_strategy=oversampling_strategy, random_state=random_state)
+    elif oversampling == 'SMOTE':
+        oversampling_method = SMOTE(sampling_strategy=oversampling_strategy, random_state=random_state, n_jobs=-1)
+
+    if undersampling == 'Random':
+        undersampling_method = RandomUnderSampler(sampling_strategy=oversampling_strategy, random_state=random_state)
+    elif undersampling == 'NearMiss':
+        undersampling_method = NearMiss(sampling_strategy=undersampling_strategy, n_jobs=-1)
+    
     pipe = make_pipeline(
-            SMOTE(sampling_strategy=smote_strategy, random_state=random_state, n_jobs=-1),
-            NearMiss(sampling_strategy=nearmiss_strategy, n_jobs=-1)
+            oversampling_method,
+            undersampling_method
         )
 
     # imblearn.over_sampling will throw user warning.
-    # This is not an issue for use because we might oversample the majority class as well (and not just the minority class).
+    # This is not an issue for us because we might oversample the majority class as well (and not just the minority class).
     with warnings.catch_warnings(): 
         warnings.simplefilter("ignore") 
         X, y = pipe.fit_resample(X, y)

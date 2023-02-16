@@ -9,9 +9,10 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score
-from scipy.stats import wasserstein_distance, energy_distance
-
+from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef, roc_auc_score
+from scipy.stats import wasserstein_distance, energy_distance, cramervonmises_2samp
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import StandardScaler
 
 # from datasets import ds_meta
 from preprocess import split_data
@@ -69,7 +70,14 @@ environments = [
     
 ]
 
+oversampling_undersampling_methods = [
+    ['Random', 'Random'],
+    ['SMOTE', 'NearMiss'],
+]
+
 random_state = 0
+
+
 
 
 # ----------------------------------------------------------------------------------------
@@ -79,11 +87,12 @@ random_state = 0
 # K_range = [3]
 
 # split_ratio_range = [ 
-#     [0.4, 0.2, 0.4], # train=40%, separated=20%, test=40%
+#     [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
 # ]
 # environments = [
 
 #     [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
+#     [1.25, 1.0, 1.0], # halved class distribution, uniform cost distribution
    
 # ]
 # ----------------------------------------------------------------------------------------
@@ -103,6 +112,7 @@ Written by Jindong Wang
 Retrieved from https://github.com/jindongwang/transferlearning
 transferlearning/code/distance/mmd_numpy_sklearn.py 
 """
+
 def mmd_linear(X, Y):
     """MMD using linear kernel (i.e., k(x,y) = <x,y>)
     Note that this is not the original linear MMD, only the reformulated and faster version.
@@ -147,6 +157,59 @@ def average_energy_distance(X_1, X_2):
     return avg_w_dist
 
 
+def average_auc_phi (X_1, X_2, repeats=3, test_ratio=0.2, random_state=0):
+    
+    min_samples = min(X_1.shape[0], X_2.shape[0])
+    X_1, X_2 = X_1[:min_samples, :], X_2[:min_samples, :]
+    X_1 = np.hstack((X_1, np.zeros((min_samples,1), dtype=np.int8)))
+    X_2 = np.hstack((X_2, np.ones((min_samples,1), dtype=np.int8)))
+    data = np.vstack((X_1,X_2))
+    X = data[:, :-1]
+    y = data[:, -1]
+
+    auc_avg = 0
+    phi_avg = 0
+
+    sss = StratifiedShuffleSplit(n_splits=repeats, test_size=test_ratio, random_state=random_state)
+        
+    for (train_index, test_index) in sss.split(X, y):
+        # Split into training and testing data
+        X_train, X_test, y_train, y_test = X[train_index].copy(), X[test_index].copy(), y[train_index].copy(), y[test_index].copy()
+        
+        # Scale features
+        scaler = StandardScaler().fit(X_train)
+        X_train = scaler.transform(X_train)
+        X_test = scaler.transform(X_test)
+
+        model = RandomForestClassifier(random_state=0)
+        model.fit(X_train, y_train)
+        y_score = model.predict(X_test)
+
+        phi_avg += matthews_corrcoef(y_test, y_score)
+        auc_avg += roc_auc_score(y_test, y_score)
+        
+    auc_avg /= repeats
+    phi_avg /= repeats
+
+    return auc_avg, phi_avg
+
+# def kldiv (X_1, X_2):
+    
+#     return 
+
+
+def average_cramervonmises (X_1, X_2):
+    n_features = X_1.shape[1]
+
+    avg_cramervonmises_criterion = 0
+    for i in range(n_features):
+        res = cramervonmises_2samp(X_1[:,i], X_2[:,i])
+        avg_cramervonmises_criterion += res.statistic
+    
+    avg_cramervonmises_criterion /= n_features
+
+    return avg_cramervonmises_criterion 
+
 def run_experiments(ds_meta):
     '''
     '''
@@ -166,9 +229,14 @@ def run_experiments(ds_meta):
         'Test Class Distr.',
         'FP cost',
         'FN cost',
+        'Oversampling Method',
+        'Undersampling Method',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
         'Avg. MMD',
+        'Avg. AUC (COVSHIFT)',
+        'Avg. Phi',
+        'Avg. Cramer-von Mises Criterion',
         'No. Test Instances',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
@@ -244,70 +312,78 @@ def run_experiments(ds_meta):
                     rocch_classifiers, rocch_thresholds = classifiers_on_rocch(fpr_list,tpr_list, threshold_list, rocch_fpr, rocch_tpr)
                     
 
-                    test_cls_distr = {cls_distr : impose_class_distr(X_test, y_test, (original_cls_distr[ds_key] * cls_distr)) for cls_distr in environments_cls_distr}
 
 
-                    for i, environment in enumerate(environments):
+                    for os_us in oversampling_undersampling_methods:
 
-                        X_test_env, y_test_env = test_cls_distr[environment[0]]
+                        test_cls_distr = {cls_distr : impose_class_distr(X_test, y_test, (original_cls_distr[ds_key] * cls_distr), os_us[0], os_us[1], random_state) for cls_distr in environments_cls_distr}
 
-                        avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
-                        avg_e_dist = average_energy_distance(X_train, X_test_env)
-                        avg_mmd = mmd_linear(X_train, X_test_env)/X_train.shape[1]
-                        
-                        # train2test_causal_summary = analyze_causality(X_train, X_separated, X_test_env, y_train, y_separated, y_test_env, ds_key, exp_settings, graphviz)
-                        
-                        # print('original_cls_distr', original_cls_distr[ds_key],'env_cls_distr',environment[0], 'y_test_env.sum()/y_test_env.shape[0]', y_test_env.sum()/y_test_env.shape[0], 'y_test.shape[0]',y_test_env.shape[0])                
-                        
-                        for j, rocch_fpr_t in enumerate(rocch_fpr):
+
+                        for i, environment in enumerate(environments):
+
+                            X_test_env, y_test_env = test_cls_distr[environment[0]]
+
+                            avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
+                            avg_e_dist = average_energy_distance(X_train, X_test_env)
+                            avg_mmd = mmd_linear(X_train, X_test_env)/X_train.shape[1]
+                            avg_auc, avg_phi = average_auc_phi(X_train, X_test_env)
+                            avg_cvmc = average_cramervonmises(X_train, X_test_env)
+
                             
-                            for k, clfs in enumerate(rocch_classifiers[j]):
-                                predictions = models[list(models.keys())[k]].predict_proba(X_test_env)[:,1]
-                                predictions_hard = np.where(1, predictions>=rocch_thresholds[j][k], 0)
+                            for j, rocch_fpr_t in enumerate(rocch_fpr):
+                                
+                                for k, clfs in enumerate(rocch_classifiers[j]):
+                                    predictions = models[list(models.keys())[k]].predict_proba(X_test_env)[:,1]
+                                    predictions_hard = np.where(1, predictions>=rocch_thresholds[j][k], 0)
 
-                                predictions_sep = models[list(models.keys())[k]].predict_proba(X_separated)[:,1]
-                                predictions_sep_hard = np.where(1, predictions_sep>=0.5, 0)
+                                    predictions_sep = models[list(models.keys())[k]].predict_proba(X_separated)[:,1]
+                                    predictions_sep_hard = np.where(1, predictions_sep>=0.5, 0)
 
-                                cost = expected_cost(y_test_env, predictions_hard, environment[1], environment[2])
-                                acc = accuracy_score(y_test_env, predictions_hard)
-                                f1_s = f1_score(y_test_env, predictions_hard)
+                                    cost = expected_cost(y_test_env, predictions_hard, environment[1], environment[2])
+                                    acc = accuracy_score(y_test_env, predictions_hard)
+                                    f1_s = f1_score(y_test_env, predictions_hard)
 
-                                acc_sep = accuracy_score(y_separated, predictions_sep_hard)
-                                f1_s_sep = f1_score(y_separated, predictions_sep_hard)
+                                    acc_sep = accuracy_score(y_separated, predictions_sep_hard)
+                                    f1_s_sep = f1_score(y_separated, predictions_sep_hard)
 
-                                performance_df.loc[c] = [
-                                    K,
-                                    train_ratio,
-                                    separated_ratio,
-                                    test_ratio,
-                                    ds_key,
-                                    predictions_hard.shape[0],
-                                    original_cls_distr[ds_key],
-                                    environment[0],
-                                    original_cls_distr[ds_key] * environment[0],
-                                    environment[1], 
-                                    environment[2],
-                                    avg_w_dist,
-                                    avg_e_dist,
-                                    avg_mmd,
-                                    y_test_env.shape[0],
-                                    split_num,
-                                    optimals[i][0],
-                                    optimals[i][1],
-                                    optimals[i][2],
-                                    optimals[i][3],
-                                    list(models.keys())[clfs],
-                                    rocch_thresholds[j][k],
-                                    rocch_fpr_t,
-                                    rocch_tpr[j],
-                                    cost,
-                                    acc,
-                                    f1_s,
-                                    acc_sep,
-                                    f1_s_sep,
-                                    ]
-                                c += 1
-    
+                                    performance_df.loc[c] = [
+                                        K,
+                                        train_ratio,
+                                        separated_ratio,
+                                        test_ratio,
+                                        ds_key,
+                                        predictions_hard.shape[0],
+                                        original_cls_distr[ds_key],
+                                        environment[0],
+                                        original_cls_distr[ds_key] * environment[0],
+                                        environment[1], 
+                                        environment[2],
+                                        os_us[0],
+                                        os_us[1],
+                                        avg_w_dist,
+                                        avg_e_dist,
+                                        avg_mmd,
+                                        avg_auc,
+                                        avg_phi,
+                                        avg_cvmc,
+                                        y_test_env.shape[0],
+                                        split_num,
+                                        optimals[i][0],
+                                        optimals[i][1],
+                                        optimals[i][2],
+                                        optimals[i][3],
+                                        list(models.keys())[clfs],
+                                        rocch_thresholds[j][k],
+                                        rocch_fpr_t,
+                                        rocch_tpr[j],
+                                        cost,
+                                        acc,
+                                        f1_s,
+                                        acc_sep,
+                                        f1_s_sep,
+                                        ]
+                                    c += 1
+        
         
     performance_df = performance_df.round(4)
     performance_df.to_csv(f'{output_table_dir}performance.csv')
@@ -326,9 +402,14 @@ def run_experiments(ds_meta):
         'Test Class Distr.',
         'FP cost',
         'FN cost',
+        'Oversampling Method',
+        'Undersampling Method',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
         'Avg. MMD',
+        'Avg. AUC (COVSHIFT)',
+        'Avg. Phi',
+        'Avg. Cramer-von Mises Criterion',
         'Split No.',
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',
@@ -358,98 +439,105 @@ def run_experiments(ds_meta):
             
             for ds_key in ds_keys:
                 for split_num in range(K):
-                    for i, environment in enumerate(environments):   
-                        current_slice_idx = (
-                                        (performance_df['K'] == K) & 
-                                        (performance_df['Train Ratio'] == train_ratio) &
-                                        (performance_df['Separated Ratio'] == separated_ratio) &
-                                        (performance_df['Test Ratio'] == test_ratio) &
-                                        (performance_df['Data Set'] == ds_key) &
-                                        (performance_df['Split No.'] == split_num) &
-                                        (performance_df['Test to Train Class Distr. Ratio'] == environment[0]) &
-                                        (performance_df['FP cost'] == environment[1]) &
-                                        (performance_df['FN cost'] == environment[2])
-                                    ) 
 
-                        current_df = performance_df.loc[current_slice_idx]
+                    for os_us in oversampling_undersampling_methods:
+                        for i, environment in enumerate(environments):   
+                            current_slice_idx = (
+                                            (performance_df['K'] == K) & 
+                                            (performance_df['Train Ratio'] == train_ratio) &
+                                            (performance_df['Separated Ratio'] == separated_ratio) &
+                                            (performance_df['Test Ratio'] == test_ratio) &
+                                            (performance_df['Data Set'] == ds_key) &
+                                            (performance_df['Split No.'] == split_num) &
+                                            (performance_df['Test to Train Class Distr. Ratio'] == environment[0]) &
+                                            (performance_df['FP cost'] == environment[1]) &
+                                            (performance_df['FN cost'] == environment[2])
+                                        ) 
+
+                            current_df = performance_df.loc[current_slice_idx]
 
 
-                        # Cost of Optimal Point selected by ROCCH Method
-                        current_optimal_df = current_df[
-                                        (current_df['Optimal FPR (ROCCH Method)'] == current_df['FPR']) & 
-                                        (current_df['Optimal TPR (ROCCH Method)'] == current_df['TPR'])
+                            # Cost of Optimal Point selected by ROCCH Method
+                            current_optimal_df = current_df[
+                                            (current_df['Optimal FPR (ROCCH Method)'] == current_df['FPR']) & 
+                                            (current_df['Optimal TPR (ROCCH Method)'] == current_df['TPR'])
+                                        ]
+                            rocchm_optimal_point_cost = current_optimal_df['Cost'].min()
+                                                
+                            # Accuracy maximizing FPR and TPR
+                            accumax_idx = current_df['Accuracy (Separated, T=0.5)'].idxmax()
+                            accumax_optimal = [current_df['FPR'].loc[accumax_idx], current_df['TPR'].loc[accumax_idx]]
+
+                            # Cost of accuracy maximizing FPR and TPR
+                            accumax_optimal_point_cost = current_df['Cost'].loc[accumax_idx]
+
+                            # F1-score maximizing FPR and TPR
+                            fonemax_idx = current_df['F1-score (Separated, T=0.5)'].idxmax()
+                            fonemax_optimal = [current_df['FPR'].loc[fonemax_idx], current_df['TPR'].loc[fonemax_idx]]
+
+                            # Cost of F1-score maximizing FPR and TPR
+                            fonemax_optimal_point_cost = current_df['Cost'].loc[fonemax_idx]
+
+                            # Actual FPR and TPR
+                            actual_min_cost_idx = current_df['Cost'].idxmin()
+                            actual_optimal = [current_df['FPR'].loc[actual_min_cost_idx], current_df['TPR'].loc[actual_min_cost_idx]]
+                            
+                            # Cost of Actual Optimal Point
+                            actual_optimal_point_cost = current_df['Cost'].loc[actual_min_cost_idx]
+
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point
+                            rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
+                            distance_rocchm_actual = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
+                            distance_accumax_actual = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
+                            distance_fonemax_actual = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_optimal))
+
+                            # Test set size, for calculating avg. exp. cost
+                            test_size = current_df['Test Size'].iloc[0]
+                            
+
+                            performance_summarized_df.loc[c] = [
+                                        K,
+                                        current_df['Train Ratio'].iloc[0],
+                                        current_df['Separated Ratio'].iloc[0],
+                                        current_df['Test Ratio'].iloc[0],
+                                        ds_key,
+                                        original_cls_distr[ds_key],
+                                        environment[0],
+                                        original_cls_distr[ds_key] * environment[0],
+                                        environment[1], 
+                                        environment[2],
+                                        os_us[0],
+                                        os_us[1],
+                                        current_df['Avg. Wasserstein Dist.'].iloc[0],
+                                        current_df['Avg. Energy Dist.'].iloc[0],
+                                        current_df['Avg. MMD'].iloc[0],
+                                        current_df['Avg. AUC (COVSHIFT)'].iloc[0],
+                                        current_df['Avg. Phi'].iloc[0],
+                                        current_df['Avg. Cramer-von Mises Criterion'].iloc[0],
+                                        split_num,
+                                        current_df['Optimal FPR (ROCCH Method)'].iloc[0],
+                                        current_df['Optimal TPR (ROCCH Method)'].iloc[0],
+                                        rocchm_optimal_point_cost/test_size,
+                                        accumax_optimal[0],
+                                        accumax_optimal[1],
+                                        accumax_optimal_point_cost/test_size,
+                                        fonemax_optimal[0],
+                                        fonemax_optimal[1],
+                                        fonemax_optimal_point_cost/test_size,
+                                        actual_optimal[0],
+                                        actual_optimal[1],
+                                        actual_optimal_point_cost/test_size,
+                                        distance_rocchm_actual,
+                                        distance_accumax_actual,
+                                        distance_fonemax_actual,
+
+                                        
                                     ]
-                        rocchm_optimal_point_cost = current_optimal_df['Cost'].min()
-                                             
-                        # Accuracy maximizing FPR and TPR
-                        accumax_idx = current_df['Accuracy (Separated, T=0.5)'].idxmax()
-                        accumax_optimal = [current_df['FPR'].loc[accumax_idx], current_df['TPR'].loc[accumax_idx]]
-
-                        # Cost of accuracy maximizing FPR and TPR
-                        accumax_optimal_point_cost = current_df['Cost'].loc[accumax_idx]
-
-                        # F1-score maximizing FPR and TPR
-                        fonemax_idx = current_df['F1-score (Separated, T=0.5)'].idxmax()
-                        fonemax_optimal = [current_df['FPR'].loc[fonemax_idx], current_df['TPR'].loc[fonemax_idx]]
-
-                        # Cost of F1-score maximizing FPR and TPR
-                        fonemax_optimal_point_cost = current_df['Cost'].loc[fonemax_idx]
-
-                        # Actual FPR and TPR
-                        actual_min_cost_idx = current_df['Cost'].idxmin()
-                        actual_optimal = [current_df['FPR'].loc[actual_min_cost_idx], current_df['TPR'].loc[actual_min_cost_idx]]
-                        
-                        # Cost of Actual Optimal Point
-                        actual_optimal_point_cost = current_df['Cost'].loc[actual_min_cost_idx]
-
-                        # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point
-                        rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
-                        distance_rocchm_actual = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_optimal))
-
-                        # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
-                        distance_accumax_actual = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_optimal))
-
-                        # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
-                        distance_fonemax_actual = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_optimal))
-
-                        # Test set size, for calculating avg. exp. cost
-                        test_size = current_df['Test Size'].iloc[0]
-                        
-
-                        performance_summarized_df.loc[c] = [
-                                    K,
-                                    current_df['Train Ratio'].iloc[0],
-                                    current_df['Separated Ratio'].iloc[0],
-                                    current_df['Test Ratio'].iloc[0],
-                                    ds_key,
-                                    original_cls_distr[ds_key],
-                                    environment[0],
-                                    original_cls_distr[ds_key] * environment[0],
-                                    environment[1], 
-                                    environment[2],
-                                    current_df['Avg. Wasserstein Dist.'].iloc[0],
-                                    current_df['Avg. Energy Dist.'].iloc[0],
-                                    current_df['MMD'].iloc[0],
-                                    split_num,
-                                    current_df['Optimal FPR (ROCCH Method)'].iloc[0],
-                                    current_df['Optimal TPR (ROCCH Method)'].iloc[0],
-                                    rocchm_optimal_point_cost/test_size,
-                                    accumax_optimal[0],
-                                    accumax_optimal[1],
-                                    accumax_optimal_point_cost/test_size,
-                                    fonemax_optimal[0],
-                                    fonemax_optimal[1],
-                                    fonemax_optimal_point_cost/test_size,
-                                    actual_optimal[0],
-                                    actual_optimal[1],
-                                    actual_optimal_point_cost/test_size,
-                                    distance_rocchm_actual,
-                                    distance_accumax_actual,
-                                    distance_fonemax_actual,
-
-                                    
-                                ]
-                        c += 1
+                            c += 1
 
 
     performance_summarized_df = performance_summarized_df.round(4)

@@ -10,7 +10,7 @@ ds_plots_metadata = {
         "Test to Train Class Distr. Ratio" : 0.5,
         "FN cost" : 1.0,
     },
-    'k=30_train=0.4_separated=0.2_test=0.4_k=30_test2train=0.75_fnc=1.0': {
+    'k=30_train=0.4_separated=0.2_test=0.4_test2train=0.75_fnc=1.0': {
         "K" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.2,
@@ -18,7 +18,7 @@ ds_plots_metadata = {
         "Test to Train Class Distr. Ratio" : 0.75,
         "FN cost" : 1.0,
     },
-    'k=30_train=0.4_separated=0.2_test=0.4_k=30_test2train=1.25_fnc=1.0': {
+    'k=30_train=0.4_separated=0.2_test=0.4_test2train=1.25_fnc=1.0': {
         "K" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.2,
@@ -26,7 +26,7 @@ ds_plots_metadata = {
         "Test to Train Class Distr. Ratio" : 1.25,
         "FN cost" : 1.0,
     },
-    'k=30_train=0.4_separated=0.2_test=0.4_k=30_test2train=1.0_fnc=1.0': {
+    'k=30_train=0.4_separated=0.2_test=0.4_test2train=1.0_fnc=1.0': {
         "K" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.2,
@@ -43,7 +43,7 @@ ds_plots_metadata = {
         "Test to Train Class Distr. Ratio" : 0.5,
         "FN cost" : 1.0,
     },
-    'k=30_train=0.4_separated=0.4_test=0.2_k=30_test2train=0.75_fnc=1.0': {
+    'k=30_train=0.4_separated=0.4_test=0.2_test2train=0.75_fnc=1.0': {
         "K" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.4,
@@ -51,7 +51,7 @@ ds_plots_metadata = {
         "Test to Train Class Distr. Ratio" : 0.75,
         "FN cost" : 1.0,
     },
-    'k=30_train=0.4_separated=0.4_test=0.2_k=30_test2train=1.25_fnc=1.0': {
+    'k=30_train=0.4_separated=0.4_test=0.2_test2train=1.25_fnc=1.0': {
         "K" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.4,
@@ -59,7 +59,7 @@ ds_plots_metadata = {
         "Test to Train Class Distr. Ratio" : 1.25,
         "FN cost" : 1.0,
     },
-    'k=30_train=0.4_separated=0.4_test=0.2_k=30_test2train=1.0_fnc=1.0': {
+    'k=30_train=0.4_separated=0.4_test=0.2_test2train=1.0_fnc=1.0': {
         "K" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.4,

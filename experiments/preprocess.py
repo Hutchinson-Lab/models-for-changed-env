@@ -8,64 +8,45 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import StandardScaler, normalize
-from scipy.stats import differential_entropy
+from sklearn.preprocessing import StandardScaler, scale
+from sklearn.svm import SVC
 
-from causallearn.search.ConstraintBased.PC import pc
-from causallearn.utils.GraphUtils import GraphUtils
 
 
 ds_main_dir = './experiments/datasets/'
 ds_raw_dir = './experiments/datasets/raw/'
 ds_preprocessed_dir = './experiments/datasets/preprocessed/'
 output_table_main_dir = './experiments/tables/'
-output_table_causal_dir = './experiments/tables/causal_graph_adj_mat/'
 output_plot_main_dir = './experiments/plots/'
-output_plot_causal_dir = './experiments/plots/causal_graphs/'
-
-def analyze_causality(X, y, ds_key, graphviz=False):
-
-    if not os.path.isdir(output_table_causal_dir):
-        os.makedirs(output_table_causal_dir)
-
-    if not os.path.isdir(output_plot_main_dir):
-        os.makedirs(output_plot_main_dir)
-    
 
 
-    cg = pc(np.hstack((X,y[:, np.newaxis])), indep_test='gsq', show_progress=False)
-    
+def class_distance_ratio (X, y):
 
-    np.savetxt(f'{output_table_causal_dir}{ds_key}.csv', cg.G.graph, delimiter=',')
+    X = scale(X)
+    svc = SVC(kernel='linear').fit(X, y)
 
-    if graphviz:
-
-        if not os.path.isdir(output_plot_causal_dir):
-            os.makedirs(output_plot_causal_dir)
-        
-        pyd_train = GraphUtils.to_pydot(cg.G)
-        pyd_train.write_png(f'{output_plot_causal_dir}{ds_key}.png')
-
-    n_nodes = cg.G.graph.shape[0]
-    cgcs = abs(cg.G.graph).sum()/n_nodes
-
-    return cgcs
-
-def class_entropy_ratio (X, y):
-
-    X = normalize(X, norm='max')
     pos_idx = np.transpose((y==1).nonzero()).flatten()
     neg_idx = np.transpose((y==0).nonzero()).flatten()
 
-    # print(pos_idx.shape, neg_idx.shape)
-    # print(differential_entropy(X[pos_idx,:1]))
-    # print(differential_entropy(X[neg_idx,:1]))
-    # print()
-    # print(X[neg_idx, :])
-    # entropy_ratio = (np.sum(entropy(X[pos_idx, :]))/pos_idx.shape[0])/(np.sum(entropy(X[neg_idx, :]))/neg_idx.shape[0])
+    pos_avg_dist = 0
+    for idx in pos_idx:
+        y_t = svc.decision_function(X[idx,:][np.newaxis,:])
+        w_norm = np.linalg.norm(svc.coef_)
+        dist = np.abs(y_t / w_norm)[0]
+        pos_avg_dist += dist
+    pos_avg_dist /= pos_idx.size
 
-    entropy_ratio=0
-    return entropy_ratio
+    neg_avg_dist = 0
+    for idx in neg_idx:
+        y_t = svc.decision_function(X[idx,:][np.newaxis,:])
+        w_norm = np.linalg.norm(svc.coef_)
+        dist = np.abs(y_t / w_norm)[0]
+        # print(dist)
+        neg_avg_dist += dist
+    neg_avg_dist /= neg_idx.size
+
+    ratio = neg_avg_dist/pos_avg_dist
+    return ratio
 
 
 def download_datasets (ds_meta):
@@ -94,7 +75,7 @@ def download_datasets (ds_meta):
         # print(c)
 
 
-def preprocess_datasets (ds_meta, graphviz=False):
+def preprocess_datasets (ds_meta):
     
     print("Preprocessing datasets:")
     
@@ -104,7 +85,7 @@ def preprocess_datasets (ds_meta, graphviz=False):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Class Balance', 'Causal Graph Connectivity Score'))
+    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Class Balance', 'Class Distance Ratio'))
     i = 0
     
     for c in (pbar := tqdm.tqdm(ds_meta.keys())):
@@ -151,13 +132,10 @@ def preprocess_datasets (ds_meta, graphviz=False):
         np.save(f'{ds_preprocessed_dir}{c}_X.npy', X)
         np.save(f'{ds_preprocessed_dir}{c}_y.npy', y)
 
-        # cgcs = analyze_causality(X, y, c, graphviz=graphviz)
-        cgcs = 1
-
-        entr_ratio = class_entropy_ratio(X,y)
+        cls_dist_ratio = class_distance_ratio(X,y)
         # print(entr_ratio)
 
-        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, class_distr, cgcs]
+        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, class_distr, cls_dist_ratio]
         i+=1
 
     dataset_descriptions = dataset_descriptions.round(4)
