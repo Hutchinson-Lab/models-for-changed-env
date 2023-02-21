@@ -84,17 +84,17 @@ random_state = 0
 # For temporary experimentation only
 # ----------------------------------------------------------------------------------------
 
-# K_range = [3]
+K_range = [3]
 
-# split_ratio_range = [ 
-#     [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
-# ]
-# environments = [
+split_ratio_range = [ 
+    [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
+]
+environments = [
 
-#     [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
-#     [1.25, 1.0, 1.0], # halved class distribution, uniform cost distribution
+    [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
+    [1.25, 1.0, 1.0], # halved class distribution, uniform cost distribution
    
-# ]
+]
 # ----------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------
 
@@ -157,7 +157,7 @@ def average_energy_distance(X_1, X_2):
     return avg_w_dist
 
 
-def average_auc_phi (X_1, X_2, repeats=5, test_ratio=0.2, random_state=0):
+def average_auc_phi (X_1, X_2, repeats=3, test_ratio=0.2, random_state=0):
     
     min_samples = min(X_1.shape[0], X_2.shape[0])
     X_1, X_2 = X_1[:min_samples, :], X_2[:min_samples, :]
@@ -326,8 +326,12 @@ def run_experiments(ds_meta):
 
                             avg_w_dist = average_wasserstein_distance(X_train, X_test_env)
                             avg_e_dist = average_energy_distance(X_train, X_test_env)
+                            
+
                             avg_mmd = mmd_linear(X_train, X_test_env)/X_train.shape[1]
                             avg_auc, avg_phi = average_auc_phi(X_train, X_test_env)
+                            
+                            
                             avg_cvmc = average_cramervonmises(X_train, X_test_env)
 
                             
