@@ -3,9 +3,16 @@
 
 /.vscode/
 
-/experiments/datasets/
-/experiments/tables/
-/experiments/plots/all_varying/
-/experiments/plots/all_dscomp/
-/experiments/plots/all_dsdist/
+
+/experiments/Synthetic/datasets/
+/experiments/Synthetic/tables/
+/experiments/Synthetic/plots/all_varying/
+/experiments/Synthetic/plots/all_dscomp/
+/experiments/Synthetic/plots/all_dsdist/
+
+/experiments/UCI_MLR/datasets/
+/experiments/UCI_MLR/tables/
+/experiments/UCI_MLR/plots/all_varying/
+/experiments/UCI_MLR/plots/all_dscomp/
+/experiments/UCI_MLR/plots/all_dsdist/
 

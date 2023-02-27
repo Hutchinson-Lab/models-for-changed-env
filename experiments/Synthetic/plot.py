@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 
-from plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
+from experiments.plot_utils.plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
 
 output_table_dir = './experiments/tables/'
 output_plot_main_dir = './experiments/plots/'
