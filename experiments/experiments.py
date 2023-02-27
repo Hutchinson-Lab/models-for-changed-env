@@ -17,6 +17,7 @@ from sklearn.preprocessing import StandardScaler
 # from datasets import ds_meta
 from preprocess import split_data
 
+from mmd import mmd_linear
 
 import sys, os
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rocchmethod')))
@@ -25,8 +26,8 @@ from rocchmethod import rocch_method, classifiers_on_rocch, impose_class_distr, 
 
 # from plot_descriptions import selected_causal_graphs
 
-# Experiment over different values of K (No of repeats/splits)
-K_range = [3, 5, 10, 20, 30] 
+# K (No of repeats/splits)
+K_range = [30] 
 
 # split_ratios[i] = [train_ratio, separated_ratio, test_ratio]
 split_ratio_range = [ 
@@ -84,17 +85,17 @@ random_state = 0
 # For temporary experimentation only
 # ----------------------------------------------------------------------------------------
 
-K_range = [3]
+# K_range = [3]
 
-split_ratio_range = [ 
-    [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
-]
-environments = [
+# split_ratio_range = [ 
+#     [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
+# ]
+# environments = [
 
-    [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
-    [1.25, 1.0, 1.0], # halved class distribution, uniform cost distribution
+#     [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
+#     [1.25, 1.0, 1.0], # halved class distribution, uniform cost distribution
    
-]
+# ]
 # ----------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------
 
@@ -107,29 +108,6 @@ output_table_dir = './experiments/tables/'
 
 
 
-"""
-Written by Jindong Wang
-Retrieved from https://github.com/jindongwang/transferlearning
-transferlearning/code/distance/mmd_numpy_sklearn.py 
-"""
-
-def mmd_linear(X, Y):
-    """MMD using linear kernel (i.e., k(x,y) = <x,y>)
-    Note that this is not the original linear MMD, only the reformulated and faster version.
-    The original version is:
-        def mmd_linear(X, Y):
-            XX = np.dot(X, X.T)
-            YY = np.dot(Y, Y.T)
-            XY = np.dot(X, Y.T)
-            return XX.mean() + YY.mean() - 2 * XY.mean()
-    Arguments:
-        X {[n_sample1, dim]} -- [X matrix]
-        Y {[n_sample2, dim]} -- [Y matrix]
-    Returns:
-        [scalar] -- [MMD value]
-    """
-    delta = X.mean(0) - Y.mean(0)
-    return delta.dot(delta.T)
 
 
 def average_wasserstein_distance(X_1, X_2):
@@ -181,7 +159,7 @@ def average_auc_phi (X_1, X_2, repeats=3, test_ratio=0.2, random_state=0):
         X_train = scaler.transform(X_train)
         X_test = scaler.transform(X_test)
 
-        model = RandomForestClassifier(random_state=0)
+        model = RandomForestClassifier(random_state=0, n_jobs=-1)
         model.fit(X_train, y_train)
         y_score = model.predict_proba(X_test)[:,1]
         y_hat = model.predict(X_test)
@@ -456,7 +434,10 @@ def run_experiments(ds_meta):
                                             (performance_df['Split No.'] == split_num) &
                                             (performance_df['Test to Train Class Distr. Ratio'] == environment[0]) &
                                             (performance_df['FP cost'] == environment[1]) &
-                                            (performance_df['FN cost'] == environment[2])
+                                            (performance_df['FN cost'] == environment[2]) &
+                                            (performance_df['Oversampling Method'] == os_us[0]) &
+                                            (performance_df['Undersampling Method'] == os_us[1])
+
                                         ) 
 
                             current_df = performance_df.loc[current_slice_idx]
