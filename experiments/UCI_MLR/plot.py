@@ -6,20 +6,20 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 
-from experiments.plot_utils.plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
+from .plot_utils.plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
 
-output_table_dir = './experiments/tables/'
-output_plot_main_dir = './experiments/plots/'
-output_plot_dscomp_dir = './experiments/plots/all_dscomp/'
-output_plot_dsdist_dir = './experiments/plots/all_dsdist/'
-output_plot_dsdist_w_dir = './experiments/plots/all_dsdist/wasserstein/'
-output_plot_dsdist_e_dir = './experiments/plots/all_dsdist/energy/'
-output_plot_dsdist_mmd_dir = './experiments/plots/all_dsdist/mmd/'
-output_plot_dsdist_a_dir = './experiments/plots/all_dsdist/auc/'
-output_plot_dsdist_mcc_dir = './experiments/plots/all_dsdist/mcc/'
-output_plot_dsdist_c_dir = './experiments/plots/all_dsdist/cramervonmises/'
+output_table_dir = './experiments/UCI_MLR/tables/'
+output_plot_main_dir = './experiments/UCI_MLR/plots/'
+output_plot_dscomp_dir = './experiments/UCI_MLR/plots/all_dscomp/'
+output_plot_dsdist_dir = './experiments/UCI_MLR/plots/all_dsdist/'
+output_plot_dsdist_w_dir = './experiments/UCI_MLR/plots/all_dsdist/wasserstein/'
+output_plot_dsdist_e_dir = './experiments/UCI_MLR/plots/all_dsdist/energy/'
+output_plot_dsdist_mmd_dir = './experiments/UCI_MLR/plots/all_dsdist/mmd/'
+output_plot_dsdist_a_dir = './experiments/UCI_MLR/plots/all_dsdist/auc/'
+output_plot_dsdist_mcc_dir = './experiments/UCI_MLR/plots/all_dsdist/mcc/'
+output_plot_dsdist_c_dir = './experiments/UCI_MLR/plots/all_dsdist/cramervonmises/'
 
-output_plot_varying_dir = './experiments/plots/all_varying/'
+output_plot_varying_dir = './experiments/UCI_MLR/plots/all_varying/'
 
 
 ds_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', 'P', '*', 'h', 'H', 'X','d', 'D']

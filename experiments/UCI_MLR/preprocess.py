@@ -8,45 +8,20 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import StandardScaler, scale
-from sklearn.svm import SVC
+from sklearn.preprocessing import StandardScaler
 
 
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
-ds_main_dir = './experiments/datasets/'
-ds_raw_dir = './experiments/datasets/raw/'
-ds_preprocessed_dir = './experiments/datasets/preprocessed/'
-output_table_main_dir = './experiments/tables/'
-output_plot_main_dir = './experiments/plots/'
+from rocchmethod.class_utils import class_distance_ratio
 
 
-def class_distance_ratio (X, y):
-
-    X = scale(X)
-    svc = SVC(kernel='linear').fit(X, y)
-
-    pos_idx = np.transpose((y==1).nonzero()).flatten()
-    neg_idx = np.transpose((y==0).nonzero()).flatten()
-
-    pos_avg_dist = 0
-    for idx in pos_idx:
-        y_t = svc.decision_function(X[idx,:][np.newaxis,:])
-        w_norm = np.linalg.norm(svc.coef_)
-        dist = np.abs(y_t / w_norm)[0]
-        pos_avg_dist += dist
-    pos_avg_dist /= pos_idx.size
-
-    neg_avg_dist = 0
-    for idx in neg_idx:
-        y_t = svc.decision_function(X[idx,:][np.newaxis,:])
-        w_norm = np.linalg.norm(svc.coef_)
-        dist = np.abs(y_t / w_norm)[0]
-        # print(dist)
-        neg_avg_dist += dist
-    neg_avg_dist /= neg_idx.size
-
-    ratio = neg_avg_dist/pos_avg_dist
-    return ratio
+ds_main_dir = './experiments/UCI_MLR/datasets/'
+ds_raw_dir = './experiments/UCI_MLR/datasets/raw/'
+ds_preprocessed_dir = './experiments/UCI_MLR/datasets/preprocessed/'
+output_table_main_dir = './experiments/UCI_MLR/tables/'
+output_plot_main_dir = './experiments/UCI_MLR/plots/'
 
 
 def download_datasets (ds_meta):
@@ -85,7 +60,7 @@ def preprocess_datasets (ds_meta):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Class Balance', 'Class Distance Ratio'))
+    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Class Balance', 'Class Distance Ratio (linear)', 'Class Distance Ratio (poly)', 'Class Distance Ratio (rbf)', 'Class Distance Ratio (sigmoid)'))
     i = 0
     
     for c in (pbar := tqdm.tqdm(ds_meta.keys())):
@@ -132,10 +107,10 @@ def preprocess_datasets (ds_meta):
         np.save(f'{ds_preprocessed_dir}{c}_X.npy', X)
         np.save(f'{ds_preprocessed_dir}{c}_y.npy', y)
 
-        cls_dist_ratio = class_distance_ratio(X,y)
+        cls_dist_ratios = class_distance_ratio(X,y)
         # print(entr_ratio)
 
-        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, class_distr, cls_dist_ratio]
+        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, class_distr, cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
         i+=1
 
     dataset_descriptions = dataset_descriptions.round(4)

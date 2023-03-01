@@ -9,20 +9,18 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, f1_score, matthews_corrcoef, roc_auc_score
-from scipy.stats import wasserstein_distance, energy_distance, cramervonmises_2samp
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, f1_score
 
 # from datasets import ds_meta
-from preprocess import split_data
+from .preprocess import split_data
 
-from mmd import mmd_linear
 
 import sys, os
-sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'rocchmethod')))
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
-from rocchmethod import rocch_method, classifiers_on_rocch, impose_class_distr, unique_cls_distr, expected_cost
+from rocchmethod.covariate_shift_measurement import average_wasserstein_distance, average_energy_distance, average_auc_phi, average_cramervonmises, mmd_linear
+from rocchmethod.class_utils import expected_cost, unique_cls_distr, impose_class_distr
+from rocchmethod.rocchmethod import rocch_method, classifiers_on_rocch
 
 # from plot_descriptions import selected_causal_graphs
 
@@ -104,90 +102,11 @@ random_state = 0
 environments_cls_distr = unique_cls_distr(environments)
 
 
-output_table_dir = './experiments/tables/'
+output_table_dir = './experiments/UCI_MLR/tables/'
 
 
 
 
-
-def average_wasserstein_distance(X_1, X_2):
-    
-    n_features = X_1.shape[1]
-
-    avg_w_dist = 0
-    for i in range(n_features):
-        avg_w_dist += wasserstein_distance(X_1[:,i], X_2[:,i])
-    
-    avg_w_dist /= n_features
-
-    return avg_w_dist 
-
-def average_energy_distance(X_1, X_2):
-    
-    n_features = X_1.shape[1]
-
-    avg_w_dist = 0
-    for i in range(n_features):
-        avg_w_dist += energy_distance(X_1[:,i], X_2[:,i])
-    
-    avg_w_dist /= n_features
-
-    return avg_w_dist
-
-
-def average_auc_phi (X_1, X_2, repeats=3, test_ratio=0.2, random_state=0):
-    
-    min_samples = min(X_1.shape[0], X_2.shape[0])
-    X_1, X_2 = X_1[:min_samples, :], X_2[:min_samples, :]
-    X_1 = np.hstack((X_1, np.zeros((min_samples,1), dtype=np.int8)))
-    X_2 = np.hstack((X_2, np.ones((min_samples,1), dtype=np.int8)))
-    data = np.vstack((X_1,X_2))
-    X = data[:, :-1]
-    y = data[:, -1]
-
-    auc_avg = 0
-    phi_avg = 0
-
-    sss = StratifiedShuffleSplit(n_splits=repeats, test_size=test_ratio, random_state=random_state)
-        
-    for (train_index, test_index) in sss.split(X, y):
-        # Split into training and testing data
-        X_train, X_test, y_train, y_test = X[train_index].copy(), X[test_index].copy(), y[train_index].copy(), y[test_index].copy()
-        
-        # Scale features
-        scaler = StandardScaler().fit(X_train)
-        X_train = scaler.transform(X_train)
-        X_test = scaler.transform(X_test)
-
-        model = RandomForestClassifier(random_state=0, n_jobs=-1)
-        model.fit(X_train, y_train)
-        y_score = model.predict_proba(X_test)[:,1]
-        y_hat = model.predict(X_test)
-
-        phi_avg += matthews_corrcoef(y_test, y_hat)
-        auc_avg += roc_auc_score(y_test, y_score)
-        
-    auc_avg /= repeats
-    phi_avg /= repeats
-
-    return auc_avg, phi_avg
-
-# def kldiv (X_1, X_2):
-    
-#     return 
-
-
-def average_cramervonmises (X_1, X_2):
-    n_features = X_1.shape[1]
-
-    avg_cramervonmises_criterion = 0
-    for i in range(n_features):
-        res = cramervonmises_2samp(X_1[:,i], X_2[:,i])
-        avg_cramervonmises_criterion += res.statistic
-    
-    avg_cramervonmises_criterion /= n_features
-
-    return avg_cramervonmises_criterion 
 
 def run_experiments(ds_meta):
     '''
@@ -235,7 +154,7 @@ def run_experiments(ds_meta):
     )
     c = 0
 
-    print("\nExperiment: Evaluate practicality and applicability of the ROC Convex Hull Method.")
+    
 
 
     for K in K_range:
@@ -530,7 +449,7 @@ def run_experiments(ds_meta):
     performance_summarized_df.to_csv(f'{output_table_dir}performance_summarized.csv')
 
 
-    print("Experiment completed.")
+    print("Experiments on UCI Machine Learning Repository Data completed.")
 
 
 

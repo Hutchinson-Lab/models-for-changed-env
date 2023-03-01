@@ -3,146 +3,129 @@
 '''
 
 
-import os, io, zipfile, requests, tqdm
+import os, tqdm
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import StandardScaler, scale
-from sklearn.svm import SVC
+
+import sys
+sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
+
+from rocchmethod.class_utils import class_distance_ratio
 
 
-
-ds_main_dir = './experiments/datasets/'
-ds_raw_dir = './experiments/datasets/raw/'
-ds_preprocessed_dir = './experiments/datasets/preprocessed/'
-output_table_main_dir = './experiments/tables/'
-output_plot_main_dir = './experiments/plots/'
+ds_main_dir = './experiments/Synthetic/datasets/'
+output_table_main_dir = './experiments/Synthetic/tables/'
+output_plot_main_dir = './experiments/Synthetic/plots/'
 
 
-def class_distance_ratio (X, y):
-
-    X = scale(X)
-    svc = SVC(kernel='linear').fit(X, y)
-
-    pos_idx = np.transpose((y==1).nonzero()).flatten()
-    neg_idx = np.transpose((y==0).nonzero()).flatten()
-
-    pos_avg_dist = 0
-    for idx in pos_idx:
-        y_t = svc.decision_function(X[idx,:][np.newaxis,:])
-        w_norm = np.linalg.norm(svc.coef_)
-        dist = np.abs(y_t / w_norm)[0]
-        pos_avg_dist += dist
-    pos_avg_dist /= pos_idx.size
-
-    neg_avg_dist = 0
-    for idx in neg_idx:
-        y_t = svc.decision_function(X[idx,:][np.newaxis,:])
-        w_norm = np.linalg.norm(svc.coef_)
-        dist = np.abs(y_t / w_norm)[0]
-        # print(dist)
-        neg_avg_dist += dist
-    neg_avg_dist /= neg_idx.size
-
-    ratio = neg_avg_dist/pos_avg_dist
-    return ratio
-
-
-def download_datasets (ds_meta):
+def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     
-    print("\nDownloading datasets:")
+    print("\nGenerating datasets:")
     
     if not os.path.isdir(ds_main_dir):
         os.makedirs(ds_main_dir)
-
-    if not os.path.isdir(ds_raw_dir):
-        os.makedirs(ds_raw_dir)
-   
-    for c in (pbar := tqdm.tqdm(ds_meta.keys())):
-        pbar.set_description(f'Downloading "{c}"')
-        r = requests.get(ds_meta[c]["url"])
-        file_content = r.content
-
-        if ds_meta[c]["url"].endswith(".zip"):
-            z = zipfile.ZipFile(io.BytesIO(r.content), 'r')
-            file_content = z.open(ds_meta[c]["local-path"]).read()
-
-        with open(f'{ds_raw_dir}{ds_meta[c]["filename"]}', 'wb') as f:
-            f.write(file_content)
-        
-    print("Downloads completed.")
-        # print(c)
-
-
-def preprocess_datasets (ds_meta):
-    
-    print("Preprocessing datasets:")
-    
-    if not os.path.exists(ds_preprocessed_dir):
-        os.makedirs(ds_preprocessed_dir)
     
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Class Balance', 'Class Distance Ratio'))
+    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances', 'Features', 'Categorical Features', 'Class Balance', 'Class Distance Ratio (linear)', 'Class Distance Ratio (poly)', 'Class Distance Ratio (rbf)', 'Class Distance Ratio (sigmoid)'))
     i = 0
     
+
+    
+
     for c in (pbar := tqdm.tqdm(ds_meta.keys())):
+        pbar.set_description(f'Generating "{c}"')
 
-        pbar.set_description(f'Preprocessing "{c}"')
+        np.random.seed(0)
 
-        data = None
-        if (ds_meta[c]["filetype"]==".xlsx"):
-            data = pd.read_excel(f'{ds_raw_dir}{ds_meta[c]["filename"]}', 
-                                na_values=ds_meta[c]["missing-data-identifier"])
+        n_cont_features = ds_meta[c]["n_features"] - ds_meta[c]["n_cat_features"]
+
+        cont_features = None
+        cat_features = None
+
+        means = []
+        if (n_cont_features != 0):
+            cont_features = np.random.normal(size=(ds_meta[c]["n_instances"], n_cont_features))
+            means.extend([0] * n_cont_features)
+            if (n_cont_features == 1):
+                cont_features = cont_features[:,np.newaxis]
             
-        elif (ds_meta[c]["filetype"]==".dat"):
-            data = pd.read_csv( f'{ds_raw_dir}{ds_meta[c]["filename"]}', 
-                                na_values=ds_meta[c]["missing-data-identifier"],
-                                skipinitialspace=True,
-                                delim_whitespace=True)
+
+        if (ds_meta[c]["n_cat_features"] != 0):
+            cat_features = np.random.binomial(n=1, p=0.5, size=(ds_meta[c]["n_instances"], ds_meta[c]["n_cat_features"]))
+            means.extend([0.5] * ds_meta[c]["n_cat_features"])
+            if (ds_meta[c]["n_cat_features"] == 1):
+                cat_features = cat_features[:,np.newaxis]
+
+        X = None
+        if (n_cont_features == 0):
+            X = cat_features
+        elif (ds_meta[c]["n_cat_features"] == 0):
+            X = cont_features
         else:
-            data = pd.read_csv( f'{ds_raw_dir}{ds_meta[c]["filename"]}', 
-                                delimiter=ds_meta[c]["delimiter"],
-                                na_values=ds_meta[c]["missing-data-identifier"],
-                                skipinitialspace=True)
+            X = np.hstack((cont_features, cat_features))
+
+        # print(ds_meta[c]["class_distribution"])
+
+                
+        intercept = np.log(ds_meta[c]["class_distribution"]/(1-ds_meta[c]["class_distribution"])) - sum(means)
+
+        i_ext = 0.1
+        if (ds_meta[c]["class_distribution"] == 0.5):
+            intercept += i_ext
+        elif (ds_meta[c]["class_distribution"] == 0.25):
+            intercept -= 6 * i_ext
+        elif (ds_meta[c]["class_distribution"] == 0.75):
+            intercept += 6 * i_ext
         
-        instances_num = data.shape[0]
-        data = data.dropna()
-        nonmissing_instances_num = data.shape[0]
-        features_num = data.shape[1] - 1
-        categorical_feature_num = len(ds_meta[c]["categorical-feature-column-position"])
+        print(ds_meta[c]["class_distribution"])
+        # print(intercept, means)
+        z = intercept + theta[0]*X[:,0][:,np.newaxis] + theta[1]*X[:,1][:,np.newaxis] + theta[2]*X[:,2][:,np.newaxis] + theta[3]*X[:,3][:,np.newaxis]
 
-        data_x = data[data.columns[ds_meta[c]["feature-column-position"]]]
+        p = 1/(1+np.exp(-z))
+
+        y = np.random.binomial(n=1, p=p, size=(ds_meta[c]["n_instances"],1)).ravel()
+
+        print(X.sum())
+        if(ds_meta[c]["noise_added"] == "Yes"):
+            noisy_rate = 0.2
+            neg_idx = (y == 0).nonzero()[0]
+            noisy_inst = int(noisy_rate * neg_idx.size)
+            sel_neg_idx =   np.random.choice(neg_idx, noisy_inst,replace=False)  
+
+            for j, m in enumerate(means):
+  
+                if (m == 0): # Normal distribution
+                    
+                    e = np.random.normal(size=sel_neg_idx.size)
+                    X[sel_neg_idx, j] += e
+
+                elif (m == 0.5): # Bernoulli distribution
+                
+
+                    X[sel_neg_idx, j] = np.where(X[sel_neg_idx, j]==0, 1, 0)         
+
+        print(X.sum())
+        print((y == 1).nonzero()[0].size,(y == 0).nonzero()[0].size)
         
-        data_x = pd.get_dummies(data_x, columns = data.columns[ds_meta[c]["categorical-feature-column-position"]])
+        np.save(f'{ds_main_dir}{c}_X.npy', X)
+        np.save(f'{ds_main_dir}{c}_y.npy', y)
 
-        data_y = data[data.columns[ds_meta[c]["label-column-position"]]]
+        cls_dist_ratios = class_distance_ratio(X,y)
         
-        data_y = data_y.replace(to_replace=ds_meta[c]["positive-label"], value=1).replace(to_replace=ds_meta[c]["negative-label"], value=0)
-     
-        class_distr = data_y.sum()/data_y.shape[0]
-
-        
-        X = data_x.values
-        y = data_y.values.astype('int')
-
-        # Save datasets
-        np.save(f'{ds_preprocessed_dir}{c}_X.npy', X)
-        np.save(f'{ds_preprocessed_dir}{c}_y.npy', y)
-
-        cls_dist_ratio = class_distance_ratio(X,y)
-        # print(entr_ratio)
-
-        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, class_distr, cls_dist_ratio]
+        dataset_descriptions.loc[i] = [c, ds_meta[c]["n_instances"], ds_meta[c]["n_features"], ds_meta[c]["n_cat_features"], ds_meta[c]["class_distribution"], cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
         i+=1
 
     dataset_descriptions = dataset_descriptions.round(4)
     dataset_descriptions.index += 1 
     dataset_descriptions.to_csv(f'{output_table_main_dir}dataset_descriptons.csv')
 
-    print("Preprocessing completed.")
+        
+    print("Data generation completed.")
+
 
 
 def split_data (ds_meta, K, train_ratio, separated_ratio, test_ratio, random_state):
@@ -151,8 +134,8 @@ def split_data (ds_meta, K, train_ratio, separated_ratio, test_ratio, random_sta
 
     for c in ds_meta:
 
-        X = np.load(f'{ds_preprocessed_dir}{c}_X.npy')
-        y = np.load(f'{ds_preprocessed_dir}{c}_y.npy')
+        X = np.load(f'{ds_main_dir}{c}_X.npy')
+        y = np.load(f'{ds_main_dir}{c}_y.npy')
         
         sss = StratifiedShuffleSplit(n_splits=K, test_size=test_ratio, random_state=random_state)
         
@@ -168,13 +151,6 @@ def split_data (ds_meta, K, train_ratio, separated_ratio, test_ratio, random_sta
                 # Split training data into training and calibration data
                 X_train, X_separated, y_train, y_separated = train_test_split(X_train, y_train, stratify=y_train, test_size=(separated_ratio/(separated_ratio+train_ratio)), random_state=random_state)
 
-            # Scale features
-            scaler = StandardScaler().fit(X_train)
-            X_train = scaler.transform(X_train)
-            X_test = scaler.transform(X_test)
-            
-            if (separated_ratio):
-                X_separated = scaler.transform(X_separated)
             
             splitted_datasets[c].append((X_train, X_test, X_separated, y_train, y_test, y_separated))
 
