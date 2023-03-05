@@ -2,7 +2,7 @@
 from .datasets import ds_meta
 from .preprocess import generate_datasets
 from .experiments import run_experiments
-# from .plot import plot_results
+from .plot import plot_results
 
 def run_Synthetic():
     

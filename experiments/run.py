@@ -9,4 +9,4 @@ from UCI_MLR.run_UCI_MLR import run_UCI_MLR
 run_Synthetic()
 
 # Experiments on UCI Machine Learning Repository Data
-run_UCI_MLR()
+# run_UCI_MLR()

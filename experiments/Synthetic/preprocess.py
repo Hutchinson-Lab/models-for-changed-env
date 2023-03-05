@@ -30,7 +30,7 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances', 'Features', 'Categorical Features', 'Class Balance', 'Class Distance Ratio (linear)', 'Class Distance Ratio (poly)', 'Class Distance Ratio (rbf)', 'Class Distance Ratio (sigmoid)'))
+    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance', 'Added Noise', 'Class Distance Ratio (linear)', 'Class Distance Ratio (poly)', 'Class Distance Ratio (rbf)', 'Class Distance Ratio (sigmoid)'))
     i = 0
     
 
@@ -81,7 +81,6 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
         elif (ds_meta[c]["class_distribution"] == 0.75):
             intercept += 6 * i_ext
         
-        print(ds_meta[c]["class_distribution"])
         # print(intercept, means)
         z = intercept + theta[0]*X[:,0][:,np.newaxis] + theta[1]*X[:,1][:,np.newaxis] + theta[2]*X[:,2][:,np.newaxis] + theta[3]*X[:,3][:,np.newaxis]
 
@@ -89,7 +88,6 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
 
         y = np.random.binomial(n=1, p=p, size=(ds_meta[c]["n_instances"],1)).ravel()
 
-        print(X.sum())
         if(ds_meta[c]["noise_added"] == "Yes"):
             noisy_rate = 0.2
             neg_idx = (y == 0).nonzero()[0]
@@ -108,15 +106,13 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
 
                     X[sel_neg_idx, j] = np.where(X[sel_neg_idx, j]==0, 1, 0)         
 
-        print(X.sum())
-        print((y == 1).nonzero()[0].size,(y == 0).nonzero()[0].size)
         
         np.save(f'{ds_main_dir}{c}_X.npy', X)
         np.save(f'{ds_main_dir}{c}_y.npy', y)
 
         cls_dist_ratios = class_distance_ratio(X,y)
         
-        dataset_descriptions.loc[i] = [c, ds_meta[c]["n_instances"], ds_meta[c]["n_features"], ds_meta[c]["n_cat_features"], ds_meta[c]["class_distribution"], cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
+        dataset_descriptions.loc[i] = [c, ds_meta[c]["n_instances"], ds_meta[c]["n_features"], ds_meta[c]["n_cat_features"], X.shape[1], ds_meta[c]["class_distribution"], ds_meta[c]["noise_added"], cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
         i+=1
 
     dataset_descriptions = dataset_descriptions.round(4)

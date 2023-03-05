@@ -105,7 +105,7 @@ ds_meta = {
 		"class_distribution" : 0.5,
         "noise_added" : "Yes",
 	},
-    "data-set-11": 
+	"data-set-11": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -113,17 +113,12 @@ ds_meta = {
 		"class_distribution" : 0.25,
         "noise_added" : "Yes",
 	},
-    
 	"data-set-12": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
-		"n_cat_features" : 4,
-		"class_distribution" : 0.5,
+		"n_cat_features" : 2,
+		"class_distribution" : 0.75,
         "noise_added" : "Yes",
-	},
-    
-	
-    
-	
+	}	
 }
