@@ -11,7 +11,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
-# from datasets import ds_meta
 from .preprocess import split_data
 
 
@@ -175,15 +174,7 @@ def run_experiments(ds_meta):
                 for split_num in range(K):
 
                     X_train, X_test, X_separated, y_train, y_test, y_separated = preprocessed_ds[ds_key][split_num]
-                    
-                     
-
-                    # print('Split No.',split_num,
-                    #     'train_ratio',train_ratio,'train_size',y_train.shape[0],
-                    #     'separated_ratio',separated_ratio,'separated_size',y_separated.shape[0],
-                    #     'test_ratio',test_ratio,'test_size',y_test.shape[0]
-                    # )
-
+                   
                     # Train classifiers and predict on (existing) test set
                     models = { 
                         # Default parameters used for models from sklearn 1.2.0

@@ -26,7 +26,7 @@ output_plot_main_dir = './experiments/UCI_MLR/plots/'
 
 def download_datasets (ds_meta):
     
-    print("\nDownloading datasets:")
+    print("\nDownloading data sets:")
     
     if not os.path.isdir(ds_main_dir):
         os.makedirs(ds_main_dir)
@@ -52,7 +52,7 @@ def download_datasets (ds_meta):
 
 def preprocess_datasets (ds_meta):
     
-    print("Preprocessing datasets:")
+    print("Preprocessing data sets:")
     
     if not os.path.exists(ds_preprocessed_dir):
         os.makedirs(ds_preprocessed_dir)
@@ -108,8 +108,7 @@ def preprocess_datasets (ds_meta):
         np.save(f'{ds_preprocessed_dir}{c}_y.npy', y)
 
         cls_dist_ratios = class_distance_ratio(X,y)
-        # print(entr_ratio)
-
+        
         dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, X.shape[1], class_distr, cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
         i+=1
 

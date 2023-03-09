@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 
-from .plot_utils.plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
+from .plot_descriptions import varying_plots_metadata, selected_varying_plots, ds_plots_metadata, dsdist_plots_metadata
 
 output_table_dir = './experiments/UCI_MLR/tables/'
 output_plot_main_dir = './experiments/UCI_MLR/plots/'
@@ -20,7 +20,6 @@ output_plot_dsdist_mmd_dir = './experiments/UCI_MLR/plots/all_dsdist/mmd/'
 output_plot_dsdist_a_dir = './experiments/UCI_MLR/plots/all_dsdist/auc/'
 output_plot_dsdist_mcc_dir = './experiments/UCI_MLR/plots/all_dsdist/mcc/'
 output_plot_dsdist_c_dir = './experiments/UCI_MLR/plots/all_dsdist/cramervonmises/'
-
 output_plot_varying_dir = './experiments/UCI_MLR/plots/all_varying/'
 
 
@@ -1319,26 +1318,26 @@ def plot_results():
 
 
 
-    # # Effects of varying settings/configurations
+    # Effects of varying settings/configurations
     
-    # import itertools
-    # varying_plots_metadata_1 = dict(itertools.islice(varying_plots_metadata.items(), 10))
+    import itertools
+    varying_plots_metadata_1 = dict(itertools.islice(varying_plots_metadata.items(), 10))
 
-    # for k in varying_plots_metadata_1:
+    for k in varying_plots_metadata_1:
 
-    #     col_names = list(varying_plots_metadata[k].keys())[1:-1]
+        col_names = list(varying_plots_metadata[k].keys())[1:-1]
  
-    #     current_slice_idx = True
-    #     for j in col_names:
-    #         current_slice_idx &=  (performance_df_summarized[j]==varying_plots_metadata[k][j])
+        current_slice_idx = True
+        for j in col_names:
+            current_slice_idx &=  (performance_df_summarized[j]==varying_plots_metadata[k][j])
 
-    #     current_df = performance_df_summarized[current_slice_idx].copy()
+        current_df = performance_df_summarized[current_slice_idx].copy()
 
 
-    #     plot_varying_cost_boxplots(current_df, varying_plots_metadata[k], ds_keys)
-    #     plot_varying_dist_boxplots(current_df, varying_plots_metadata[k], ds_keys)
+        plot_varying_cost_boxplots(current_df, varying_plots_metadata[k], ds_keys)
+        plot_varying_dist_boxplots(current_df, varying_plots_metadata[k], ds_keys)
 
-    # # Save selected plots of interest to a separate directory
+    # Save selected plots of interest to a separate directory
     # for plot_filename in selected_varying_plots:
     #     shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
 

@@ -20,7 +20,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.5,
-        "noise_added" : "No", 
+    	"noise_added" : "No", 
 	
 	},
     
@@ -39,7 +39,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.5,
-        "noise_added" : "No",
+    	"noise_added" : "No",
 	},
     
 	"data-set-4": 
@@ -48,7 +48,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 2,
 		"class_distribution" : 0.5,
-        "noise_added" : "No",
+    	"noise_added" : "No",
 	},
     
 	"data-set-5": 
@@ -57,7 +57,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 4,
 		"class_distribution" : 0.5,
-        "noise_added" : "No",
+    	"noise_added" : "No",
 	},
 
     
@@ -67,7 +67,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.25,
-        "noise_added" : "No",
+    	"noise_added" : "No",
 	},
     
 	"data-set-7": 
@@ -76,7 +76,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.75,
-        "noise_added" : "No",
+    	"noise_added" : "No",
 	},
     
 	"data-set-8": 
@@ -85,7 +85,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.5,
-        "noise_added" : "Yes",
+    	"noise_added" : "Yes",
 	},
     
 	"data-set-9": 
@@ -94,7 +94,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.25,
-        "noise_added" : "Yes",
+    	"noise_added" : "Yes",
 	},
     
 	"data-set-10": 
@@ -103,7 +103,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 2,
 		"class_distribution" : 0.5,
-        "noise_added" : "Yes",
+    	"noise_added" : "Yes",
 	},
 	"data-set-11": 
 	{
@@ -111,7 +111,7 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 2,
 		"class_distribution" : 0.25,
-        "noise_added" : "Yes",
+    	"noise_added" : "Yes",
 	},
 	"data-set-12": 
 	{
@@ -119,6 +119,6 @@ ds_meta = {
 		"n_features" : 4,
 		"n_cat_features" : 2,
 		"class_distribution" : 0.75,
-        "noise_added" : "Yes",
+    	"noise_added" : "Yes",
 	}	
 }

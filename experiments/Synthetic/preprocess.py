@@ -22,7 +22,7 @@ output_plot_main_dir = './experiments/Synthetic/plots/'
 
 def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     
-    print("\nGenerating datasets:")
+    print("\nGenerating data sets:")
     
     if not os.path.isdir(ds_main_dir):
         os.makedirs(ds_main_dir)
@@ -68,8 +68,6 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
         else:
             X = np.hstack((cont_features, cat_features))
 
-        # print(ds_meta[c]["class_distribution"])
-
                 
         intercept = np.log(ds_meta[c]["class_distribution"]/(1-ds_meta[c]["class_distribution"])) - sum(means)
 
@@ -81,7 +79,6 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
         elif (ds_meta[c]["class_distribution"] == 0.75):
             intercept += 6 * i_ext
         
-        # print(intercept, means)
         z = intercept + theta[0]*X[:,0][:,np.newaxis] + theta[1]*X[:,1][:,np.newaxis] + theta[2]*X[:,2][:,np.newaxis] + theta[3]*X[:,3][:,np.newaxis]
 
         p = 1/(1+np.exp(-z))
@@ -120,7 +117,7 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     dataset_descriptions.to_csv(f'{output_table_main_dir}dataset_descriptons.csv')
 
         
-    print("Data generation completed.")
+    print("Synthetic data generation completed.")
 
 
 
