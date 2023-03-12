@@ -115,7 +115,7 @@ def run_experiments(ds_meta):
     ds_keys = list(dataset_descriptions['Data Set'])
     
     performance_df = pd.DataFrame(columns=(
-        'K',
+        'Repeats',
         'Train Ratio',
         'Separated Ratio',
         'Test Ratio',
@@ -162,7 +162,7 @@ def run_experiments(ds_meta):
 
             train_ratio, separated_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
 
-            print(f'\nK: {K}, Train Ratio: {train_ratio}, Separated Ratio: {separated_ratio}, Test Ratio: {test_ratio}')    
+            print(f'\nRepeats: {K}, Train Ratio: {train_ratio}, Separated Ratio: {separated_ratio}, Test Ratio: {test_ratio}')    
             
             preprocessed_ds = split_data(ds_meta, K, train_ratio, separated_ratio, test_ratio, random_state=random_state)
             
@@ -199,9 +199,7 @@ def run_experiments(ds_meta):
                                                                                                 environments
                                                                                             )
                     rocch_classifiers, rocch_thresholds = classifiers_on_rocch(fpr_list,tpr_list, threshold_list, rocch_fpr, rocch_tpr)
-                    
-
-
+            
 
                     for os_us in oversampling_undersampling_methods:
 
@@ -230,7 +228,7 @@ def run_experiments(ds_meta):
                                     predictions_hard = np.where(1, predictions>=rocch_thresholds[j][k], 0)
 
                                     predictions_sep = models[list(models.keys())[k]].predict_proba(X_separated)[:,1]
-                                    predictions_sep_hard = np.where(1, predictions_sep>=0.5, 0)
+                                    predictions_sep_hard = np.where(1, predictions_sep>=rocch_thresholds[j][k], 0)
 
                                     cost = expected_cost(y_test_env, predictions_hard, environment[1], environment[2])
                                     acc = accuracy_score(y_test_env, predictions_hard)
@@ -285,7 +283,7 @@ def run_experiments(ds_meta):
 
     
     performance_summarized_df = pd.DataFrame(columns=(
-        'K',
+        'Repeats',
         'Train Ratio',
         'Separated Ratio',
         'Test Ratio',
@@ -336,7 +334,7 @@ def run_experiments(ds_meta):
                     for os_us in oversampling_undersampling_methods:
                         for i, environment in enumerate(environments):   
                             current_slice_idx = (
-                                            (performance_df['K'] == K) & 
+                                            (performance_df['Repeats'] == K) & 
                                             (performance_df['Train Ratio'] == train_ratio) &
                                             (performance_df['Separated Ratio'] == separated_ratio) &
                                             (performance_df['Test Ratio'] == test_ratio) &
