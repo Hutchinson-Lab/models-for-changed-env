@@ -18,7 +18,7 @@ import sys, os
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
 from rocchmethod.covariate_shift_measurement import average_wasserstein_distance, average_energy_distance, average_auc_phi, average_cramervonmises, mmd_linear
-from rocchmethod.class_utils import expected_cost, unique_cls_distr, impose_class_distr
+from rocchmethod.class_utils import normalized_cost, unique_cls_distr, impose_class_distr
 from rocchmethod.rocchmethod import rocch_method, classifiers_on_rocch
 
 # from plot_descriptions import selected_causal_graphs
@@ -230,7 +230,7 @@ def run_experiments(ds_meta):
                                     predictions_sep = models[list(models.keys())[k]].predict_proba(X_separated)[:,1]
                                     predictions_sep_hard = np.where(1, predictions_sep>=rocch_thresholds[j][k], 0)
 
-                                    cost = expected_cost(y_test_env, predictions_hard, environment[1], environment[2])
+                                    cost = normalized_cost(y_test_env, predictions_hard, environment[1], environment[2])
                                     acc = accuracy_score(y_test_env, predictions_hard)
                                     f1_s = f1_score(y_test_env, predictions_hard)
 

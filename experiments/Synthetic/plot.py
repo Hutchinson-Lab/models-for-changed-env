@@ -1021,9 +1021,9 @@ def plot_varying_cost_boxplots (df, plot_metadata, ds_keys):
         fontsize=7)
 
     # Format suplabels and title
-    fig.supylabel('Average Expected Cost', x=0.02, fontsize=8)
+    fig.supylabel('Average Normalized Cost', x=0.02, fontsize=8)
     fig.supxlabel(plot_metadata['varying'], y=0.04, fontsize=8)
-    fig.suptitle(f'Average Incurred Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
+    fig.suptitle(f'Average Normalized Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
     fig.tight_layout()
 
     fig.savefig(f'{output_plot_varying_dir}cost_{plot_metadata["identifier"]}.png', bbox_inches='tight', dpi=300)

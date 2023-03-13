@@ -7,9 +7,14 @@ from sklearn.preprocessing import scale
 from sklearn.metrics import confusion_matrix
 from sklearn.svm import SVC
 
-def expected_cost(y_true, y_pred, fpc, fnc):
+def normalized_cost(y_true, y_pred, fpc, fnc):
+    '''
+    # Page 201 from Provost and Fawcett (Machine Learning, 2001)
+    '''
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
-    cost = (fp * fpc) + (fn * fnc) # Pagee 44 from Provost and Fawcett (KDD 1997)
+    fpr = fp/(fp+tn)
+    tpr = tp/(tp+fn)
+    cost = (fpr * fpc) + ((1-tpr) * fnc) 
     return cost
 
 
