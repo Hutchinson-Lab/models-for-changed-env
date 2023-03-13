@@ -12,8 +12,19 @@ def normalized_cost(y_true, y_pred, fpc, fnc):
     # Page 201 from Provost and Fawcett (Machine Learning, 2001)
     '''
     tn, fp, fn, tp = confusion_matrix(y_true, y_pred, labels=[0, 1]).ravel()
-    fpr = fp/(fp+tn)
-    tpr = tp/(tp+fn)
+    
+    fpr, tpr = None, None
+    
+    if (fp==0):
+        fpr = 0.0
+    else:
+        fpr = fp/(fp+tn)
+
+    if (tp==0):
+        tpr = 0.0
+    else:
+        tpr = tp/(tp+fn)
+        
     cost = (fpr * fpc) + ((1-tpr) * fnc) 
     return cost
 

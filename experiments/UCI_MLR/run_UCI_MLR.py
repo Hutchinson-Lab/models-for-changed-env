@@ -8,9 +8,9 @@ from .plot import plot_results
 
 def run_UCI_MLR():
 
-    print('-'*52)
-    print('Experiments on UCI Machine Learning Repository Data')
-    print('-'*52)
+    print('-'*56)
+    print('Experiments on UCI Machine Learning Repository Data Sets')
+    print('-'*56)
     
     # Download all datasets
     download_datasets(ds_meta) # Comment out this line if data sets have previously been downloaded

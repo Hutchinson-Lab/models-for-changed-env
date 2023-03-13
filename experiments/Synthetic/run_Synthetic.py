@@ -6,9 +6,9 @@ from .plot import plot_results
 
 def run_Synthetic():
     
-    print('-'*30)
-    print('Experiments on Synthetic Data')
-    print('-'*30)
+    print('-'*34)
+    print('Experiments on Synthetic Data Sets')
+    print('-'*34)
 
     # Generate all datasets
     generate_datasets(ds_meta) # Comment out this line if data sets have previously been generated

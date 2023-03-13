@@ -11,7 +11,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, f1_score
 
-from .preprocess import split_data
+from .preprocess import split_datasets
 
 
 import sys, os
@@ -23,8 +23,8 @@ from rocchmethod.rocchmethod import rocch_method, classifiers_on_rocch
 
 # from plot_descriptions import selected_causal_graphs
 
-# K (No of repeats/splits)
-K_range = [30] 
+# No of repeats/splits
+repeats_range = [30] 
 
 # split_ratios[i] = [train_ratio, separated_ratio, test_ratio]
 split_ratio_range = [ 
@@ -82,7 +82,7 @@ random_state = 0
 # For temporary experimentation only
 # ----------------------------------------------------------------------------------------
 
-# K_range = [3]
+# repeats_range = [3]
 
 # split_ratio_range = [ 
 #     [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
@@ -147,8 +147,8 @@ def run_experiments(ds_meta):
         'Cost',
         'Accuracy',
         'F1-score',
-        'Accuracy (Separated, T=0.5)',
-        'F1-score (Separated, T=0.5)',
+        'Accuracy (Separated)',
+        'F1-score (Separated)',
         )
     )
     c = 0
@@ -156,22 +156,22 @@ def run_experiments(ds_meta):
     
 
 
-    for K in K_range:
+    for repeats in repeats_range:
 
         for split_ratio in split_ratio_range:
 
             train_ratio, separated_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
 
-            print(f'\nRepeats: {K}, Train Ratio: {train_ratio}, Separated Ratio: {separated_ratio}, Test Ratio: {test_ratio}')    
+            print(f'\nRepeats: {repeats}, Train Ratio: {train_ratio}, Separated Ratio: {separated_ratio}, Test Ratio: {test_ratio}')    
             
-            preprocessed_ds = split_data(ds_meta, K, train_ratio, separated_ratio, test_ratio, random_state=random_state)
+            preprocessed_ds = split_datasets(ds_meta, repeats, train_ratio, separated_ratio, test_ratio, random_state=random_state)
             
             for ds_key in (pbar := tqdm.tqdm(preprocessed_ds.keys())):
                 
-                pbar.set_description(f'Running experiment on "{ds_key}"')
+                pbar.set_description(f'Running experiments on "{ds_key}"')
 
 
-                for split_num in range(K):
+                for split_num in range(repeats):
 
                     X_train, X_test, X_separated, y_train, y_test, y_separated = preprocessed_ds[ds_key][split_num]
                    
@@ -238,7 +238,7 @@ def run_experiments(ds_meta):
                                     f1_s_sep = f1_score(y_separated, predictions_sep_hard)
 
                                     performance_df.loc[c] = [
-                                        K,
+                                        repeats,
                                         train_ratio,
                                         separated_ratio,
                                         test_ratio,
@@ -323,18 +323,18 @@ def run_experiments(ds_meta):
     c = 0
 
     print("\nSummarizing and saving results.")
-    for K in K_range:
+    for repeats in repeats_range:
         for split_ratio in split_ratio_range:
 
             train_ratio, separated_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
             
             for ds_key in ds_keys:
-                for split_num in range(K):
+                for split_num in range(repeats):
 
                     for os_us in oversampling_undersampling_methods:
                         for i, environment in enumerate(environments):   
                             current_slice_idx = (
-                                            (performance_df['Repeats'] == K) & 
+                                            (performance_df['Repeats'] == repeats) & 
                                             (performance_df['Train Ratio'] == train_ratio) &
                                             (performance_df['Separated Ratio'] == separated_ratio) &
                                             (performance_df['Test Ratio'] == test_ratio) &
@@ -359,14 +359,14 @@ def run_experiments(ds_meta):
                             rocchm_optimal_point_cost = current_optimal_df['Cost'].min()
                                                 
                             # Accuracy maximizing FPR and TPR
-                            accumax_idx = current_df['Accuracy (Separated, T=0.5)'].idxmax()
+                            accumax_idx = current_df['Accuracy (Separated)'].idxmax()
                             accumax_optimal = [current_df['FPR'].loc[accumax_idx], current_df['TPR'].loc[accumax_idx]]
 
                             # Cost of accuracy maximizing FPR and TPR
                             accumax_optimal_point_cost = current_df['Cost'].loc[accumax_idx]
 
                             # F1-score maximizing FPR and TPR
-                            fonemax_idx = current_df['F1-score (Separated, T=0.5)'].idxmax()
+                            fonemax_idx = current_df['F1-score (Separated)'].idxmax()
                             fonemax_optimal = [current_df['FPR'].loc[fonemax_idx], current_df['TPR'].loc[fonemax_idx]]
 
                             # Cost of F1-score maximizing FPR and TPR
@@ -394,7 +394,7 @@ def run_experiments(ds_meta):
                             
 
                             performance_summarized_df.loc[c] = [
-                                        K,
+                                        repeats,
                                         current_df['Train Ratio'].iloc[0],
                                         current_df['Separated Ratio'].iloc[0],
                                         current_df['Test Ratio'].iloc[0],

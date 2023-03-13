@@ -119,7 +119,7 @@ def preprocess_datasets (ds_meta):
     print("Preprocessing completed.")
 
 
-def split_data (ds_meta, K, train_ratio, separated_ratio, test_ratio, random_state):
+def split_datasets (ds_meta, n_splits, train_ratio, separated_ratio, test_ratio, random_state):
 
     splitted_datasets = {}
 
@@ -128,7 +128,7 @@ def split_data (ds_meta, K, train_ratio, separated_ratio, test_ratio, random_sta
         X = np.load(f'{ds_preprocessed_dir}{c}_X.npy')
         y = np.load(f'{ds_preprocessed_dir}{c}_y.npy')
         
-        sss = StratifiedShuffleSplit(n_splits=K, test_size=test_ratio, random_state=random_state)
+        sss = StratifiedShuffleSplit(n_splits=n_splits, test_size=test_ratio, random_state=random_state)
         
         splitted_datasets[c] = []
 
