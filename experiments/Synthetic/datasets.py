@@ -16,7 +16,7 @@ ds_meta = {
     
 	"data-set-1": 
 	{
-		"n_instances" : 100,
+		"n_instances" : 500,
 		"n_features" : 4,
 		"n_cat_features" : 0,
 		"class_distribution" : 0.5,
@@ -29,7 +29,7 @@ ds_meta = {
 		"n_instances" : 500,
 		"n_features" : 4,
 		"n_cat_features" : 0,
-		"class_distribution" : 0.5,
+		"class_distribution" : 0.25,
 		"noise_added" : "No",
 	},
     
