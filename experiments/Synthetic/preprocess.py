@@ -87,21 +87,21 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
 
         if(ds_meta[c]["noise_added"] == "Yes"):
             noisy_rate = 0.2
-            neg_idx = (y == 0).nonzero()[0]
-            noisy_inst = int(noisy_rate * neg_idx.size)
-            sel_neg_idx =   np.random.choice(neg_idx, noisy_inst,replace=False)  
+            pos_idx = (y == 1).nonzero()[0]
+            noisy_inst = int(noisy_rate * pos_idx.size)
+            sel_pos_idx =   np.random.choice(pos_idx, noisy_inst,replace=False)  
 
             for j, m in enumerate(means):
   
                 if (m == 0): # Normal distribution
                     
-                    e = np.random.normal(size=sel_neg_idx.size)
-                    X[sel_neg_idx, j] += e
+                    e = np.random.normal(size=sel_pos_idx.size)
+                    X[sel_pos_idx, j] += e
 
                 elif (m == 0.5): # Bernoulli distribution
                 
 
-                    X[sel_neg_idx, j] = np.where(X[sel_neg_idx, j]==0, 1, 0)         
+                    X[sel_pos_idx, j] = np.where(X[sel_pos_idx, j]==0, 1, 0)         
 
         
         np.save(f'{ds_main_dir}{c}_X.npy', X)

@@ -1188,10 +1188,10 @@ def plot_results():
 
     # Effects of varying settings/configurations
     
-    import itertools
-    varying_plots_metadata_1 = dict(itertools.islice(varying_plots_metadata.items(), 10))
+    # import itertools
+    # varying_plots_metadata_1 = dict(itertools.islice(varying_plots_metadata.items(), 10))
 
-    for k in varying_plots_metadata_1:
+    for k in varying_plots_metadata:
 
         col_names = list(varying_plots_metadata[k].keys())[1:-1]
  

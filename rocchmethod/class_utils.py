@@ -65,7 +65,7 @@ def class_distance_ratio (X, y):
                 neg_avg_dist += np.abs(y_t)
         neg_avg_dist /= neg_idx.size
 
-        ratios[m] = float(neg_avg_dist/pos_avg_dist)
+        ratios[m] = float(pos_avg_dist/neg_avg_dist)
     return ratios
 
 
