@@ -18,7 +18,7 @@ import sys, os
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
 from rocchmethod.covariate_shift_measurement import average_wasserstein_distance, average_energy_distance, average_auc_phi, average_cramervonmises, mmd_linear
-from rocchmethod.class_utils import normalized_cost, unique_cls_distr, impose_class_distr
+from rocchmethod.class_utils import normalized_cost, expected_cost, unique_cls_distr, impose_class_distr
 from rocchmethod.rocchmethod import rocch_method, classifiers_on_rocch
 
 # from plot_descriptions import selected_causal_graphs
@@ -144,12 +144,14 @@ def run_experiments(ds_meta):
         'Threshold',
         'FPR',
         'TPR',
-        'Cost',
+        'Normalized Cost',
+        'Expected Cost',
         'Accuracy',
         'F1-score',
         'Accuracy (Separated)',
         'F1-score (Separated)',
-        'Cost (Separated)',
+        'Normalized Cost (Separated)',
+        'Expected Cost (Separated)',
         )
     )
     c = 0
@@ -231,13 +233,15 @@ def run_experiments(ds_meta):
                                     predictions_sep = models[list(models.keys())[k]].predict_proba(X_separated)[:,1]
                                     predictions_sep_hard = np.where(1, predictions_sep>=rocch_thresholds[j][k], 0)
 
-                                    cost = normalized_cost(y_test_env, predictions_hard, environment[1], environment[2])
+                                    norm_cost = normalized_cost(y_test_env, predictions_hard, environment[1], environment[2])
+                                    exp_cost = expected_cost(y_test_env, predictions_hard, environment[1], environment[2])
                                     acc = accuracy_score(y_test_env, predictions_hard)
                                     f1_s = f1_score(y_test_env, predictions_hard)
 
                                     acc_sep = accuracy_score(y_separated, predictions_sep_hard)
                                     f1_s_sep = f1_score(y_separated, predictions_sep_hard)
-                                    cost_sep = normalized_cost(y_separated, predictions_sep_hard, environment[1], environment[2])
+                                    norm_cost_sep = normalized_cost(y_separated, predictions_sep_hard, environment[1], environment[2])
+                                    exp_cost_sep = expected_cost(y_separated, predictions_sep_hard, environment[1], environment[2])
 
                                     performance_df.loc[c] = [
                                         repeats,
@@ -269,12 +273,14 @@ def run_experiments(ds_meta):
                                         rocch_thresholds[j][k],
                                         rocch_fpr_t,
                                         rocch_tpr[j],
-                                        cost,
+                                        norm_cost,
+                                        exp_cost,
                                         acc,
                                         f1_s,
                                         acc_sep,
                                         f1_s_sep,
-                                        cost_sep
+                                        norm_cost_sep,
+                                        exp_cost_sep,
                                         ]
                                     c += 1
         
@@ -307,23 +313,44 @@ def run_experiments(ds_meta):
         'Split No.',
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',
-        'Avg. Optimal Point Cost (ROCCH Method)',
-        'Optimal FPR (Cost-Min)',
-        'Optimal TPR (Cost-Min)',
-        'Avg. Optimal Point Cost (Cost-Min)',
+        'Optimal Point Normalized Cost (ROCCH Method)',
+        'Optimal Point Expected Cost (ROCCH Method)',
+        'Optimal FPR (Norm-Cost-Min)',
+        'Optimal TPR (Norm-Cost-Min)',
+        'Optimal Point Normalized Cost (Norm-Cost-Min)',
+        'Optimal Point Expected Cost (Norm-Cost-Min)',
+        'Optimal FPR (Exp-Cost-Min)',
+        'Optimal TPR (Exp-Cost-Min)',
+        'Optimal Point Normalized Cost (Exp-Cost-Min)',
+        'Optimal Point Expected Cost (Exp-Cost-Min)',
         'Optimal FPR (Accuracy-Max)',
         'Optimal TPR (Accuracy-Max)',
-        'Avg. Optimal Point Cost (Accuracy-Max)',
+        'Optimal Point Normalized Cost (Accuracy-Max)',
+        'Optimal Point Expected Cost (Accuracy-Max)',
         'Optimal FPR (F1-score-Max)',
         'Optimal TPR (F1-score-Max)',
-        'Avg. Optimal Point Cost (F1-score-Max)',
-        'Optimal FPR (Actual)',
-        'Optimal TPR (Actual)',
-        'Avg. Optimal Point Cost (Actual)',
-        'Distance between ROCCHM and Actual',
-        'Distance between Cost-Min and Actual',
-        'Distance between Accuracy-Max and Actual',
-        'Distance between F1-score-Max and Actual',
+        'Optimal Point Normalized Cost  (F1-score-Max)',
+        'Optimal Point Expected Cost  (F1-score-Max)',
+        'Optimal FPR (Actual-Norm)',
+        'Optimal TPR (Actual-Norm)',
+        'Optimal Point Normalized Cost (Actual-Norm)',
+        'Optimal Point Expected Cost (Actual-Norm)',
+        'Optimal FPR (Actual-Exp)',
+        'Optimal TPR (Actual-Exp)',
+        'Optimal Point Normalized Cost (Actual-Exp)',
+        'Optimal Point Expected Cost (Actual-Exp)',
+        'Distance between ROCCHM and Actual-Norm',
+        'Distance between Norm-Cost-Min and Actual-Norm',
+        'Distance between Exp-Cost-Min and Actual-Norm',
+        'Distance between Accuracy-Max and Actual-Norm',
+        'Distance between F1-score-Max and Actual-Norm',
+        'Distance between ROCCHM and Actual-Exp',
+        'Distance between Norm-Cost-Min and Actual-Exp',
+        'Distance between Exp-Cost-Min and Actual-Exp',
+        'Distance between Accuracy-Max and Actual-Exp',
+        'Distance between F1-score-Max and Actual-Exp',
+        
+        
         )
     )
 
@@ -363,50 +390,94 @@ def run_experiments(ds_meta):
                                             (current_df['Optimal FPR (ROCCH Method)'] == current_df['FPR']) & 
                                             (current_df['Optimal TPR (ROCCH Method)'] == current_df['TPR'])
                                         ]
-                            rocchm_optimal_point_cost = current_optimal_df['Cost'].min()
-                                                
-                            # Cost minimizing FPR and TPR
-                            costmin_idx = current_df['Cost (Separated)'].idxmin()
-                            costmin_optimal = [current_df['FPR'].loc[costmin_idx], current_df['TPR'].loc[costmin_idx]]
+                            rocchm_optimal_point_norm_cost = current_optimal_df['Normalized Cost'].min()
+                            rocchm_optimal_point_exp_cost = current_optimal_df['Expected Cost'].min()
+                            
 
-                            # Cost of cost minimizing FPR and TPR
-                            costmin_optimal_point_cost = current_df['Cost'].loc[costmin_idx]
+                            # Normalized cost minimizing FPR and TPR
+                            normcostmin_idx = current_df['Normalized Cost (Separated)'].idxmin()
+                            normcostmin_optimal = [current_df['FPR'].loc[normcostmin_idx], current_df['TPR'].loc[normcostmin_idx]]
 
+                            # Cost of normalized cost minimizing FPR and TPR
+                            normcostmin_optimal_point_norm_cost = current_df['Normalized Cost'].loc[normcostmin_idx]
+                            normcostmin_optimal_point_exp_cost = current_df['Expected Cost'].loc[normcostmin_idx]
+
+
+                            # Expected cost minimizing FPR and TPR
+                            expcostmin_idx = current_df['Expected Cost (Separated)'].idxmin()
+                            expcostmin_optimal = [current_df['FPR'].loc[expcostmin_idx], current_df['TPR'].loc[expcostmin_idx]]
+
+                            # Cost of expected cost minimizing FPR and TPR
+                            expcostmin_optimal_point_norm_cost = current_df['Normalized Cost'].loc[normcostmin_idx]
+                            expcostmin_optimal_point_exp_cost = current_df['Expected Cost'].loc[normcostmin_idx]
 
                             # Accuracy maximizing FPR and TPR
                             accumax_idx = current_df['Accuracy (Separated)'].idxmax()
                             accumax_optimal = [current_df['FPR'].loc[accumax_idx], current_df['TPR'].loc[accumax_idx]]
 
                             # Cost of accuracy maximizing FPR and TPR
-                            accumax_optimal_point_cost = current_df['Cost'].loc[accumax_idx]
+                            accumax_optimal_point_norm_cost = current_df['Normalized Cost'].loc[accumax_idx]
+                            accumax_optimal_point_exp_cost = current_df['Expected Cost'].loc[accumax_idx]
 
                             # F1-score maximizing FPR and TPR
                             fonemax_idx = current_df['F1-score (Separated)'].idxmax()
                             fonemax_optimal = [current_df['FPR'].loc[fonemax_idx], current_df['TPR'].loc[fonemax_idx]]
 
                             # Cost of F1-score maximizing FPR and TPR
-                            fonemax_optimal_point_cost = current_df['Cost'].loc[fonemax_idx]
+                            fonemax_optimal_point_norm_cost = current_df['Normalized Cost'].loc[fonemax_idx]
+                            fonemax_optimal_point_exp_cost = current_df['Expected Cost'].loc[fonemax_idx]
 
-                            # Actual FPR and TPR
-                            actual_min_cost_idx = current_df['Cost'].idxmin()
-                            actual_optimal = [current_df['FPR'].loc[actual_min_cost_idx], current_df['TPR'].loc[actual_min_cost_idx]]
+                            # Actual FPR and TPR based on Normalized Cost
+                            actual_min_norm_cost_idx = current_df['Normalized Cost'].idxmin()
+                            actual_norm_optimal = [current_df['FPR'].loc[actual_min_norm_cost_idx], current_df['TPR'].loc[actual_min_norm_cost_idx]]
                             
-                            # Cost of Actual Optimal Point
-                            actual_optimal_point_cost = current_df['Cost'].loc[actual_min_cost_idx]
+                            # Cost of Actual Optimal Point based on Normalized Cost
+                            actual_norm_optimal_point_norm_cost = current_df['Normalized Cost'].loc[actual_min_norm_cost_idx]
+                            actual_norm_optimal_point_exp_cost = current_df['Expected Cost'].loc[actual_min_norm_cost_idx]
 
-                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point
+                            # Actual FPR and TPR based on Expected Cost
+                            actual_min_exp_cost_idx = current_df['Expected Cost'].idxmin()
+                            actual_exp_optimal = [current_df['FPR'].loc[actual_min_exp_cost_idx], current_df['TPR'].loc[actual_min_exp_cost_idx]]
+                            
+                            # Cost of Actual Optimal Point based on Expected Cost
+                            actual_exp_optimal_point_norm_cost = current_df['Normalized Cost'].loc[actual_min_exp_cost_idx]
+                            actual_exp_optimal_point_exp_cost = current_df['Expected Cost'].loc[actual_min_exp_cost_idx]
+
+
+
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point based on Normalized Cost
                             rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
-                            distance_rocchm_actual = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_optimal))
+                            distance_rocchm_actual_norm = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based Cost-Min and Actual Optimal Point
-                            distance_costmin_actual = np.linalg.norm (np.array(costmin_optimal)-np.array(actual_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Actual Optimal Point based on Normalized Cost
+                            distance_normcostmin_actual_norm = np.linalg.norm (np.array(normcostmin_optimal)-np.array(actual_norm_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based on Exp-Cost-Min and Actual Optimal Point based on Normalized Cost
+                            distance_expcostmin_actual_norm = np.linalg.norm (np.array(expcostmin_optimal)-np.array(actual_norm_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Normalized Cost
+                            distance_accumax_actual_norm = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_norm_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Normalized Cost
+                            distance_fonemax_actual_norm = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_norm_optimal))
 
 
-                            # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
-                            distance_accumax_actual = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_optimal))
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point based on Expected Cost
+                            rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
+                            distance_rocchm_actual_exp = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
-                            distance_fonemax_actual = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Actual Optimal Point based on Expected Cost
+                            distance_normcostmin_actual_exp = np.linalg.norm (np.array(normcostmin_optimal)-np.array(actual_exp_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based on Exp-Cost-Min and Actual Optimal Point based on Expected Cost
+                            distance_expcostmin_actual_exp = np.linalg.norm (np.array(expcostmin_optimal)-np.array(actual_exp_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Expected Cost
+                            distance_accumax_actual_exp = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_exp_optimal))
+
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Expected Cost
+                            distance_fonemax_actual_exp = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_exp_optimal))
+
 
                             # # Test set size, for calculating avg. exp. cost
                             # test_size = current_df['Test Size'].iloc[0]
@@ -434,23 +505,42 @@ def run_experiments(ds_meta):
                                         split_num,
                                         current_df['Optimal FPR (ROCCH Method)'].iloc[0],
                                         current_df['Optimal TPR (ROCCH Method)'].iloc[0],
-                                        rocchm_optimal_point_cost,
-                                        costmin_optimal[0],
-                                        costmin_optimal[1],
-                                        costmin_optimal_point_cost,
+                                        rocchm_optimal_point_norm_cost,
+                                        rocchm_optimal_point_exp_cost,
+                                        normcostmin_optimal[0],
+                                        normcostmin_optimal[1],
+                                        normcostmin_optimal_point_norm_cost,
+                                        normcostmin_optimal_point_exp_cost,
+                                        expcostmin_optimal[0],
+                                        expcostmin_optimal[1],
+                                        expcostmin_optimal_point_norm_cost,
+                                        expcostmin_optimal_point_exp_cost,
                                         accumax_optimal[0],
                                         accumax_optimal[1],
-                                        accumax_optimal_point_cost,
+                                        accumax_optimal_point_norm_cost,
+                                        accumax_optimal_point_exp_cost,
                                         fonemax_optimal[0],
                                         fonemax_optimal[1],
-                                        fonemax_optimal_point_cost,
-                                        actual_optimal[0],
-                                        actual_optimal[1],
-                                        actual_optimal_point_cost,
-                                        distance_rocchm_actual,
-                                        distance_costmin_actual,
-                                        distance_accumax_actual,
-                                        distance_fonemax_actual,
+                                        fonemax_optimal_point_norm_cost,
+                                        fonemax_optimal_point_exp_cost,
+                                        actual_norm_optimal[0],
+                                        actual_norm_optimal[1],
+                                        actual_norm_optimal_point_norm_cost,
+                                        actual_norm_optimal_point_exp_cost,
+                                        actual_exp_optimal[0],
+                                        actual_exp_optimal[1],
+                                        actual_exp_optimal_point_norm_cost,
+                                        actual_exp_optimal_point_exp_cost,
+                                        distance_rocchm_actual_norm,
+                                        distance_normcostmin_actual_norm,
+                                        distance_expcostmin_actual_norm,
+                                        distance_accumax_actual_norm,
+                                        distance_fonemax_actual_norm,
+                                        distance_rocchm_actual_exp,
+                                        distance_normcostmin_actual_exp,
+                                        distance_expcostmin_actual_exp,
+                                        distance_accumax_actual_exp,
+                                        distance_fonemax_actual_exp,
 
                                         
                                     ]
