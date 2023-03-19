@@ -8,6 +8,7 @@ from .plot import plot_results
 
 def run_UCI_MLR():
 
+    print('\n')
     print('-'*56)
     print('Experiments on UCI Machine Learning Repository Data Sets')
     print('-'*56)
@@ -20,4 +21,4 @@ def run_UCI_MLR():
     run_experiments(ds_meta)
 
     # Plot results from experiments
-    plot_results()
+    # plot_results()

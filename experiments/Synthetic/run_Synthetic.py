@@ -6,6 +6,7 @@ from .plot import plot_results
 
 def run_Synthetic():
     
+    print('\n')
     print('-'*34)
     print('Experiments on Synthetic Data Sets')
     print('-'*34)
@@ -17,4 +18,4 @@ def run_Synthetic():
     run_experiments(ds_meta)
 
     # Plot results from experiments
-    plot_results()
+    # plot_results()

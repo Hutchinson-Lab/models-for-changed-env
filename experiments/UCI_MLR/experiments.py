@@ -93,7 +93,7 @@ random_state = 0
 #     [1.25, 1.0, 1.0], # halved class distribution, uniform cost distribution
    
 # ]
-# ----------------------------------------------------------------------------------------
+# # ----------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------
 
 
@@ -149,6 +149,7 @@ def run_experiments(ds_meta):
         'F1-score',
         'Accuracy (Separated)',
         'F1-score (Separated)',
+        'Cost (Separated)',
         )
     )
     c = 0
@@ -236,6 +237,7 @@ def run_experiments(ds_meta):
 
                                     acc_sep = accuracy_score(y_separated, predictions_sep_hard)
                                     f1_s_sep = f1_score(y_separated, predictions_sep_hard)
+                                    cost_sep = normalized_cost(y_separated, predictions_sep_hard, environment[1], environment[2])
 
                                     performance_df.loc[c] = [
                                         repeats,
@@ -272,6 +274,7 @@ def run_experiments(ds_meta):
                                         f1_s,
                                         acc_sep,
                                         f1_s_sep,
+                                        cost_sep
                                         ]
                                     c += 1
         
@@ -305,6 +308,9 @@ def run_experiments(ds_meta):
         'Optimal FPR (ROCCH Method)',
         'Optimal TPR (ROCCH Method)',
         'Avg. Optimal Point Cost (ROCCH Method)',
+        'Optimal FPR (Cost-Min)',
+        'Optimal TPR (Cost-Min)',
+        'Avg. Optimal Point Cost (Cost-Min)',
         'Optimal FPR (Accuracy-Max)',
         'Optimal TPR (Accuracy-Max)',
         'Avg. Optimal Point Cost (Accuracy-Max)',
@@ -315,6 +321,7 @@ def run_experiments(ds_meta):
         'Optimal TPR (Actual)',
         'Avg. Optimal Point Cost (Actual)',
         'Distance between ROCCHM and Actual',
+        'Distance between Cost-Min and Actual',
         'Distance between Accuracy-Max and Actual',
         'Distance between F1-score-Max and Actual',
         )
@@ -358,6 +365,14 @@ def run_experiments(ds_meta):
                                         ]
                             rocchm_optimal_point_cost = current_optimal_df['Cost'].min()
                                                 
+                            # Cost minimizing FPR and TPR
+                            costmin_idx = current_df['Cost (Separated)'].idxmin()
+                            costmin_optimal = [current_df['FPR'].loc[costmin_idx], current_df['TPR'].loc[costmin_idx]]
+
+                            # Cost of cost minimizing FPR and TPR
+                            costmin_optimal_point_cost = current_df['Cost'].loc[costmin_idx]
+
+
                             # Accuracy maximizing FPR and TPR
                             accumax_idx = current_df['Accuracy (Separated)'].idxmax()
                             accumax_optimal = [current_df['FPR'].loc[accumax_idx], current_df['TPR'].loc[accumax_idx]]
@@ -383,14 +398,18 @@ def run_experiments(ds_meta):
                             rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
                             distance_rocchm_actual = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_optimal))
 
+                            # Distance (in ROC space) between Optimal Point based Cost-Min and Actual Optimal Point
+                            distance_costmin_actual = np.linalg.norm (np.array(costmin_optimal)-np.array(actual_optimal))
+
+
                             # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
                             distance_accumax_actual = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_optimal))
 
                             # Distance (in ROC space) between Optimal Point based Accuracy-Max and Actual Optimal Point
                             distance_fonemax_actual = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_optimal))
 
-                            # Test set size, for calculating avg. exp. cost
-                            test_size = current_df['Test Size'].iloc[0]
+                            # # Test set size, for calculating avg. exp. cost
+                            # test_size = current_df['Test Size'].iloc[0]
                             
 
                             performance_summarized_df.loc[c] = [
@@ -415,17 +434,21 @@ def run_experiments(ds_meta):
                                         split_num,
                                         current_df['Optimal FPR (ROCCH Method)'].iloc[0],
                                         current_df['Optimal TPR (ROCCH Method)'].iloc[0],
-                                        rocchm_optimal_point_cost/test_size,
+                                        rocchm_optimal_point_cost,
+                                        costmin_optimal[0],
+                                        costmin_optimal[1],
+                                        costmin_optimal_point_cost,
                                         accumax_optimal[0],
                                         accumax_optimal[1],
-                                        accumax_optimal_point_cost/test_size,
+                                        accumax_optimal_point_cost,
                                         fonemax_optimal[0],
                                         fonemax_optimal[1],
-                                        fonemax_optimal_point_cost/test_size,
+                                        fonemax_optimal_point_cost,
                                         actual_optimal[0],
                                         actual_optimal[1],
-                                        actual_optimal_point_cost/test_size,
+                                        actual_optimal_point_cost,
                                         distance_rocchm_actual,
+                                        distance_costmin_actual,
                                         distance_accumax_actual,
                                         distance_fonemax_actual,
 
