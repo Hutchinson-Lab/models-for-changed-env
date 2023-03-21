@@ -393,6 +393,9 @@ def run_experiments(ds_meta):
                                             (current_df['Optimal FPR (ROCCH Method)'] == current_df['FPR']) & 
                                             (current_df['Optimal TPR (ROCCH Method)'] == current_df['TPR'])
                                         ]
+                            
+                            # We might get multiple discrete classifiers, if they come from different continuous classifeirs, but with same FPR and TPR values
+                            # We take the discrete classifier with the lowest corresponding cost
                             rocchm_optimal_point_norm_cost = current_optimal_df['Normalized Cost'].min()
                             rocchm_optimal_point_exp_cost = current_optimal_df['Expected Cost'].min()
                             
@@ -411,8 +414,8 @@ def run_experiments(ds_meta):
                             expcostmin_optimal = [current_df['FPR'].loc[expcostmin_idx], current_df['TPR'].loc[expcostmin_idx]]
 
                             # Cost of expected cost minimizing FPR and TPR
-                            expcostmin_optimal_point_norm_cost = current_df['Normalized Cost'].loc[normcostmin_idx]
-                            expcostmin_optimal_point_exp_cost = current_df['Expected Cost'].loc[normcostmin_idx]
+                            expcostmin_optimal_point_norm_cost = current_df['Normalized Cost'].loc[expcostmin_idx]
+                            expcostmin_optimal_point_exp_cost = current_df['Expected Cost'].loc[expcostmin_idx]
 
                             # Accuracy maximizing FPR and TPR
                             accumax_idx = current_df['Accuracy (Separated)'].idxmax()
