@@ -131,7 +131,7 @@ def run_experiments(ds_meta):
         'Undersampling Method',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
-        'Avg. MMD',
+        'MMD',
         'Avg. AUC (COVSHIFT)',
         'Avg. Phi',
         'Avg. Cramer-von Mises Criterion',
@@ -220,7 +220,7 @@ def run_experiments(ds_meta):
                             avg_e_dist = average_energy_distance(X_train, X_test_env)
                             
 
-                            avg_mmd = mmd_linear(X_train, X_test_env)
+                            mmd = mmd_linear(X_train, X_test_env)
                             avg_auc, avg_phi = average_auc_phi(X_train, X_test_env)
                             
                             
@@ -262,7 +262,7 @@ def run_experiments(ds_meta):
                                         os_us[1],
                                         avg_w_dist,
                                         avg_e_dist,
-                                        avg_mmd,
+                                        mmd,
                                         avg_auc,
                                         avg_phi,
                                         avg_cvmc,
@@ -309,7 +309,7 @@ def run_experiments(ds_meta):
         'Undersampling Method',
         'Avg. Wasserstein Dist.',
         'Avg. Energy Dist.',
-        'Avg. MMD',
+        'MMD',
         'Avg. AUC (COVSHIFT)',
         'Avg. Phi',
         'Avg. Cramer-von Mises Criterion',
@@ -504,7 +504,7 @@ def run_experiments(ds_meta):
                                         os_us[1],
                                         current_df['Avg. Wasserstein Dist.'].iloc[0],
                                         current_df['Avg. Energy Dist.'].iloc[0],
-                                        current_df['Avg. MMD'].iloc[0],
+                                        current_df['MMD'].iloc[0],
                                         current_df['Avg. AUC (COVSHIFT)'].iloc[0],
                                         current_df['Avg. Phi'].iloc[0],
                                         current_df['Avg. Cramer-von Mises Criterion'].iloc[0],
