@@ -220,7 +220,7 @@ def run_experiments(ds_meta):
                             avg_e_dist = average_energy_distance(X_train, X_test_env)
                             
 
-                            avg_mmd = mmd_linear(X_train, X_test_env)/X_train.shape[1]
+                            avg_mmd = mmd_linear(X_train, X_test_env)
                             avg_auc, avg_phi = average_auc_phi(X_train, X_test_env)
                             
                             
