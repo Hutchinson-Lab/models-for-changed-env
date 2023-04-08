@@ -55,9 +55,9 @@ environments = [
     [0.5, 1.0, 1.5], # halved class distribution,  FN cost is 1.5 times FP cost
     [0.5, 1.0, 3.0], # halved class distribution,  FN cost is 3 times FP cost
 
-    [0.25, 1.0, 1.0], # quartered class distribution, uniform cost distribution 
-    [0.25, 1.0, 1.5], # quartered class distribution,  FN cost is 1.5 times FP cost
-    [0.25, 1.0, 3.0], # quartered class distribution,  FN cost is 3 times FP cost
+    # [0.25, 1.0, 1.0], # quartered class distribution, uniform cost distribution 
+    # [0.25, 1.0, 1.5], # quartered class distribution,  FN cost is 1.5 times FP cost
+    # [0.25, 1.0, 3.0], # quartered class distribution,  FN cost is 3 times FP cost
     
     [0.75, 1.0, 1.0], # 3/4 times class distribution, uniform cost distribution 
     [0.75, 1.0, 1.5], # 3/4 times class distribution,  FN cost is 1.5 times FP cost
@@ -332,8 +332,8 @@ def run_experiments(ds_meta):
         'Optimal Point Expected Cost (Accuracy-Max)',
         'Optimal FPR (F1-score-Max)',
         'Optimal TPR (F1-score-Max)',
-        'Optimal Point Normalized Cost  (F1-score-Max)',
-        'Optimal Point Expected Cost  (F1-score-Max)',
+        'Optimal Point Normalized Cost (F1-score-Max)',
+        'Optimal Point Expected Cost (F1-score-Max)',
         'Optimal FPR (Actual-Norm)',
         'Optimal TPR (Actual-Norm)',
         'Optimal Point Normalized Cost (Actual-Norm)',

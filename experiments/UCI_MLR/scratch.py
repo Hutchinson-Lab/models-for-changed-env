@@ -304,4 +304,6 @@
 # a = roc_auc_score(y_true, y_pred)
 # print(a)
 
-print(2/0)
+# print(2/0)
+
+print(4%4)

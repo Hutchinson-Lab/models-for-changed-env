@@ -12,7 +12,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
-from rocchmethod.class_utils import class_distance_ratio
+# from rocchmethod.class_utils import class_distance_ratio
 
 
 ds_main_dir = './experiments/Synthetic/datasets/'
@@ -30,7 +30,7 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance', 'Added Noise', 'Class Distance Ratio (linear)', 'Class Distance Ratio (poly)', 'Class Distance Ratio (rbf)', 'Class Distance Ratio (sigmoid)'))
+    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance', 'Added Noise'))
     i = 0
     
 
@@ -107,9 +107,8 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
         np.save(f'{ds_main_dir}{c}_X.npy', X)
         np.save(f'{ds_main_dir}{c}_y.npy', y)
 
-        cls_dist_ratios = class_distance_ratio(X,y)
         
-        dataset_descriptions.loc[i] = [c, ds_meta[c]["n_instances"], ds_meta[c]["n_features"], ds_meta[c]["n_cat_features"], X.shape[1], ds_meta[c]["class_distribution"], ds_meta[c]["noise_added"], cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
+        dataset_descriptions.loc[i] = [c, ds_meta[c]["n_instances"], ds_meta[c]["n_features"], ds_meta[c]["n_cat_features"], X.shape[1], ds_meta[c]["class_distribution"], ds_meta[c]["noise_added"]]
         i+=1
 
     dataset_descriptions = dataset_descriptions.round(4)

@@ -14,7 +14,7 @@ from sklearn.preprocessing import StandardScaler
 import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
-from rocchmethod.class_utils import class_distance_ratio
+# from rocchmethod.class_utils import class_distance_ratio
 
 
 ds_main_dir = './experiments/UCI_MLR/datasets/'
@@ -60,7 +60,7 @@ def preprocess_datasets (ds_meta):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance', 'Class Distance Ratio (linear)', 'Class Distance Ratio (poly)', 'Class Distance Ratio (rbf)', 'Class Distance Ratio (sigmoid)'))
+    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance'))
     i = 0
     
     for c in (pbar := tqdm.tqdm(ds_meta.keys())):
@@ -107,9 +107,9 @@ def preprocess_datasets (ds_meta):
         np.save(f'{ds_preprocessed_dir}{c}_X.npy', X)
         np.save(f'{ds_preprocessed_dir}{c}_y.npy', y)
 
-        cls_dist_ratios = class_distance_ratio(X,y)
+        # cls_dist_ratios = class_distance_ratio(X,y)
         
-        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, X.shape[1], class_distr, cls_dist_ratios['linear'],  cls_dist_ratios['poly'], cls_dist_ratios['rbf'], cls_dist_ratios['sigmoid']]
+        dataset_descriptions.loc[i] = [c, instances_num, nonmissing_instances_num, features_num, categorical_feature_num, X.shape[1], class_distr]
         i+=1
 
     dataset_descriptions = dataset_descriptions.round(4)

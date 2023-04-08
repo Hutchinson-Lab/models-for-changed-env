@@ -5,7 +5,7 @@ from imblearn.over_sampling import RandomOverSampler, SMOTE
 from imblearn.under_sampling import RandomUnderSampler, NearMiss
 from sklearn.preprocessing import scale
 from sklearn.metrics import confusion_matrix
-from sklearn.svm import SVC
+# from sklearn.svm import SVC
 
 def normalized_cost(y_true, y_pred, fpc, fnc):
     '''
@@ -53,44 +53,44 @@ def expected_cost(y_true, y_pred, fpc, fnc):
     return cost
 
 
-def class_distance_ratio (X, y):
+# def class_distance_ratio (X, y):
 
-    X = scale(X)
-    models = {
-        'linear' : SVC(kernel='linear', random_state=0).fit(X, y),
-        'poly' : SVC(kernel='poly', random_state=0).fit(X, y),
-        'rbf' : SVC(kernel='rbf', random_state=0).fit(X, y),
-        'sigmoid' : SVC(kernel='sigmoid', random_state=0).fit(X, y),
-    }
-    pos_idx = np.transpose((y==1).nonzero()).flatten()
-    neg_idx = np.transpose((y==0).nonzero()).flatten()
+#     X = scale(X)
+#     models = {
+#         'linear' : SVC(kernel='linear', random_state=0).fit(X, y),
+#         'poly' : SVC(kernel='poly', random_state=0).fit(X, y),
+#         'rbf' : SVC(kernel='rbf', random_state=0).fit(X, y),
+#         'sigmoid' : SVC(kernel='sigmoid', random_state=0).fit(X, y),
+#     }
+#     pos_idx = np.transpose((y==1).nonzero()).flatten()
+#     neg_idx = np.transpose((y==0).nonzero()).flatten()
 
-    ratios = {}
-    for m in models:
-        pos_avg_dist = 0
-        for idx in pos_idx:
-            y_t = models[m].decision_function(X[idx,:][np.newaxis,:])
-            if (m == 'linear'):
-                w_norm = np.linalg.norm(models[m].coef_)
-                dist = np.abs(y_t / w_norm)[0]
-                pos_avg_dist += dist
-            else:
-                pos_avg_dist += np.abs(y_t)
-        pos_avg_dist /= pos_idx.size
+#     ratios = {}
+#     for m in models:
+#         pos_avg_dist = 0
+#         for idx in pos_idx:
+#             y_t = models[m].decision_function(X[idx,:][np.newaxis,:])
+#             if (m == 'linear'):
+#                 w_norm = np.linalg.norm(models[m].coef_)
+#                 dist = np.abs(y_t / w_norm)[0]
+#                 pos_avg_dist += dist
+#             else:
+#                 pos_avg_dist += np.abs(y_t)
+#         pos_avg_dist /= pos_idx.size
 
-        neg_avg_dist = 0
-        for idx in neg_idx:
-            y_t = models[m].decision_function(X[idx,:][np.newaxis,:])
-            if (m == 'linear'):
-                w_norm = np.linalg.norm(models[m].coef_)
-                dist = np.abs(y_t / w_norm)[0]
-                neg_avg_dist += dist
-            else:
-                neg_avg_dist += np.abs(y_t)
-        neg_avg_dist /= neg_idx.size
+#         neg_avg_dist = 0
+#         for idx in neg_idx:
+#             y_t = models[m].decision_function(X[idx,:][np.newaxis,:])
+#             if (m == 'linear'):
+#                 w_norm = np.linalg.norm(models[m].coef_)
+#                 dist = np.abs(y_t / w_norm)[0]
+#                 neg_avg_dist += dist
+#             else:
+#                 neg_avg_dist += np.abs(y_t)
+#         neg_avg_dist /= neg_idx.size
 
-        ratios[m] = float(pos_avg_dist/neg_avg_dist)
-    return ratios
+#         ratios[m] = float(pos_avg_dist/neg_avg_dist)
+#     return ratios
 
 
 

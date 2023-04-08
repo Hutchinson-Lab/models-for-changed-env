@@ -1,194 +1,7 @@
 
 
 
-ds_plots_metadata = {
- 
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=0.5_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-        "Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 0.5,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=0.75_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 0.75,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=1.25_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 1.25,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=1.0_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 1.0,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=0.5_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 0.5,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=0.75_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 0.75,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=1.25_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 1.25,
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=1.0_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 1.0,
-        "FN cost" : 1.0,
-    },
-    
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=0.5_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-        "Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 0.5,
-        "FN cost" : 1.0,
-    },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=0.75_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 0.75,
-        "FN cost" : 1.0,
-    },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=1.25_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 1.25,
-        "FN cost" : 1.0,
-    },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.2_test=0.4_test2train=1.0_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "Test to Train Class Distr. Ratio" : 1.0,
-        "FN cost" : 1.0,
-    },
-
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=0.5_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 0.5,
-        "FN cost" : 1.0,
-    },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=0.75_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 0.75,
-        "FN cost" : 1.0,
-    },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=1.25_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 1.25,
-        "FN cost" : 1.0,
-    },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.4_test=0.2_test2train=1.0_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "Test to Train Class Distr. Ratio" : 1.0,
-        "FN cost" : 1.0,
-    },
-
-}
-
-dsdist_plots_metadata = {
-    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.2,        
-        "FN cost" : 1.0,
-    },
-
-    'os=rnd_us=rnd_repeats=30_train=0.2_separated=0.4_test=0.4_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.2,
-        "Separated Ratio" : 0.4,
-        "Test Ratio" : 0.4,        
-        "FN cost" : 1.0,
-    },
-
+characteristics_plots_metadata = {
     'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=1.0': {
         "Oversampling Method" : "Random", 
     	"Undersampling Method" : "Random",
@@ -198,60 +11,113 @@ dsdist_plots_metadata = {
         "Test Ratio" : 0.4,        
         "FN cost" : 1.0,
     },
-
-    'os=rnd_us=rnd_repeats=30_train=0.2_separated=0.2_test=0.6_fnc=1.0': {
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=1.5': {
         "Oversampling Method" : "Random", 
     	"Undersampling Method" : "Random",
     	"Repeats" : 30,
-        "Train Ratio" : 0.2,
+        "Train Ratio" : 0.4,
         "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.6,        
+        "Test Ratio" : 0.4,        
+        "FN cost" : 1.5,
+    },
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=3.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 3.0,
+    },
+}
+
+
+metrics_plots_metadata = {
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=1.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
         "FN cost" : 1.0,
     },
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.4_test=0.2_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=1.5': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 1.5,
+    },
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=3.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.2,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 3.0,
+    },
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_fnc=1.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
     	"Repeats" : 30,
         "Train Ratio" : 0.4,
         "Separated Ratio" : 0.4,
         "Test Ratio" : 0.2,        
         "FN cost" : 1.0,
     },
-
-    'os=smt_us=nrm_repeats=30_train=0.2_separated=0.4_test=0.4_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_fnc=1.5': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "FN cost" : 1.5,
+    },
+    'os=rnd_us=rnd_repeats=30_train=0.4_separated=0.4_test=0.2_fnc=3.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.4,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.2,        
+        "FN cost" : 3.0,
+    },
+    'os=rnd_us=rnd_repeats=30_train=0.2_separated=0.4_test=0.4_fnc=1.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
     	"Repeats" : 30,
         "Train Ratio" : 0.2,
         "Separated Ratio" : 0.4,
         "Test Ratio" : 0.4,        
         "FN cost" : 1.0,
     },
-
-    'os=smt_us=nrm_repeats=30_train=0.4_separated=0.2_test=0.4_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "FN cost" : 1.0,
-    },
-
-    'os=smt_us=nrm_repeats=30_train=0.2_separated=0.2_test=0.6_fnc=1.0': {
-        "Oversampling Method" : "SMOTE", 
-    	"Undersampling Method" : "NearMiss",
+    'os=rnd_us=rnd_repeats=30_train=0.2_separated=0.4_test=0.4_fnc=1.5': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
     	"Repeats" : 30,
         "Train Ratio" : 0.2,
-        "Separated Ratio" : 0.2,
-        "Test Ratio" : 0.6,        
-        "FN cost" : 1.0,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 1.5,
     },
-
+    'os=rnd_us=rnd_repeats=30_train=0.2_separated=0.4_test=0.4_fnc=3.0': {
+        "Oversampling Method" : "Random", 
+    	"Undersampling Method" : "Random",
+    	"Repeats" : 30,
+        "Train Ratio" : 0.2,
+        "Separated Ratio" : 0.4,
+        "Test Ratio" : 0.4,        
+        "FN cost" : 3.0,
+    },
 }
 
 
-selected_varying_plots = {
+selected_general_plots = {
     'cost_os=rnd_us=rnd_fncost_repeats=30_train=0.4_test=0.4_test2train=1.0.png',
     'cost_os=rnd_us=rnd_k_train=0.4_test=0.2_test2train=0.5_fnc=1.0.png',
     'cost_os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.5_fnc=1.0.png',
@@ -276,21 +142,12 @@ selected_varying_plots = {
 
 
 
-varying_plots_metadata = {
+general_plots_metadata = {
 
     # Varies "Separated Ratio"/"Train Ratio" while keeping "Test Ratio" constant
     
+    
     "Separated Ratio 1" : {
-        "varying" : "Separated Ratio",
-        "Oversampling Method" : "Random",
-		"Undersampling Method" : "Random",
-		"Repeats" : 30,
-        "Test Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.0,
-        "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.25_fnc=1.0",
-    },
-    "Separated Ratio 2" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -300,7 +157,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.5_fnc=1.0",
     },
-    "Separated Ratio 3" : {
+    "Separated Ratio 2" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -310,7 +167,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.75_fnc=1.0",
     },
-    "Separated Ratio 4" : {
+    "Separated Ratio 3" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -320,7 +177,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=1.0_fnc=1.0",
     },
-    "Separated Ratio 5" : {
+    "Separated Ratio 4" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -330,17 +187,8 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=1.25_fnc=1.0",
     },
-    "Separated Ratio 6" : {
-        "varying" : "Separated Ratio",
-        "Oversampling Method" : "Random",
-		"Undersampling Method" : "Random",
-		"Repeats" : 30,
-        "Test Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.5,
-        "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.25_fnc=1.5",
-    },
-    "Separated Ratio 7" : {
+    
+    "Separated Ratio 5" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -350,7 +198,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.5_fnc=1.5",
     },
-    "Separated Ratio 8" : {
+    "Separated Ratio 6" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -360,7 +208,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.75_fnc=1.5",
     },
-    "Separated Ratio 9" : {
+    "Separated Ratio 7" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -370,7 +218,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=1.0_fnc=1.5",
     },
-    "Separated Ratio 10" : {
+    "Separated Ratio 8" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -380,17 +228,8 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=1.25_fnc=1.5",
     },
-    "Separated Ratio 11" : {
-        "varying" : "Separated Ratio",
-        "Oversampling Method" : "Random",
-		"Undersampling Method" : "Random",
-		"Repeats" : 30,
-        "Test Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 3.0,
-        "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.25_fnc=3.0",
-    },
-    "Separated Ratio 12" : {
+    
+    "Separated Ratio 9" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -400,7 +239,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.5_fnc=3.0",
     },
-    "Separated Ratio 13" : {
+    "Separated Ratio 10" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -410,7 +249,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=0.75_fnc=3.0",
     },
-    "Separated Ratio 14" : {
+    "Separated Ratio 11" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -420,7 +259,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=1.0_fnc=3.0",
     },
-    "Separated Ratio 15" : {
+    "Separated Ratio 12" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -430,17 +269,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_separated_repeats=30_test=0.2_test2train=1.25_fnc=3.0",
     },
-	"Separated Ratio 16" : {
-        "varying" : "Separated Ratio",
-        "Oversampling Method" : "SMOTE",
-		"Undersampling Method" : "NearMiss",
-		"Repeats" : 30,
-        "Test Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.0,
-        "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.25_fnc=1.0",
-    },
-    "Separated Ratio 17" : {
+    "Separated Ratio 13" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -450,7 +279,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.5_fnc=1.0",
     },
-    "Separated Ratio 18" : {
+    "Separated Ratio 14" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -460,7 +289,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.75_fnc=1.0",
     },
-    "Separated Ratio 19" : {
+    "Separated Ratio 15" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -470,7 +299,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=1.0_fnc=1.0",
     },
-    "Separated Ratio 20" : {
+    "Separated Ratio 16" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -480,17 +309,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=1.25_fnc=1.0",
     },
-    "Separated Ratio 21" : {
-        "varying" : "Separated Ratio",
-        "Oversampling Method" : "SMOTE",
-		"Undersampling Method" : "NearMiss",
-		"Repeats" : 30,
-        "Test Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.5,
-        "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.25_fnc=1.5",
-    },
-    "Separated Ratio 22" : {
+    "Separated Ratio 17" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -500,7 +319,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.5_fnc=1.5",
     },
-    "Separated Ratio 23" : {
+    "Separated Ratio 18" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -510,7 +329,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.75_fnc=1.5",
     },
-    "Separated Ratio 24" : {
+    "Separated Ratio 19" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -520,7 +339,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=1.0_fnc=1.5",
     },
-    "Separated Ratio 25" : {
+    "Separated Ratio 20" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -530,17 +349,8 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=1.25_fnc=1.5",
     },
-    "Separated Ratio 26" : {
-        "varying" : "Separated Ratio",
-        "Oversampling Method" : "SMOTE",
-		"Undersampling Method" : "NearMiss",
-		"Repeats" : 30,
-        "Test Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 3.0,
-        "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.25_fnc=3.0",
-    },
-    "Separated Ratio 27" : {
+    
+    "Separated Ratio 21" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -550,7 +360,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.5_fnc=3.0",
     },
-    "Separated Ratio 28" : {
+    "Separated Ratio 22" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -560,7 +370,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=0.75_fnc=3.0",
     },
-    "Separated Ratio 29" : {
+    "Separated Ratio 23" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -570,7 +380,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=smt_us=nrm_separated_repeats=30_test=0.2_test2train=1.0_fnc=3.0",
     },
-    "Separated Ratio 30" : {
+    "Separated Ratio 24" : {
         "varying" : "Separated Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -592,21 +402,11 @@ varying_plots_metadata = {
 		"Undersampling Method" : "Random",
 		"Repeats" : 30,
         "Separated Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.0,
-        "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.25_fnc=1.0",
-    },
-    "Test Ratio 2" : {
-        "varying" : "Test Ratio",
-        "Oversampling Method" : "Random",
-		"Undersampling Method" : "Random",
-		"Repeats" : 30,
-        "Separated Ratio" : 0.2,
         "Test to Train Class Distr. Ratio" : 0.5,
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.5_fnc=1.0",
     },
-    "Test Ratio 3" : {
+    "Test Ratio 2" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -616,7 +416,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.75_fnc=1.0",
     },
-    "Test Ratio 4" : {
+    "Test Ratio 3" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -626,7 +426,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=1.0_fnc=1.0",
     },
-    "Test Ratio 5" : {
+    "Test Ratio 4" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -636,17 +436,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=1.25_fnc=1.0",
     },
-    "Test Ratio 6" : {
-        "varying" : "Test Ratio",
-        "Oversampling Method" : "Random",
-		"Undersampling Method" : "Random",
-		"Repeats" : 30,
-        "Separated Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.5,
-        "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.25_fnc=1.5",
-    },
-    "Test Ratio 7" : {
+    "Test Ratio 5" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -656,7 +446,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.5_fnc=1.5",
     },
-    "Test Ratio 8" : {
+    "Test Ratio 6" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -666,7 +456,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.75_fnc=1.5",
     },
-    "Test Ratio 9" : {
+    "Test Ratio 7" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -676,7 +466,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=1.0_fnc=1.5",
     },
-    "Test Ratio 10" : {
+    "Test Ratio 8" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -686,17 +476,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=1.25_fnc=1.5",
     },
-    "Test Ratio 11" : {
-        "varying" : "Test Ratio",
-        "Oversampling Method" : "Random",
-		"Undersampling Method" : "Random",
-		"Repeats" : 30,
-        "Separated Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 3.0,
-        "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.25_fnc=3.0",
-    },
-    "Test Ratio 12" : {
+    "Test Ratio 9" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -706,7 +486,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.5_fnc=3.0",
     },
-    "Test Ratio 13" : {
+    "Test Ratio 10" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -716,7 +496,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=0.75_fnc=3.0",
     },
-    "Test Ratio 14" : {
+    "Test Ratio 11" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -726,7 +506,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=1.0_fnc=3.0",
     },
-    "Test Ratio 15" : {
+    "Test Ratio 12" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "Random",
 		"Undersampling Method" : "Random",
@@ -736,17 +516,8 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=rnd_us=rnd_test_repeats=30_test=0.2_test2train=1.25_fnc=3.0",
     },
-    "Test Ratio 16" : {
-        "varying" : "Test Ratio",
-        "Oversampling Method" : "SMOTE",
-		"Undersampling Method" : "NearMiss",
-		"Repeats" : 30,
-        "Separated Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.0,
-        "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.25_fnc=1.0",
-    },
-    "Test Ratio 17" : {
+    
+    "Test Ratio 13" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -756,7 +527,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.5_fnc=1.0",
     },
-    "Test Ratio 18" : {
+    "Test Ratio 14" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -766,7 +537,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.75_fnc=1.0",
     },
-    "Test Ratio 19" : {
+    "Test Ratio 15" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -776,7 +547,7 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=1.0_fnc=1.0",
     },
-    "Test Ratio 20" : {
+    "Test Ratio 16" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -786,17 +557,8 @@ varying_plots_metadata = {
         "FN cost" : 1.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=1.25_fnc=1.0",
     },
-    "Test Ratio 21" : {
-        "varying" : "Test Ratio",
-        "Oversampling Method" : "SMOTE",
-		"Undersampling Method" : "NearMiss",
-		"Repeats" : 30,
-        "Separated Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 1.5,
-        "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.25_fnc=1.5",
-    },
-    "Test Ratio 22" : {
+   
+    "Test Ratio 17" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -806,7 +568,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.5_fnc=1.5",
     },
-    "Test Ratio 23" : {
+    "Test Ratio 18" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -816,7 +578,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.75_fnc=1.5",
     },
-    "Test Ratio 24" : {
+    "Test Ratio 19" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -826,7 +588,7 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=1.0_fnc=1.5",
     },
-    "Test Ratio 25" : {
+    "Test Ratio 20" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -836,17 +598,8 @@ varying_plots_metadata = {
         "FN cost" : 1.5,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=1.25_fnc=1.5",
     },
-    "Test Ratio 26" : {
-        "varying" : "Test Ratio",
-        "Oversampling Method" : "SMOTE",
-		"Undersampling Method" : "NearMiss",
-		"Repeats" : 30,
-        "Separated Ratio" : 0.2,
-        "Test to Train Class Distr. Ratio" : 0.25,
-        "FN cost" : 3.0,
-        "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.25_fnc=3.0",
-    },
-    "Test Ratio 27" : {
+  
+    "Test Ratio 21" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -856,7 +609,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.5_fnc=3.0",
     },
-    "Test Ratio 28" : {
+    "Test Ratio 22" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -866,7 +619,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=0.75_fnc=3.0",
     },
-    "Test Ratio 29" : {
+    "Test Ratio 23" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -876,7 +629,7 @@ varying_plots_metadata = {
         "FN cost" : 3.0,
         "identifier" : "os=smt_us=nrm_test_repeats=30_test=0.2_test2train=1.0_fnc=3.0",
     },
-    "Test Ratio 30" : {
+    "Test Ratio 24" : {
         "varying" : "Test Ratio",
         "Oversampling Method" : "SMOTE",
 		"Undersampling Method" : "NearMiss",
@@ -979,5 +732,6 @@ varying_plots_metadata = {
 
 
 }
+
 
 
