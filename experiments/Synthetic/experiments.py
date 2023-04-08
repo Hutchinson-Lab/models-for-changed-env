@@ -54,11 +54,7 @@ environments = [
     [0.5, 1.0, 1.0], # halved class distribution, uniform cost distribution
     [0.5, 1.0, 1.5], # halved class distribution,  FN cost is 1.5 times FP cost
     [0.5, 1.0, 3.0], # halved class distribution,  FN cost is 3 times FP cost
-
-    # [0.25, 1.0, 1.0], # quartered class distribution, uniform cost distribution 
-    # [0.25, 1.0, 1.5], # quartered class distribution,  FN cost is 1.5 times FP cost
-    # [0.25, 1.0, 3.0], # quartered class distribution,  FN cost is 3 times FP cost
-    
+   
     [0.75, 1.0, 1.0], # 3/4 times class distribution, uniform cost distribution 
     [0.75, 1.0, 1.5], # 3/4 times class distribution,  FN cost is 1.5 times FP cost
     [0.75, 1.0, 3.0], # 3/4 times class distribution,  FN cost is 3 times FP cost
