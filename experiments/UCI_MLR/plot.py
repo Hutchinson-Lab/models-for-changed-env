@@ -65,7 +65,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
                 f'Optimal Point {cost_type} Cost (Norm-Cost-Min)', 
                 f'Optimal Point {cost_type} Cost (Exp-Cost-Min)',
                 f'Optimal Point {cost_type} Cost (Accuracy-Max)', 
-                f'Optimal Point {cost_type}  Cost (F1-score-Max)',
+                f'Optimal Point {cost_type} Cost (F1-score-Max)',
                 f'Optimal Point {cost_type} Cost (ROCCH Method)',
                 ]
         )
