@@ -119,7 +119,7 @@ def preprocess_datasets (ds_meta):
     print("Preprocessing completed.")
 
 
-def split_datasets (ds_meta, n_splits, train_ratio, separated_ratio, test_ratio, random_state):
+def split_datasets (ds_meta, n_splits, train_ratio, validation_ratio, test_ratio, random_state):
 
     splitted_datasets = {}
 
@@ -137,20 +137,20 @@ def split_datasets (ds_meta, n_splits, train_ratio, separated_ratio, test_ratio,
             # Split into training and testing data
             X_train, X_test, y_train, y_test = X[train_index].copy(), X[test_index].copy(), y[train_index].copy(), y[test_index].copy()
 
-            X_separated, y_separated = None, None # Separated data to use for calibration, ROCCH method, etc.
-            if (separated_ratio):
+            X_validation, y_validation = None, None # Validation data to use for calibration, ROCCH method, etc.
+            if (validation_ratio):
                 # Split training data into training and calibration data
-                X_train, X_separated, y_train, y_separated = train_test_split(X_train, y_train, stratify=y_train, test_size=(separated_ratio/(separated_ratio+train_ratio)), random_state=random_state)
+                X_train, X_validation, y_train, y_validation = train_test_split(X_train, y_train, stratify=y_train, test_size=(validation_ratio/(validation_ratio+train_ratio)), random_state=random_state)
 
             # Scale features
             scaler = StandardScaler().fit(X_train)
             X_train = scaler.transform(X_train)
             X_test = scaler.transform(X_test)
             
-            if (separated_ratio):
-                X_separated = scaler.transform(X_separated)
+            if (validation_ratio):
+                X_validation = scaler.transform(X_validation)
             
-            splitted_datasets[c].append((X_train, X_test, X_separated, y_train, y_test, y_separated))
+            splitted_datasets[c].append((X_train, X_test, X_validation, y_train, y_test, y_validation))
 
     
     return splitted_datasets

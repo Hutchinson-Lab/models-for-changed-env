@@ -27,14 +27,14 @@ from rocchmethod.rocchmethod import rocch_method, classifiers_on_rocch
 # No of repeats/splits
 repeats_range = [30] 
 
-# split_ratios[i] = [train_ratio, separated_ratio, test_ratio]
+# split_ratios[i] = [train_ratio, validation_ratio, test_ratio]
 split_ratio_range = [ 
-    [0.2, 0.6, 0.2], # train=20%, separated=60%, test=20%
-    [0.4, 0.4, 0.2], # train=40%, separated=40%, test=20%
-    [0.6, 0.2, 0.2], # train=60%, separated=20%, test=20%
-    [0.4, 0.2, 0.4], # train=40%, separated=20%, test=40%
-    [0.2, 0.2, 0.6], # train=20%, separated=20%, test=60%
-    [0.2, 0.4, 0.4], # train=20%, separated=40%, test=40%
+    [0.2, 0.6, 0.2], # train=20%, validation=60%, test=20%
+    [0.4, 0.4, 0.2], # train=40%, validation=40%, test=20%
+    [0.6, 0.2, 0.2], # train=60%, validation=20%, test=20%
+    [0.4, 0.2, 0.4], # train=40%, validation=20%, test=40%
+    [0.2, 0.2, 0.6], # train=20%, validation=20%, test=60%
+    [0.2, 0.4, 0.4], # train=20%, validation=40%, test=40%
 ]
 
 
@@ -82,7 +82,7 @@ random_state = 0
 # repeats_range = [3]
 
 # split_ratio_range = [ 
-#     [0.4, 0.4, 0.2], # train=40%, separated=20%, test=40%
+#     [0.4, 0.4, 0.2], # train=40%, validation=20%, test=40%
 # ]
 # environments = [
 
@@ -114,7 +114,7 @@ def run_experiments(ds_meta):
     performance_df = pd.DataFrame(columns=(
         'Repeats',
         'Train Ratio',
-        'Separated Ratio',
+        'Validation Ratio',
         'Test Ratio',
         'Data Set',
         'Test Size',
@@ -145,10 +145,10 @@ def run_experiments(ds_meta):
         'Expected Cost',
         'Accuracy',
         'F1-score',
-        'Accuracy (Separated)',
-        'F1-score (Separated)',
-        'Normalized Cost (Separated)',
-        'Expected Cost (Separated)',
+        'Accuracy (Validation)',
+        'F1-score (Validation)',
+        'Normalized Cost (Validation)',
+        'Expected Cost (Validation)',
         )
     )
     c = 0
@@ -160,11 +160,11 @@ def run_experiments(ds_meta):
 
         for split_ratio in split_ratio_range:
 
-            train_ratio, separated_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
+            train_ratio, validation_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
 
-            print(f'\nRepeats: {repeats}, Train Ratio: {train_ratio}, Separated Ratio: {separated_ratio}, Test Ratio: {test_ratio}')    
+            print(f'\nRepeats: {repeats}, Train Ratio: {train_ratio}, Validation Ratio: {validation_ratio}, Test Ratio: {test_ratio}')    
             
-            preprocessed_ds = split_datasets(ds_meta, repeats, train_ratio, separated_ratio, test_ratio, random_state=random_state)
+            preprocessed_ds = split_datasets(ds_meta, repeats, train_ratio, validation_ratio, test_ratio, random_state=random_state)
             
             for ds_key in (pbar := tqdm.tqdm(preprocessed_ds.keys())):
                 
@@ -173,7 +173,7 @@ def run_experiments(ds_meta):
 
                 for split_num in range(repeats):
 
-                    X_train, X_test, X_separated, y_train, y_test, y_separated = preprocessed_ds[ds_key][split_num]
+                    X_train, X_test, X_validation, y_train, y_test, y_validation = preprocessed_ds[ds_key][split_num]
             
                     # Train classifiers and predict on (existing) test set
                     models = { 
@@ -190,11 +190,11 @@ def run_experiments(ds_meta):
                         
                         models[m].fit(X_train, y_train)
                         
-                        y_hats.append(models[m].predict_proba(X_separated)[:,1])
+                        y_hats.append(models[m].predict_proba(X_validation)[:,1])
                         
                         
                     fpr_list, tpr_list, threshold_list, rocch_fpr, rocch_tpr, optimals = rocch_method(
-                                                                                                y_separated,
+                                                                                                y_validation,
                                                                                                 y_hats,
                                                                                                 environments
                                                                                             )
@@ -229,7 +229,7 @@ def run_experiments(ds_meta):
                                     predictions = models[list(models.keys())[k]].predict_proba(X_test_env)[:,1]
                                     predictions_hard = np.where(1, predictions>=rocch_thresholds[j][k], 0)
 
-                                    predictions_sep = models[list(models.keys())[k]].predict_proba(X_separated)[:,1]
+                                    predictions_sep = models[list(models.keys())[k]].predict_proba(X_validation)[:,1]
                                     predictions_sep_hard = np.where(1, predictions_sep>=rocch_thresholds[j][k], 0)
 
                                     norm_cost = normalized_cost(y_test_env, predictions_hard, environment[1], environment[2])
@@ -237,15 +237,15 @@ def run_experiments(ds_meta):
                                     acc = accuracy_score(y_test_env, predictions_hard)
                                     f1_s = f1_score(y_test_env, predictions_hard)
 
-                                    acc_sep = accuracy_score(y_separated, predictions_sep_hard)
-                                    f1_s_sep = f1_score(y_separated, predictions_sep_hard)
-                                    norm_cost_sep = normalized_cost(y_separated, predictions_sep_hard, environment[1], environment[2])
-                                    exp_cost_sep = expected_cost(y_separated, predictions_sep_hard, environment[1], environment[2])
+                                    acc_sep = accuracy_score(y_validation, predictions_sep_hard)
+                                    f1_s_sep = f1_score(y_validation, predictions_sep_hard)
+                                    norm_cost_sep = normalized_cost(y_validation, predictions_sep_hard, environment[1], environment[2])
+                                    exp_cost_sep = expected_cost(y_validation, predictions_sep_hard, environment[1], environment[2])
 
                                     performance_df.loc[c] = [
                                         repeats,
                                         train_ratio,
-                                        separated_ratio,
+                                        validation_ratio,
                                         test_ratio,
                                         ds_key,
                                         predictions_hard.shape[0],
@@ -293,7 +293,7 @@ def run_experiments(ds_meta):
     performance_summarized_df = pd.DataFrame(columns=(
         'Repeats',
         'Train Ratio',
-        'Separated Ratio',
+        'Validation Ratio',
         'Test Ratio',
         'Data Set',
         'Train Class Distr.',
@@ -359,7 +359,7 @@ def run_experiments(ds_meta):
     for repeats in repeats_range:
         for split_ratio in split_ratio_range:
 
-            train_ratio, separated_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
+            train_ratio, validation_ratio, test_ratio = split_ratio[0], split_ratio[1], split_ratio[2] 
             
             for ds_key in ds_keys:
                 for split_num in range(repeats):
@@ -369,7 +369,7 @@ def run_experiments(ds_meta):
                             current_slice_idx = (
                                             (performance_df['Repeats'] == repeats) & 
                                             (performance_df['Train Ratio'] == train_ratio) &
-                                            (performance_df['Separated Ratio'] == separated_ratio) &
+                                            (performance_df['Validation Ratio'] == validation_ratio) &
                                             (performance_df['Test Ratio'] == test_ratio) &
                                             (performance_df['Data Set'] == ds_key) &
                                             (performance_df['Split No.'] == split_num) &
@@ -397,7 +397,7 @@ def run_experiments(ds_meta):
                             
 
                             # Normalized cost minimizing FPR and TPR
-                            normcostmin_idx = current_df['Normalized Cost (Separated)'].idxmin()
+                            normcostmin_idx = current_df['Normalized Cost (Validation)'].idxmin()
                             normcostmin_optimal = [current_df['FPR'].loc[normcostmin_idx], current_df['TPR'].loc[normcostmin_idx]]
 
                             # Cost of normalized cost minimizing FPR and TPR
@@ -406,7 +406,7 @@ def run_experiments(ds_meta):
 
 
                             # Expected cost minimizing FPR and TPR
-                            expcostmin_idx = current_df['Expected Cost (Separated)'].idxmin()
+                            expcostmin_idx = current_df['Expected Cost (Validation)'].idxmin()
                             expcostmin_optimal = [current_df['FPR'].loc[expcostmin_idx], current_df['TPR'].loc[expcostmin_idx]]
 
                             # Cost of expected cost minimizing FPR and TPR
@@ -414,7 +414,7 @@ def run_experiments(ds_meta):
                             expcostmin_optimal_point_exp_cost = current_df['Expected Cost'].loc[expcostmin_idx]
 
                             # Accuracy maximizing FPR and TPR
-                            accumax_idx = current_df['Accuracy (Separated)'].idxmax()
+                            accumax_idx = current_df['Accuracy (Validation)'].idxmax()
                             accumax_optimal = [current_df['FPR'].loc[accumax_idx], current_df['TPR'].loc[accumax_idx]]
 
                             # Cost of accuracy maximizing FPR and TPR
@@ -422,7 +422,7 @@ def run_experiments(ds_meta):
                             accumax_optimal_point_exp_cost = current_df['Expected Cost'].loc[accumax_idx]
 
                             # F1-score maximizing FPR and TPR
-                            fonemax_idx = current_df['F1-score (Separated)'].idxmax()
+                            fonemax_idx = current_df['F1-score (Validation)'].idxmax()
                             fonemax_optimal = [current_df['FPR'].loc[fonemax_idx], current_df['TPR'].loc[fonemax_idx]]
 
                             # Cost of F1-score maximizing FPR and TPR
@@ -488,7 +488,7 @@ def run_experiments(ds_meta):
                             performance_summarized_df.loc[c] = [
                                         repeats,
                                         current_df['Train Ratio'].iloc[0],
-                                        current_df['Separated Ratio'].iloc[0],
+                                        current_df['Validation Ratio'].iloc[0],
                                         current_df['Test Ratio'].iloc[0],
                                         ds_key,
                                         original_cls_distr[ds_key],

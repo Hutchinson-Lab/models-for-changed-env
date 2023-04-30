@@ -105,7 +105,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
     # Format legend
     fig.legend(
         handles, 
-        ['Actual',  'Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy Max', 'F1-score Max', 'ROCCH Method',],
+        ['Actual',  'Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
         title='Cost Incurred by Selected Points',
         title_fontsize=8,
         loc='lower center', 
@@ -192,7 +192,7 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
     # Format legend
     fig.legend(
         handles, 
-        ['Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy Max', 'F1-score Max', 'ROCCH Method',],
+        ['Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
         title='Distance to Actual Optimal Point',
         title_fontsize=8,
         loc='lower center', 

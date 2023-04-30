@@ -21,4 +21,4 @@ def run_UCI_MLR():
     run_experiments(ds_meta)
 
     # Plot results from experiments
-    plot_results()
+    # plot_results()
