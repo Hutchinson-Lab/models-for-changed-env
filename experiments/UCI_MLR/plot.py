@@ -46,10 +46,10 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
 
     col_names = list(plot_metadata.keys())[1:-1]
 
-    nrow = 3
-    ncol = 5
+    nrow = 5
+    ncol = 3
     sns.set_style('darkgrid')
-    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize=(8, 5))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, sharex=True, figsize=(7, 8))
     
     handles = None
 
@@ -61,7 +61,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
             current_df, 
             id_vars=[plot_metadata['varying']], 
             value_vars=[
-                f'Optimal Point {cost_type} Cost (Actual-{cost_type_abr})',
+                f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})',
                 f'Optimal Point {cost_type} Cost (Norm-Cost-Min)', 
                 f'Optimal Point {cost_type} Cost (Exp-Cost-Min)',
                 f'Optimal Point {cost_type} Cost (Accuracy-Max)', 
@@ -76,7 +76,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
 
         # Plot boxplots
         palette = {
-            f'Optimal Point {cost_type} Cost (Actual-{cost_type_abr})' : 'limegreen',
+            f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})' : 'limegreen',
             f'Optimal Point {cost_type} Cost (Norm-Cost-Min)' : 'royalblue', 
             f'Optimal Point {cost_type} Cost (Exp-Cost-Min)' : 'orange',
             f'Optimal Point {cost_type} Cost (Accuracy-Max)' : 'sienna', 
@@ -105,17 +105,17 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
     # Format legend
     fig.legend(
         handles, 
-        ['Actual',  'Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
+        ['Oracle',  'Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
         title='Cost Incurred by Selected Points',
         title_fontsize=8,
         loc='lower center', 
-        bbox_to_anchor=(0.5, - 0.075), 
+        bbox_to_anchor=(0.5, - 0.035), 
         ncol=6, 
         fontsize=7)
 
     # Format suplabels and title
     fig.supylabel(f'{cost_type} Cost', x=0.02, fontsize=8)
-    fig.supxlabel(plot_metadata['varying'], y=0.04, fontsize=8)
+    fig.supxlabel(plot_metadata['varying'], y=0.03, fontsize=8)
     fig.suptitle(f'{cost_type} Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
     fig.tight_layout()
 
@@ -137,10 +137,10 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
 
     col_names = list(plot_metadata.keys())[1:-1]
 
-    nrow = 3
-    ncol = 5
+    nrow = 5
+    ncol = 3
     sns.set_style('darkgrid')
-    fig, _ = plt.subplots(nrow, ncol, sharey=True, figsize=(8, 5))
+    fig, _ = plt.subplots(nrow, ncol, sharey=True, sharex=True, figsize=(7, 8))
     
     handles = None
 
@@ -152,11 +152,11 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
             current_df, 
             id_vars=[plot_metadata['varying']], 
             value_vars=[
-                f'Distance between Norm-Cost-Min and Actual-{cost_type_abr}',
-                f'Distance between Exp-Cost-Min and Actual-{cost_type_abr}',
-                f'Distance between Accuracy-Max and Actual-{cost_type_abr}',
-                f'Distance between F1-score-Max and Actual-{cost_type_abr}',
-                f'Distance between ROCCHM and Actual-{cost_type_abr}', 
+                f'Distance between Norm-Cost-Min and Oracle-{cost_type_abr}',
+                f'Distance between Exp-Cost-Min and Oracle-{cost_type_abr}',
+                f'Distance between Accuracy-Max and Oracle-{cost_type_abr}',
+                f'Distance between F1-score-Max and Oracle-{cost_type_abr}',
+                f'Distance between ROCCHM and Oracle-{cost_type_abr}', 
                 ]
         )
 
@@ -165,11 +165,11 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
 
         # Plot boxplots
         palette = {
-            f'Distance between Norm-Cost-Min and Actual-{cost_type_abr}'  : 'royalblue',
-            f'Distance between Exp-Cost-Min and Actual-{cost_type_abr}' : 'orange',
-            f'Distance between Accuracy-Max and Actual-{cost_type_abr}' : 'sienna',
-            f'Distance between F1-score-Max and Actual-{cost_type_abr}' : 'mediumpurple',
-            f'Distance between ROCCHM and Actual-{cost_type_abr}' : 'red',
+            f'Distance between Norm-Cost-Min and Oracle-{cost_type_abr}'  : 'royalblue',
+            f'Distance between Exp-Cost-Min and Oracle-{cost_type_abr}' : 'orange',
+            f'Distance between Accuracy-Max and Oracle-{cost_type_abr}' : 'sienna',
+            f'Distance between F1-score-Max and Oracle-{cost_type_abr}' : 'mediumpurple',
+            f'Distance between ROCCHM and Oracle-{cost_type_abr}' : 'red',
         }
         sns.boxplot(y='value', x=plot_metadata['varying'], hue='variable', data=current_df,  orient='v' , linewidth=0.5,  fliersize=1, ax=ax, palette=palette)
         
@@ -193,17 +193,17 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
     fig.legend(
         handles, 
         ['Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
-        title='Distance to Actual Optimal Point',
+        title='Distance to Oracle Optimal Point',
         title_fontsize=8,
         loc='lower center', 
-        bbox_to_anchor=(0.5, -0.075), 
+        bbox_to_anchor=(0.5, -0.035), 
         ncol=5, 
         fontsize=7)
 
     # Format suplabels and title
     fig.supylabel('Distance', x=0.02, fontsize=8)
-    fig.supxlabel(plot_metadata['varying'], y=0.04, fontsize=8)
-    fig.suptitle(f'Distance to Actual Optimal Point based on {cost_type} Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
+    fig.supxlabel(plot_metadata['varying'], y=0.03, fontsize=8)
+    fig.suptitle(f'Distance to Oracle Optimal Point based on {cost_type} Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
     fig.tight_layout()
 
     fig.savefig(f'{save_dir}dist_{plot_metadata["identifier"]}.png', bbox_inches='tight', dpi=300)
@@ -231,9 +231,9 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
     
     subplot_row_titles = ['Data Set Size', 'No. of Features','Class Distribution']
 
-    subplot_column_titles = [0.75, 0.5, 1.0, 1.25]
+    subplot_column_titles = [ 0.5, 0.75, 1.0, 1.25]
 
-    df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH Method)'] - df[f'Optimal Point {cost_type} Cost (Actual-{cost_type_abr})']
+    df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH Method)'] - df[f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})']
     df.reset_index(drop=True)
 
 
@@ -369,7 +369,7 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
         fontsize=6)
 
     # Format suplabels and title
-    fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Actual)', x=0.04, fontsize=8)
+    fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Oracle)', x=0.04, fontsize=8)
     fig.supxlabel('', fontsize=1)
     fig.suptitle(f'{cost_type} Cost Difference\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}, {col_names[6]}={plot_metadata[col_names[6]]}', y =0.9675, fontsize=8)
     fig.tight_layout()
@@ -401,9 +401,9 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
     subplot_row_titles = ['Wasserstein Distance', 'Energy Distance', 'Maximum Mean Discrepancy', 'Area Under ROC Curve (AUC)', "Matthew's Correlation Coefficient", "Cr$\\'{a}$mer-Von Mises Criterion"]
     subplot_row_titles_fmt = ['Wasserstein\nDistance', 'Energy\nDistance', 'Maximum Mean\nDiscrepancy', 'Area Under\nROC Curve\n(AUC)', "Matthew's\nCorrelation\nCoefficient", "Cr$\\'{a}$mer-Von Mises\nCriterion"]
 
-    subplot_column_titles = [0.75, 0.5, 1.0, 1.25]
+    subplot_column_titles = [ 0.5, 0.75, 1.0, 1.25]
 
-    df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH Method)'] - df[f'Optimal Point {cost_type} Cost (Actual-{cost_type_abr})']
+    df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH Method)'] - df[f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})']
     df.reset_index(drop=True)
 
     col_names = list(plot_metadata.keys())
@@ -541,7 +541,7 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
         fontsize=6)
 
     # Format suplabels and title
-    fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Actual)', x=0.04, fontsize=8)
+    fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Oracle)', x=0.04, fontsize=8)
     fig.supxlabel('', fontsize=1)
     fig.suptitle(f'Effect of Covariate Shift on Efficacy of ROCCH Method\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}, {col_names[6]}={plot_metadata[col_names[6]]}', y =0.9675, fontsize=8)
     fig.tight_layout()
@@ -634,9 +634,6 @@ def plot_results():
         plot_general_cost_boxplots(current_df, general_plots_metadata[k], ds_keys, 'Expected')
         plot_general_dist_boxplots(current_df, general_plots_metadata[k], ds_keys, 'Expected')
 
-    # Save selected plots of interest to a separate directory
-    # for plot_filename in selected_varying_plots:
-    #     shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
 
 
 
@@ -695,6 +692,10 @@ def plot_results():
         plot_metrics_pointplot(current_df, dataset_descriptions, metrics_plots_metadata[k], k, 'Normalized')
         plot_metrics_pointplot(current_df, dataset_descriptions, metrics_plots_metadata[k], k, 'Expected')
 
+
+    # Save selected plots of interest to a separate directory
+    # for plot_filename in selected_varying_plots:
+    #     shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
 
     
     print("Plotting completed.")

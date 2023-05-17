@@ -327,24 +327,24 @@ def run_experiments(ds_meta):
         'Optimal TPR (F1-score-Max)',
         'Optimal Point Normalized Cost (F1-score-Max)',
         'Optimal Point Expected Cost (F1-score-Max)',
-        'Optimal FPR (Actual-Norm)',
-        'Optimal TPR (Actual-Norm)',
-        'Optimal Point Normalized Cost (Actual-Norm)',
-        'Optimal Point Expected Cost (Actual-Norm)',
-        'Optimal FPR (Actual-Exp)',
-        'Optimal TPR (Actual-Exp)',
-        'Optimal Point Normalized Cost (Actual-Exp)',
-        'Optimal Point Expected Cost (Actual-Exp)',
-        'Distance between ROCCHM and Actual-Norm',
-        'Distance between Norm-Cost-Min and Actual-Norm',
-        'Distance between Exp-Cost-Min and Actual-Norm',
-        'Distance between Accuracy-Max and Actual-Norm',
-        'Distance between F1-score-Max and Actual-Norm',
-        'Distance between ROCCHM and Actual-Exp',
-        'Distance between Norm-Cost-Min and Actual-Exp',
-        'Distance between Exp-Cost-Min and Actual-Exp',
-        'Distance between Accuracy-Max and Actual-Exp',
-        'Distance between F1-score-Max and Actual-Exp',
+        'Optimal FPR (Oracle-Norm)',
+        'Optimal TPR (Oracle-Norm)',
+        'Optimal Point Normalized Cost (Oracle-Norm)',
+        'Optimal Point Expected Cost (Oracle-Norm)',
+        'Optimal FPR (Oracle-Exp)',
+        'Optimal TPR (Oracle-Exp)',
+        'Optimal Point Normalized Cost (Oracle-Exp)',
+        'Optimal Point Expected Cost (Oracle-Exp)',
+        'Distance between ROCCHM and Oracle-Norm',
+        'Distance between Norm-Cost-Min and Oracle-Norm',
+        'Distance between Exp-Cost-Min and Oracle-Norm',
+        'Distance between Accuracy-Max and Oracle-Norm',
+        'Distance between F1-score-Max and Oracle-Norm',
+        'Distance between ROCCHM and Oracle-Exp',
+        'Distance between Norm-Cost-Min and Oracle-Exp',
+        'Distance between Exp-Cost-Min and Oracle-Exp',
+        'Distance between Accuracy-Max and Oracle-Exp',
+        'Distance between F1-score-Max and Oracle-Exp',
         
         
         )
@@ -426,56 +426,56 @@ def run_experiments(ds_meta):
                             fonemax_optimal_point_norm_cost = current_df['Normalized Cost'].loc[fonemax_idx]
                             fonemax_optimal_point_exp_cost = current_df['Expected Cost'].loc[fonemax_idx]
 
-                            # Actual FPR and TPR based on Normalized Cost
-                            actual_min_norm_cost_idx = current_df['Normalized Cost'].idxmin()
-                            actual_norm_optimal = [current_df['FPR'].loc[actual_min_norm_cost_idx], current_df['TPR'].loc[actual_min_norm_cost_idx]]
+                            # Oracle FPR and TPR based on Normalized Cost
+                            oracle_min_norm_cost_idx = current_df['Normalized Cost'].idxmin()
+                            oracle_norm_optimal = [current_df['FPR'].loc[oracle_min_norm_cost_idx], current_df['TPR'].loc[oracle_min_norm_cost_idx]]
                             
-                            # Cost of Actual Optimal Point based on Normalized Cost
-                            actual_norm_optimal_point_norm_cost = current_df['Normalized Cost'].loc[actual_min_norm_cost_idx]
-                            actual_norm_optimal_point_exp_cost = current_df['Expected Cost'].loc[actual_min_norm_cost_idx]
+                            # Cost of Oracle Optimal Point based on Normalized Cost
+                            oracle_norm_optimal_point_norm_cost = current_df['Normalized Cost'].loc[oracle_min_norm_cost_idx]
+                            oracle_norm_optimal_point_exp_cost = current_df['Expected Cost'].loc[oracle_min_norm_cost_idx]
 
-                            # Actual FPR and TPR based on Expected Cost
-                            actual_min_exp_cost_idx = current_df['Expected Cost'].idxmin()
-                            actual_exp_optimal = [current_df['FPR'].loc[actual_min_exp_cost_idx], current_df['TPR'].loc[actual_min_exp_cost_idx]]
+                            # Oracle FPR and TPR based on Expected Cost
+                            oracle_min_exp_cost_idx = current_df['Expected Cost'].idxmin()
+                            oracle_exp_optimal = [current_df['FPR'].loc[oracle_min_exp_cost_idx], current_df['TPR'].loc[oracle_min_exp_cost_idx]]
                             
-                            # Cost of Actual Optimal Point based on Expected Cost
-                            actual_exp_optimal_point_norm_cost = current_df['Normalized Cost'].loc[actual_min_exp_cost_idx]
-                            actual_exp_optimal_point_exp_cost = current_df['Expected Cost'].loc[actual_min_exp_cost_idx]
+                            # Cost of Oracle Optimal Point based on Expected Cost
+                            oracle_exp_optimal_point_norm_cost = current_df['Normalized Cost'].loc[oracle_min_exp_cost_idx]
+                            oracle_exp_optimal_point_exp_cost = current_df['Expected Cost'].loc[oracle_min_exp_cost_idx]
 
 
 
-                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point based on Normalized Cost
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Oracle Optimal Point based on Normalized Cost
                             rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
-                            distance_rocchm_actual_norm = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_norm_optimal))
+                            distance_rocchm_oracle_norm = np.linalg.norm (np.array(rocchm_optimal)-np.array(oracle_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Actual Optimal Point based on Normalized Cost
-                            distance_normcostmin_actual_norm = np.linalg.norm (np.array(normcostmin_optimal)-np.array(actual_norm_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Oracle Optimal Point based on Normalized Cost
+                            distance_normcostmin_oracle_norm = np.linalg.norm (np.array(normcostmin_optimal)-np.array(oracle_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Exp-Cost-Min and Actual Optimal Point based on Normalized Cost
-                            distance_expcostmin_actual_norm = np.linalg.norm (np.array(expcostmin_optimal)-np.array(actual_norm_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Exp-Cost-Min and Oracle Optimal Point based on Normalized Cost
+                            distance_expcostmin_oracle_norm = np.linalg.norm (np.array(expcostmin_optimal)-np.array(oracle_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Normalized Cost
-                            distance_accumax_actual_norm = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_norm_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Oracle Optimal Point based on Normalized Cost
+                            distance_accumax_oracle_norm = np.linalg.norm (np.array(accumax_optimal)-np.array(oracle_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Normalized Cost
-                            distance_fonemax_actual_norm = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_norm_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Oracle Optimal Point based on Normalized Cost
+                            distance_fonemax_oracle_norm = np.linalg.norm (np.array(fonemax_optimal)-np.array(oracle_norm_optimal))
 
 
-                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Actual Optimal Point based on Expected Cost
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Oracle Optimal Point based on Expected Cost
                             rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
-                            distance_rocchm_actual_exp = np.linalg.norm (np.array(rocchm_optimal)-np.array(actual_norm_optimal))
+                            distance_rocchm_oracle_exp = np.linalg.norm (np.array(rocchm_optimal)-np.array(oracle_norm_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Actual Optimal Point based on Expected Cost
-                            distance_normcostmin_actual_exp = np.linalg.norm (np.array(normcostmin_optimal)-np.array(actual_exp_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Oracle Optimal Point based on Expected Cost
+                            distance_normcostmin_oracle_exp = np.linalg.norm (np.array(normcostmin_optimal)-np.array(oracle_exp_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Exp-Cost-Min and Actual Optimal Point based on Expected Cost
-                            distance_expcostmin_actual_exp = np.linalg.norm (np.array(expcostmin_optimal)-np.array(actual_exp_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Exp-Cost-Min and Oracle Optimal Point based on Expected Cost
+                            distance_expcostmin_oracle_exp = np.linalg.norm (np.array(expcostmin_optimal)-np.array(oracle_exp_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Expected Cost
-                            distance_accumax_actual_exp = np.linalg.norm (np.array(accumax_optimal)-np.array(actual_exp_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Oracle Optimal Point based on Expected Cost
+                            distance_accumax_oracle_exp = np.linalg.norm (np.array(accumax_optimal)-np.array(oracle_exp_optimal))
 
-                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Actual Optimal Point based on Expected Cost
-                            distance_fonemax_actual_exp = np.linalg.norm (np.array(fonemax_optimal)-np.array(actual_exp_optimal))
+                            # Distance (in ROC space) between Optimal Point based on Accuracy-Max and Oracle Optimal Point based on Expected Cost
+                            distance_fonemax_oracle_exp = np.linalg.norm (np.array(fonemax_optimal)-np.array(oracle_exp_optimal))
 
 
                             # # Test set size, for calculating avg. exp. cost
@@ -522,24 +522,24 @@ def run_experiments(ds_meta):
                                         fonemax_optimal[1],
                                         fonemax_optimal_point_norm_cost,
                                         fonemax_optimal_point_exp_cost,
-                                        actual_norm_optimal[0],
-                                        actual_norm_optimal[1],
-                                        actual_norm_optimal_point_norm_cost,
-                                        actual_norm_optimal_point_exp_cost,
-                                        actual_exp_optimal[0],
-                                        actual_exp_optimal[1],
-                                        actual_exp_optimal_point_norm_cost,
-                                        actual_exp_optimal_point_exp_cost,
-                                        distance_rocchm_actual_norm,
-                                        distance_normcostmin_actual_norm,
-                                        distance_expcostmin_actual_norm,
-                                        distance_accumax_actual_norm,
-                                        distance_fonemax_actual_norm,
-                                        distance_rocchm_actual_exp,
-                                        distance_normcostmin_actual_exp,
-                                        distance_expcostmin_actual_exp,
-                                        distance_accumax_actual_exp,
-                                        distance_fonemax_actual_exp,
+                                        oracle_norm_optimal[0],
+                                        oracle_norm_optimal[1],
+                                        oracle_norm_optimal_point_norm_cost,
+                                        oracle_norm_optimal_point_exp_cost,
+                                        oracle_exp_optimal[0],
+                                        oracle_exp_optimal[1],
+                                        oracle_exp_optimal_point_norm_cost,
+                                        oracle_exp_optimal_point_exp_cost,
+                                        distance_rocchm_oracle_norm,
+                                        distance_normcostmin_oracle_norm,
+                                        distance_expcostmin_oracle_norm,
+                                        distance_accumax_oracle_norm,
+                                        distance_fonemax_oracle_norm,
+                                        distance_rocchm_oracle_exp,
+                                        distance_normcostmin_oracle_exp,
+                                        distance_expcostmin_oracle_exp,
+                                        distance_accumax_oracle_exp,
+                                        distance_fonemax_oracle_exp,
 
                                         
                                     ]
