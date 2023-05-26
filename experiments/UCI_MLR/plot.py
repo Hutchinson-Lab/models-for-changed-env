@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
 
-from .plot_descriptions import general_plots_metadata, selected_general_plots, characteristics_plots_metadata, metrics_plots_metadata
+from .plot_descriptions import general_plots_metadata, characteristics_plots_metadata, metrics_plots_metadata
 
 output_table_dir = './experiments/UCI_MLR/tables/'
 
@@ -21,12 +21,12 @@ output_plot_general_d_n_dir = './experiments/UCI_MLR/plots/general/distance/norm
 output_plot_general_d_e_dir = './experiments/UCI_MLR/plots/general/distance/exp/'
 
 output_plot_chrc_dir = './experiments/UCI_MLR/plots/characteristics/'
-output_plot_chrc_n_dir = './experiments/UCI_MLR/plots/characteristics/norm/' #new
-output_plot_chrc_e_dir = './experiments/UCI_MLR/plots/characteristics/exp/' #new
+output_plot_chrc_n_dir = './experiments/UCI_MLR/plots/characteristics/norm/' 
+output_plot_chrc_e_dir = './experiments/UCI_MLR/plots/characteristics/exp/'
 
 output_plot_metrics_dir = './experiments/UCI_MLR/plots/metrics/'
-output_plot_metrics_n_dir = './experiments/UCI_MLR/plots/metrics/norm/' #new
-output_plot_metrics_e_dir = './experiments/UCI_MLR/plots/metrics/exp/' #new
+output_plot_metrics_n_dir = './experiments/UCI_MLR/plots/metrics/norm/'
+output_plot_metrics_e_dir = './experiments/UCI_MLR/plots/metrics/exp/'
 
 
 ds_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', 'P', '*', 'h', 'H', 'X','d', 'D']
@@ -43,8 +43,6 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
     elif (cost_type=='Expected'):
         cost_type_abr = 'Exp'
         save_dir = output_plot_general_c_e_dir
-
-    col_names = list(plot_metadata.keys())[1:-1]
 
     nrow = 5
     ncol = 3
@@ -67,14 +65,9 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
                 f'Optimal Point {cost_type} Cost (Accuracy-Max)', 
                 f'Optimal Point {cost_type} Cost (F1-score-Max)',
                 f'Optimal Point {cost_type} Cost (ROCCH Method)',
-                ]
+            ]
         )
 
-        # current_df = current_df.round(4)
-        # current_df.to_csv(f'{output_table_dir}current_{plot_metadata["identifier"]}_{ds_keys[i]}.csv')
-
-
-        # Plot boxplots
         palette = {
             f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})' : 'limegreen',
             f'Optimal Point {cost_type} Cost (Norm-Cost-Min)' : 'royalblue', 
@@ -94,14 +87,11 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
 
         ax.patch.set_edgecolor('black')  
 
-        # ax.patch.set_linewidth('1') 
-
         # Save subplot legend hangles and labels for suplegend
         handles,_ = ax.get_legend_handles_labels()
         ax.get_legend().remove()
         
-    # ax.set_title(f"{col_names[0]}={plot_metadata[col_names[0]]}\nK=3, Sep. to Train Ratio=0.5\nOrig. To Impr. Ratio=0.5, FN cost=1.0", fontsize=12)
-
+  
     # Format legend
     fig.legend(
         handles, 
@@ -116,7 +106,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
     # Format suplabels and title
     fig.supylabel(f'{cost_type} Cost', x=0.02, fontsize=8)
     fig.supxlabel(plot_metadata['varying'], y=0.03, fontsize=8)
-    fig.suptitle(f'{cost_type} Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
+    fig.suptitle(f'{cost_type} Cost while varying {plot_metadata["varying"]}', fontsize=9)
     fig.tight_layout()
 
     fig.savefig(f'{save_dir}cost_{plot_metadata["identifier"]}.png', bbox_inches='tight', dpi=300)
@@ -134,8 +124,6 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
     elif (cost_type=='Expected'):
         cost_type_abr = 'Exp'
         save_dir = output_plot_general_d_e_dir
-
-    col_names = list(plot_metadata.keys())[1:-1]
 
     nrow = 5
     ncol = 3
@@ -157,12 +145,10 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
                 f'Distance between Accuracy-Max and Oracle-{cost_type_abr}',
                 f'Distance between F1-score-Max and Oracle-{cost_type_abr}',
                 f'Distance between ROCCHM and Oracle-{cost_type_abr}', 
-                ]
+            ]
         )
 
-        # current_df = current_df.round(4)
-        # current_df.to_csv(f'{output_table_dir}current_{plot_metadata["identifier"]}_{ds_keys[i]}.csv')
-
+        
         # Plot boxplots
         palette = {
             f'Distance between Norm-Cost-Min and Oracle-{cost_type_abr}'  : 'royalblue',
@@ -181,14 +167,12 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
 
         ax.patch.set_edgecolor('black')  
 
-        # ax.patch.set_linewidth('1') 
-
+       
         # Save subplot legend hangles and labels for suplegend
         handles,_ = ax.get_legend_handles_labels()
         ax.get_legend().remove()
         
-    # ax.set_title(f"{col_names[0]}={plot_metadata[col_names[0]]}\nK=3, Sep. to Train Ratio=0.5\nOrig. To Impr. Ratio=0.5, FN cost=1.0", fontsize=12)
-
+  
     # Format legend
     fig.legend(
         handles, 
@@ -203,7 +187,7 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
     # Format suplabels and title
     fig.supylabel('Distance', x=0.02, fontsize=8)
     fig.supxlabel(plot_metadata['varying'], y=0.03, fontsize=8)
-    fig.suptitle(f'Distance to Oracle Optimal Point based on {cost_type} Cost while varying "{plot_metadata["varying"]}"\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n{col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}', fontsize=9)
+    fig.suptitle(f'Distance to Oracle Optimal Point while varying {plot_metadata["varying"]}', fontsize=9)
     fig.tight_layout()
 
     fig.savefig(f'{save_dir}dist_{plot_metadata["identifier"]}.png', bbox_inches='tight', dpi=300)
@@ -228,7 +212,6 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
 
     
     
-    
     subplot_row_titles = ['Data Set Size', 'No. of Features','Class Distribution']
 
     subplot_column_titles = [ 0.5, 0.75, 1.0, 1.25]
@@ -245,8 +228,6 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
             
             df.loc[df['Data Set']==ds_key, subplot_row_title] = float(descriptions_df.loc[descriptions_df['Data Set']==ds_key, subplot_row_title])
 
-
-    col_names = list(plot_metadata.keys())
 
     nrow = 3
     ncol = 4
@@ -317,8 +298,6 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
 
 
         
-        
-
         if (r==0):
             ax.set_title('$\\frac{P_{test}(Y=1)}{P_{train}(Y=1)}$='+str(subplot_column_titles[c]), fontsize=7)
         else:
@@ -330,7 +309,6 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
                 1.125, 
                 0.5, 
                 subplot_row_titles[r],
-                # bbox=dict(boxstyle='square,pad=0.4', facecolor='white', edgecolor='black', alpha=0.5, linewidth=0.5), 
                 horizontalalignment='center', 
                 verticalalignment='center', 
                 transform=ax.transAxes,
@@ -343,10 +321,6 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
             
         
         ax.set(xlabel=None,ylabel=None)
-
-        # else:
-            # ax.set(ylabel=None)
-
         ax.tick_params(axis='x', labelsize=4, labelrotation=45)
         ax.tick_params(axis='y', labelsize=4)
 
@@ -355,7 +329,6 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
             handles,_ = ax.get_legend_handles_labels()
         ax.get_legend().remove()
 
-    # handles,_ = ax.get_legend_handles_labels()
     
     # Format legend
     fig.legend(
@@ -371,10 +344,8 @@ def plot_characteristics_pointplots (df, descriptions_df, plot_metadata, identif
     # Format suplabels and title
     fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Oracle)', x=0.04, fontsize=8)
     fig.supxlabel('', fontsize=1)
-    fig.suptitle(f'{cost_type} Cost Difference\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}, {col_names[6]}={plot_metadata[col_names[6]]}', y =0.9675, fontsize=8)
-    fig.tight_layout()
-
-    
+    fig.suptitle(f'{cost_type} Cost Difference', y =0.9675, fontsize=8)
+    fig.tight_layout()    
 
     fig.savefig(f'{save_dir}ds_cost_{identifier}.png', bbox_inches='tight', dpi=300)
     
@@ -405,8 +376,6 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
 
     df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH Method)'] - df[f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})']
     df.reset_index(drop=True)
-
-    col_names = list(plot_metadata.keys())
 
     nrow = 6
     ncol = 4
@@ -474,7 +443,6 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
 
         model = sm.OLS(df_t["Cost Difference"], sm.add_constant(df_t['Avg. '+subplot_row_titles[r]])).fit()
 
-        # print(model.params)
         intercept, slope = round(model.params[0],2), round(model.params[1],2)
         r_squared, p_value = round(model.rsquared, 2), round(model.pvalues.loc['Avg. '+subplot_row_titles[r]], 2) 
         ax.text(
@@ -502,23 +470,15 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
                 1.125, 
                 0.5, 
                 subplot_row_titles_fmt[r],
-                # bbox=dict(boxstyle='square,pad=0.4', facecolor='white', edgecolor='black', alpha=0.5, linewidth=0.5), 
                 horizontalalignment='center', 
                 verticalalignment='center', 
                 transform=ax.transAxes,
                 rotation=90, 
                 fontsize=5
             )
-
-
-    
-            
+        
         
         ax.set(xlabel=None,ylabel=None)
-
-        # else:
-            # ax.set(ylabel=None)
-
         ax.tick_params(axis='x', labelsize=3)
         ax.tick_params(axis='y', labelsize=3)
 
@@ -527,7 +487,6 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
             handles,_ = ax.get_legend_handles_labels()
         ax.get_legend().remove()
 
-    # handles,_ = ax.get_legend_handles_labels()
     
     # Format legend
     fig.legend(
@@ -543,7 +502,7 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
     # Format suplabels and title
     fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Oracle)', x=0.04, fontsize=8)
     fig.supxlabel('', fontsize=1)
-    fig.suptitle(f'Effect of Covariate Shift on Efficacy of ROCCH Method\n{col_names[0]}={plot_metadata[col_names[0]]}, {col_names[1]}={plot_metadata[col_names[1]]}\n {col_names[2]}={plot_metadata[col_names[2]]}, {col_names[3]}={plot_metadata[col_names[3]]}, {col_names[4]}={plot_metadata[col_names[4]]}, {col_names[5]}={plot_metadata[col_names[5]]}, {col_names[6]}={plot_metadata[col_names[6]]}', y =0.9675, fontsize=8)
+    fig.suptitle(f'Covariate Shift and Efficacy of ROCCH Method', y =0.9675, fontsize=8)
     fig.tight_layout()
 
     
@@ -553,9 +512,6 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
     matplotlib.rcParams.update(matplotlib.rcParamsDefault)
     
     plt.close()
-
-
-
 
 
 
@@ -693,9 +649,4 @@ def plot_results():
         plot_metrics_pointplot(current_df, dataset_descriptions, metrics_plots_metadata[k], k, 'Expected')
 
 
-    # Save selected plots of interest to a separate directory
-    # for plot_filename in selected_varying_plots:
-    #     shutil.copyfile(f'{output_plot_varying_dir}{plot_filename}', f'{output_plot_main_dir}{plot_filename}')
-
-    
     print("Plotting completed.")

@@ -1,37 +1,5 @@
 
 
-
-characteristics_plots_metadata = {
-    'os=rnd_us=rnd_repeats=30_train=0.4_validation=0.2_test=0.4_fnc=1.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Validation Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "FN cost" : 1.0,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_validation=0.2_test=0.4_fnc=1.5': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Validation Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "FN cost" : 1.5,
-    },
-    'os=rnd_us=rnd_repeats=30_train=0.4_validation=0.2_test=0.4_fnc=3.0': {
-        "Oversampling Method" : "Random", 
-    	"Undersampling Method" : "Random",
-    	"Repeats" : 30,
-        "Train Ratio" : 0.4,
-        "Validation Ratio" : 0.2,
-        "Test Ratio" : 0.4,        
-        "FN cost" : 3.0,
-    },
-}
-
-
 metrics_plots_metadata = {
     'os=rnd_us=rnd_repeats=30_train=0.4_validation=0.2_test=0.4_fnc=1.0': {
         "Oversampling Method" : "Random", 

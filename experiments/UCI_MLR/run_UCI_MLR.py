@@ -14,11 +14,11 @@ def run_UCI_MLR():
     print('-'*56)
     
     # Download all datasets
-    download_datasets(ds_meta) # Comment out this line if data sets have previously been downloaded
-    preprocess_datasets(ds_meta)
+    # download_datasets(ds_meta) # Comment out this line if data sets have previously been downloaded
+    # preprocess_datasets(ds_meta)
 
     # Evaluate practicality and applicability of the ROC Convex Hull Method
-    run_experiments(ds_meta)
+    # run_experiments(ds_meta)
 
     # Plot results from experiments
-    # plot_results()
+    plot_results()
