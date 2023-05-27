@@ -42,6 +42,9 @@ cd experiments
 python run.py
 ```
 
+Experimental methodology of learning, inference, evaluation, and selection:
+<img src="figures/exp_methodology.png"  width="600">
+
 ### Changed Class Distributions
 
 In these experimental settings, cost distributions are fixed and class distributions were changed. `Norm-Cost-Min` performs well on almost data sets. `Exp-Cost-Min` does not perform as well. `Accuracy-Max` and `F1-score-Max` do not perfom competitively because they can not factor class distributions of changed test environnments. `ROCCH Method` performs better when relative frequency of negatives is higher in the test set than the trainig set, but performs very poorly when the opposite happens.
