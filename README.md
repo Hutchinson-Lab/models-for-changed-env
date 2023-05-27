@@ -8,4 +8,4 @@
 
 
 
-![image info](./figures/rocchmethod.png)
+![image info](figures/rocch_method.png)
