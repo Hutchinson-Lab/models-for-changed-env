@@ -1,6 +1,6 @@
 # Model Selection for Changed Environments
 
-Code for model selection of ciscrete classifiers under class and cost distribution change, i.e., changed environments. Changed environments refer to circumstances when the relative frequency of positives and negatives, and mislabeling costs of making false positive and false negative errors of the test data is different from that of the training data. Expected cost and normalized (expected) cost are used to evaluate performance of selected discrete classifiers on changed environment test data.
+Code for model selection of discrete classifiers under class and cost distribution change, i.e., changed environments. Changed environments refer to circumstances when the relative frequency of positives and negatives, and mislabeling costs of making false positive and false negative errors of the test data is different from that of the training data. Normalized (expected) normalized cost is used to evaluate performance of selected discrete classifiers on changed environment test data.
 
 ## Candidate Approaches
  
@@ -12,6 +12,8 @@ Discrete classifiers on the ROC convex hull are selected based on the following 
 * `F1-score-Max`: This appraoch selects discrete classifier that maximizes F1-score on the validation data
 * `ROCCH Method`: This approach uses isometrics to select classifiers (Provost and Fawcett, 1997, 1998, 2001).
 
+Construcitng ROC convex hull and applying `ROCCH Method`:
+<img src="figures/rocch_method.png"  width="600">
 
 ## Requirements
 
@@ -29,13 +31,9 @@ Discrete classifiers on the ROC convex hull are selected based on the following 
 
 ## Overview
 
-`rocchmethod` contains implementation of the `ROCCH Method`, and other relevant utilities, e.g., for calculating expected cost, constructing ROC curves and ROC convex hulls, etc.) `experiments` contains code for running our experiments. 
-
-
-<img src="figures/rocch_method.png"  width="600">
+`rocchmethod` contains implementation of the `ROCCH Method`, and other relevant utilities, e.g., for calculating expected cost, constructing ROC curves and ROC convex hulls, etc.) `experiments` contains code for running all experiments. `experiments/UCI_MLR` contains code for running experiments on UCI Machine Learning Repository data sets, and `experiments/Synthetic` contains code for running experiments on synthetic data sets.
 
 ## Experiments
-
 
 Our experiments can be reproduced by running the following code in a terminal:
 
@@ -44,13 +42,18 @@ cd experiments
 python run.py
 ```
 
-
-## Plotting Results
-
 ### Changed Class Distributions
+
+In these experimental settings, cost distributions are fixed and class distributions were changed. `Norm-Cost-Min` performs well on almost data sets. `Exp-Cost-Min` does not perform as well. `Accuracy-Max` and `F1-score-Max` do not perfom competitively because they can not factor class distributions of changed test environnments. `ROCCH Method` performs better when relative frequency of negatives is higher in the test set than the trainig set, but performs very poorly when the opposite happens.
+
+Normalized cost while varying test to trian class distribution ratio:
 <img src="figures/UCI_norm_cost_os=rnd_us=rnd_test2train_repeats=30_train=0.4_test=0.4_fnc=1.0.png"  width="600">
 
 ### Changed Cost Distributions
+
+In these experimental settings, class distributions and are fixed and cost distributions were changed. `Accuracy-Max` and `F1-score-Max` do not perfom competitively. `ROCCh Method` seems to performn better on some dats sets when cost distributions are sekewd.
+
+Normalized cost while varying false negative cost:
 <img src="figures/UCI_norm_cost_os=rnd_us=rnd_fncost_repeats=30_train=0.4_test=0.4_test2train=1.0.png"  width="600">
 
 
