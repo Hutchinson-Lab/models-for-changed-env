@@ -25,6 +25,10 @@
 
 ## Experiments
 
+```
+cd experiments
+python run.py
+```
 
 ## Plotting Results
 
