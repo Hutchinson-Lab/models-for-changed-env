@@ -38,7 +38,7 @@ python run_UCI_MLR.py
 
 ```
 cd experiments/Synthetic
-python run.py
+python run_Synthetic.py
 ```
 
 ## Plotting Results
