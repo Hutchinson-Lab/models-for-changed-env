@@ -5,12 +5,12 @@ Code for model selection of discrete classifiers under class and cost distributi
 ## Candidate Approaches
  
 Discrete classifiers on the ROC convex hull are selected based on the following approahces:
- 
+
+* `ROCCH Method`: This approach uses isometrics to select classifiers (Provost and Fawcett, 1997, 1998, 2001).
 * `Norm-Cost-Min`: This appraoch selects discrete classifier that minimizes normalized cost on validation data, where probability of making mistakes on positives and negatives on the validation set are weighted by false positive and false negative misclassification costs of test data.
 * `Exp-Cost-Min`:  This appraoch selects discrete classifier that minimizes normalized cost on validation data, where probability of making mistakes on positives and negatives on the validation set are weighted by relative frequency of positives and negatives, and false positive and false negative misclassification costs of test data.
 * `Accuracy-Max`: This appraoch selects discrete classifier that maximizes accuracy on the validation data.
 * `F1-score-Max`: This appraoch selects discrete classifier that maximizes F1-score on the validation data
-* `ROCCH Method`: This approach uses isometrics to select classifiers (Provost and Fawcett, 1997, 1998, 2001).
 
 Construcitng ROC convex hull and applying `ROCCH Method`:
 <img src="figures/rocch_method.png"  width="600">
