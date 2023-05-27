@@ -8,4 +8,4 @@
 
 
 
-![image info](figures/rocch_method.png)
+<img src="figures/rocch_method.png"  width="600">
