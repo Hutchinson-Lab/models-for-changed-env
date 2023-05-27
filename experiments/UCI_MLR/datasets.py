@@ -1,7 +1,9 @@
+# UCI data set descriptions
 
-'''
+# Nahian Ahmed
+# May 27, 2023
 
-'''
+
 ds_meta = {
 
 	"banknote-authentication": 

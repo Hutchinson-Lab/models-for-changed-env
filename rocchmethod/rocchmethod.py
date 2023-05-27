@@ -1,6 +1,7 @@
-'''
+# Implementation of ROC Convex Hull Method
 
-'''
+# Nahian Ahmed
+# May 27, 2023
 
 import numpy as np
 from sklearn.metrics import roc_curve
@@ -113,7 +114,3 @@ def classifiers_on_rocch(fpr_list, tpr_list, threshold_list, rocch_fpr, rocch_tp
         
     return rocch_classifiers, rocch_thresholds
             
-
-
-
-# Need to implement metrics to find distance between points.

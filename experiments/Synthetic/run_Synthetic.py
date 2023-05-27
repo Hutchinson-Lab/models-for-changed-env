@@ -1,3 +1,8 @@
+# Main script for running experiments on synthetic data sets
+
+# Nahian Ahmed
+# May 27, 2023
+
 # contains dataset metadata, such as columns that need one-hot encoding, label identifiers, etc.
 from .datasets import ds_meta
 from .preprocess import generate_datasets
@@ -12,10 +17,10 @@ def run_Synthetic():
     print('-'*34)
 
     # Generate all datasets
-    # generate_datasets(ds_meta) # Comment out this line if data sets have previously been generated
+    generate_datasets(ds_meta) # Comment out this line if data sets have previously been generated
  
     # Evaluate practicality and applicability of the ROC Convex Hull Method
-    # run_experiments(ds_meta)
+    run_experiments(ds_meta)
 
     # Plot results from experiments
     plot_results()

@@ -1,5 +1,9 @@
-# contains dataset metadata, such as columns that need one-hot encoding, label identifiers, etc.
+# Main script for running experiments on UCI data sets
 
+# Nahian Ahmed
+# May 27, 2023
+
+# contains dataset metadata, such as columns that need one-hot encoding, label identifiers, etc.
 from .datasets import ds_meta
 from .preprocess import download_datasets, preprocess_datasets
 from .experiments import run_experiments
@@ -14,11 +18,11 @@ def run_UCI_MLR():
     print('-'*56)
     
     # Download all datasets
-    # download_datasets(ds_meta) # Comment out this line if data sets have previously been downloaded
-    # preprocess_datasets(ds_meta)
+    download_datasets(ds_meta) # Comment out this line if data sets have previously been downloaded
+    preprocess_datasets(ds_meta)
 
     # Evaluate practicality and applicability of the ROC Convex Hull Method
-    # run_experiments(ds_meta)
+    run_experiments(ds_meta)
 
     # Plot results from experiments
     plot_results()

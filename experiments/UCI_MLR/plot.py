@@ -1,5 +1,9 @@
+# Plot all results on UCI data sets
+
+# Nahian Ahmed
+# May 27, 2023
+
 import os
-import shutil
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt

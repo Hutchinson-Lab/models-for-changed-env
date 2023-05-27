@@ -1,11 +1,14 @@
+# Utilites for model selection under class and cost distribution change
+
+# Nahian Ahmed
+# May 27, 2023
+
 import warnings
 import numpy as np
 from imblearn.pipeline import make_pipeline
 from imblearn.over_sampling import RandomOverSampler, SMOTE
 from imblearn.under_sampling import RandomUnderSampler, NearMiss
-from sklearn.preprocessing import scale
 from sklearn.metrics import confusion_matrix
-# from sklearn.svm import SVC
 
 def normalized_cost(y_true, y_pred, fpc, fnc):
     '''
@@ -53,49 +56,9 @@ def expected_cost(y_true, y_pred, fpc, fnc):
     return cost
 
 
-# def class_distance_ratio (X, y):
-
-#     X = scale(X)
-#     models = {
-#         'linear' : SVC(kernel='linear', random_state=0).fit(X, y),
-#         'poly' : SVC(kernel='poly', random_state=0).fit(X, y),
-#         'rbf' : SVC(kernel='rbf', random_state=0).fit(X, y),
-#         'sigmoid' : SVC(kernel='sigmoid', random_state=0).fit(X, y),
-#     }
-#     pos_idx = np.transpose((y==1).nonzero()).flatten()
-#     neg_idx = np.transpose((y==0).nonzero()).flatten()
-
-#     ratios = {}
-#     for m in models:
-#         pos_avg_dist = 0
-#         for idx in pos_idx:
-#             y_t = models[m].decision_function(X[idx,:][np.newaxis,:])
-#             if (m == 'linear'):
-#                 w_norm = np.linalg.norm(models[m].coef_)
-#                 dist = np.abs(y_t / w_norm)[0]
-#                 pos_avg_dist += dist
-#             else:
-#                 pos_avg_dist += np.abs(y_t)
-#         pos_avg_dist /= pos_idx.size
-
-#         neg_avg_dist = 0
-#         for idx in neg_idx:
-#             y_t = models[m].decision_function(X[idx,:][np.newaxis,:])
-#             if (m == 'linear'):
-#                 w_norm = np.linalg.norm(models[m].coef_)
-#                 dist = np.abs(y_t / w_norm)[0]
-#                 neg_avg_dist += dist
-#             else:
-#                 neg_avg_dist += np.abs(y_t)
-#         neg_avg_dist /= neg_idx.size
-
-#         ratios[m] = float(pos_avg_dist/neg_avg_dist)
-#     return ratios
-
-
 
 # environment = ["%/100 of original clas distr.", "FP cost", "FN cost"]
-# "%/100 of original clas distr." represents the scaled percentage of the original class distribution (of training set) in the imprecise environment/test set
+# "%/100 of original clas distr." represents the scaled percentage of the original class distribution (of training set) in the changed environment/test set
 # A value of 1.0 indicates that the test set has the same class distriution as the original/training set.
 # A value of 0.5 indicates that the test set is equal to the original class distribution multiplied by 0.5 (divided by 2).
 # A value of 1.25 indicates that the test set is equal to the original class distribution mulitplied by 1.25 (divided by 4/5)  

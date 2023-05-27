@@ -1,3 +1,8 @@
+# Plot all results on synthetic data sets
+
+# Nahian Ahmed
+# May 27, 2023
+
 import os
 import shutil
 import pandas as pd

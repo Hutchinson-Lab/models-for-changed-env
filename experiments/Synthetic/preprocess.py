@@ -1,6 +1,7 @@
-'''
+# Generate and preprocess synthetic data sets
 
-'''
+# Nahian Ahmed
+# May 27, 2023
 
 
 import os, tqdm

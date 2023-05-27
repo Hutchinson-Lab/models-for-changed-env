@@ -1,6 +1,7 @@
-'''
+# Main script for running all experiments
 
-'''
+# Nahian Ahmed
+# May 27, 2023
 
 from Synthetic.run_Synthetic import run_Synthetic
 from UCI_MLR.run_UCI_MLR import run_UCI_MLR

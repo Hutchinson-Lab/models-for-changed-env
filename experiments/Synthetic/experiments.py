@@ -1,7 +1,7 @@
-'''
-Experiment: Evaluate practicality and applicability of the ROC Convex Hull Method.
+# Experiments on synthetic data sets
 
-'''
+# Nahian Ahmed
+# May 27, 2023
 
 import tqdm
 import numpy as np

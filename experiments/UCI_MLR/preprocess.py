@@ -1,7 +1,7 @@
-'''
+# Preprocess UCI data sets
 
-'''
-
+# Nahian Ahmed
+# May 27, 2023
 
 import os, io, zipfile, requests, tqdm
 import numpy as np
@@ -9,7 +9,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.preprocessing import StandardScaler
-
 
 import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))

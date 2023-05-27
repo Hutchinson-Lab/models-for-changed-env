@@ -1,15 +1,14 @@
+# Configurations of synthetic data sets
 
-'''
-
-'''
-
+# Nahian Ahmed
+# May 27, 2023
 
 '''
 Data Set Size
 No. of Features
 No. of Categorical Features
 Class Distribution
-Added Noise to Negative Instances
+Noise Added to Positive Instances
 '''
 
 ds_meta = {
