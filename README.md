@@ -30,6 +30,17 @@ cd experiments
 python run.py
 ```
 
+
+```
+cd experiments/UCI_MLR
+python run_UCI_MLR.py
+```
+
+```
+cd experiments/Synthetic
+python run.py
+```
+
 ## Plotting Results
 
 ### Changed Class Distributions
