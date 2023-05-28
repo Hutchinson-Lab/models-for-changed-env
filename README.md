@@ -13,7 +13,10 @@ Discrete classifiers on the ROC convex hull are selected based on the following 
 * `F1-score-Max`: This appraoch selects discrete classifier that maximizes F1-score on the validation data
 
 Construcitng ROC convex hull and applying `ROCCH Method`:
-<img src="figures/rocch_method.png"  width="600">
+<p align="center">
+  <img src="figures/rocch_method.png"  width="600">
+</p>
+
 
 ## Requirements
 
@@ -43,22 +46,29 @@ python run.py
 ```
 
 Experimental methodology of learning, inference, evaluation, and selection:
-<img src="figures/exp_methodology.png"  width="600">
+<p align="center">
+  <img src="figures/exp_methodology.png"  width="600">
+</p>
+
 
 ### Changed Class Distributions
 
 In these experimental settings, cost distributions are fixed and class distributions were changed. `Norm-Cost-Min` performs well on almost data sets. `Exp-Cost-Min` does not perform as well. `Accuracy-Max` and `F1-score-Max` do not perfom competitively because they can not factor class distributions of changed test environnments. `ROCCH Method` performs better when relative frequency of negatives is higher in the test set than the trainig set, but performs very poorly when the opposite happens.
 
 Normalized cost while varying test to trian class distribution ratio:
-<img src="figures/UCI_norm_cost_os=rnd_us=rnd_test2train_repeats=30_train=0.4_test=0.4_fnc=1.0.png"  width="600">
+<p align="center">
+  <img src="figures/UCI_norm_cost_os=rnd_us=rnd_test2train_repeats=30_train=0.4_test=0.4_fnc=1.0.png"  width="600">
+</p>
+
 
 ### Changed Cost Distributions
 
 In these experimental settings, class distributions and are fixed and cost distributions were changed. `Accuracy-Max` and `F1-score-Max` do not perfom competitively. `ROCCh Method` seems to performn better on some dats sets when cost distributions are sekewd.
 
 Normalized cost while varying false negative cost:
-<img src="figures/UCI_norm_cost_os=rnd_us=rnd_fncost_repeats=30_train=0.4_test=0.4_test2train=1.0.png"  width="600">
-
+<p align="center">
+  <img src="figures/UCI_norm_cost_os=rnd_us=rnd_fncost_repeats=30_train=0.4_test=0.4_test2train=1.0.png"  width="600">
+</p>
 
 ## Authors
 
