@@ -78,13 +78,13 @@ Normalized cost while varying false negative cost:
 ## References
 
 Foster J Provost, Tom Fawcett, et al. Analysis and visualization of classifier performance: comparison under imprecise class and cost distributions. In KDD, volume 97, pp. 43–48, 1997.
-<https://dl.acm.org/doi/abs/10.5555/3001392.3001400>.
+<https://dl.acm.org/doi/abs/10.5555/3001392.3001400>
 
-Foster Provost and Tom Fawcett. Robust classification systems for imprecise environments. In AAAI/IAAI, Pages 706–713, 1998
-<https://dl.acm.org/doi/10.5555/295240.295794>.
+Foster Provost and Tom Fawcett. Robust classification systems for imprecise environments. In AAAI/IAAI, Pages 706–713, 1998.
+<https://dl.acm.org/doi/10.5555/295240.295794>
 
 Foster Provost and Tom Fawcett. Robust classification for imprecise environments. Machine Learning, 42 (3), Pages 203–231, 2001.
-https://doi.org/10.1023/A:1007601015854.
+<https://doi.org/10.1023/A:1007601015854>
 
 
 ## Acknowledgements
