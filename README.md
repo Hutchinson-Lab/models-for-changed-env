@@ -77,8 +77,8 @@ Normalized cost while varying false negative cost:
 
 ## References
 
-Foster Provost and Tom Fawcett. Analysis and visualization of classifier performance with nonuniform class and cost distributions. In Proceedings of AAAI-97 Workshop on AI Approaches to Fraud Detection & Risk Management, Pages 57–63, 1997. 
-<https://aaai.org/papers/007-analysis-and-visualization-of-classifier-performance-comparison-under-imprecise-class-and-cost-distributions/>.
+Foster J Provost, Tom Fawcett, et al. Analysis and visualization of classifier performance: comparison under imprecise class and cost distributions. In KDD, volume 97, pp. 43–48, 1997.
+<https://dl.acm.org/doi/abs/10.5555/3001392.3001400>.
 
 Foster Provost and Tom Fawcett. Robust classification systems for imprecise environments. In AAAI/IAAI, Pages 706–713, 199
 <https://dl.acm.org/doi/10.5555/295240.295794>.
