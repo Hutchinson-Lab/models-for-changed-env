@@ -57,7 +57,7 @@ In these experimental settings, cost distributions are fixed and class distribut
 
 Normalized cost while varying test to trian class distribution ratio:
 <p align="center">
-  <img src="figures/UCI_norm_cost_os=rnd_us=rnd_test2train_repeats=30_train=0.4_test=0.4_fnc=1.0.png"  width="700">
+  <img src="figures/UCI_norm_cost_os=rnd_us=rnd_test2train_repeats=30_train=0.4_test=0.4_fnc=1.0.png"  width="600">
 </p>
 
 
@@ -67,7 +67,7 @@ In these experimental settings, class distributions and are fixed and cost distr
 
 Normalized cost while varying false negative cost:
 <p align="center">
-  <img src="figures/UCI_norm_cost_os=rnd_us=rnd_fncost_repeats=30_train=0.4_test=0.4_test2train=1.0.png"  width="700">
+  <img src="figures/UCI_norm_cost_os=rnd_us=rnd_fncost_repeats=30_train=0.4_test=0.4_test2train=1.0.png"  width="600">
 </p>
 
 ## Authors
