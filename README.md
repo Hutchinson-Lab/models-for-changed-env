@@ -1,6 +1,6 @@
 # Model Selection for Changed Environments
 
-Code for model selection of discrete classifiers under class and cost distribution change, i.e., changed environments. Changed environments refer to circumstances when the relative frequency of positives and negatives, and mislabeling costs of making false positive and false negative errors of the test data is different from that of the training data. Normalized (expected) normalized cost is used to evaluate performance of selected discrete classifiers on changed environment test data.
+Code for model selection of discrete classifiers under class and cost distribution change, i.e., changed environments. Changed environments refer to circumstances when the relative frequency of positives and negatives, and/or mislabeling costs of making false positive and false negative errors of the test data is different from that of the training data. Normalized (expected) normalized cost is used to evaluate performance of selected discrete classifiers on changed environment test data.
 
 ## Candidate Approaches
  
