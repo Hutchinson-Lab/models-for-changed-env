@@ -35,7 +35,7 @@ Construcitng ROC convex hull and applying `ROCCH Method`:
 
 ## Overview
 
-`rocchmethod` contains implementation of the `ROCCH Method`, and other relevant utilities, e.g., for calculating expected cost, constructing ROC curves and ROC convex hulls, etc.) `experiments` contains code for running all experiments. `experiments/UCI_MLR` contains code for running experiments on UCI Machine Learning Repository data sets, and `experiments/Synthetic` contains code for running experiments on synthetic data sets.
+`rocchmethod` contains implementation of the `ROCCH Method`, and other relevant utilities, e.g., for calculating expected cost, constructing ROC curves and ROC convex hulls, etc. `experiments` contains code for running all experiments. `experiments/UCI_MLR` contains code for running experiments on UCI Machine Learning Repository data sets, and `experiments/Synthetic` contains code for running experiments on synthetic data sets.
 
 ## Experiments
 
