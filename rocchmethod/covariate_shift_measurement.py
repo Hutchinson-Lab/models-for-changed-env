@@ -1,7 +1,7 @@
-# Methods for measuring covariate shift between training and test data sets
+# Methods for measuring covariate shift between training and test sets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 import numpy as np
 from scipy.stats import wasserstein_distance, energy_distance, cramervonmises_2samp

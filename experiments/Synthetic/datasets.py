@@ -1,10 +1,10 @@
-# Configurations of synthetic data sets
+# Configurations of synthetic datasets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 '''
-Data Set Size
+Dataset Size
 No. of Features
 No. of Categorical Features
 Class Distribution
@@ -13,7 +13,7 @@ Noise Added to Positive Instances
 
 ds_meta = {
     
-	"data-set-1": 
+	"dataset-1": 
 	{
 		"n_instances" : 500,
 		"n_features" : 4,
@@ -23,7 +23,7 @@ ds_meta = {
 	
 	},
     
-	"data-set-2": 
+	"dataset-2": 
 	{
 		"n_instances" : 500,
 		"n_features" : 4,
@@ -32,7 +32,7 @@ ds_meta = {
 		"noise_added" : "No",
 	},
     
-	"data-set-3": 
+	"dataset-3": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -41,7 +41,7 @@ ds_meta = {
     	"noise_added" : "No",
 	},
     
-	"data-set-4": 
+	"dataset-4": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -50,7 +50,7 @@ ds_meta = {
     	"noise_added" : "No",
 	},
     
-	"data-set-5": 
+	"dataset-5": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -60,7 +60,7 @@ ds_meta = {
 	},
 
     
-	"data-set-6": 
+	"dataset-6": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -69,7 +69,7 @@ ds_meta = {
     	"noise_added" : "No",
 	},
     
-	"data-set-7": 
+	"dataset-7": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -78,7 +78,7 @@ ds_meta = {
     	"noise_added" : "No",
 	},
     
-	"data-set-8": 
+	"dataset-8": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -87,7 +87,7 @@ ds_meta = {
     	"noise_added" : "Yes",
 	},
     
-	"data-set-9": 
+	"dataset-9": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -96,7 +96,7 @@ ds_meta = {
     	"noise_added" : "Yes",
 	},
     
-	"data-set-10": 
+	"dataset-10": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -104,7 +104,7 @@ ds_meta = {
 		"class_distribution" : 0.5,
     	"noise_added" : "Yes",
 	},
-	"data-set-11": 
+	"dataset-11": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,
@@ -112,7 +112,7 @@ ds_meta = {
 		"class_distribution" : 0.25,
     	"noise_added" : "Yes",
 	},
-	"data-set-12": 
+	"dataset-12": 
 	{
 		"n_instances" : 1000,
 		"n_features" : 4,

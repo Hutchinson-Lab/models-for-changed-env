@@ -1,7 +1,7 @@
-# Preprocess UCI data sets
+# Preprocess UCI datasets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 import os, io, zipfile, requests, tqdm
 import numpy as np
@@ -13,8 +13,6 @@ from sklearn.preprocessing import StandardScaler
 import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
-# from rocchmethod.class_utils import class_distance_ratio
-
 
 ds_main_dir = './experiments/UCI_MLR/datasets/'
 ds_raw_dir = './experiments/UCI_MLR/datasets/raw/'
@@ -25,7 +23,7 @@ output_plot_main_dir = './experiments/UCI_MLR/plots/'
 
 def download_datasets (ds_meta):
     
-    print("\nDownloading data sets:")
+    print("\nDownloading datasets:")
     
     if not os.path.isdir(ds_main_dir):
         os.makedirs(ds_main_dir)
@@ -51,7 +49,7 @@ def download_datasets (ds_meta):
 
 def preprocess_datasets (ds_meta):
     
-    print("Preprocessing data sets:")
+    print("Preprocessing datasets:")
     
     if not os.path.exists(ds_preprocessed_dir):
         os.makedirs(ds_preprocessed_dir)
@@ -59,7 +57,7 @@ def preprocess_datasets (ds_meta):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance'))
+    dataset_descriptions = pd.DataFrame(columns=('Dataset','Instances','Non-missing Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance'))
     i = 0
     
     for c in (pbar := tqdm.tqdm(ds_meta.keys())):

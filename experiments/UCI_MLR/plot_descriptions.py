@@ -1,6 +1,7 @@
-# Descriptions of plots on UCI data sets
+# Descriptions of plots on UCI datasets
+
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 
 characteristics_plots_metadata = {

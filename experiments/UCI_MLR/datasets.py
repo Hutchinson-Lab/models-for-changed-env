@@ -1,14 +1,14 @@
-# UCI data set descriptions
+# UCI dataset descriptions
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 
 ds_meta = {
 
 	"banknote-authentication": 
 	{
-		"title" : "Banknote Authentication Data Set",
+		"title" : "Banknote Authentication Dataset",
 		"abstract" : "Data were extracted from images that were taken for the evaluation of an authentication procedure for banknotes.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/banknote+authentication",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/00267/data_banknote_authentication.txt",
@@ -28,7 +28,7 @@ ds_meta = {
 		
 	"credit-approval": 
 	{
-		"title" : "Credit Approval Data Set",
+		"title" : "Credit Approval Dataset",
 		"abstract" : "This data concerns credit card applications.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Credit+Approval",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/credit-screening/crx.data",		
@@ -48,7 +48,7 @@ ds_meta = {
 
 	"german-credit": 
 	{
-		"title" : "German Credit Data Set (Statlog)", # dat set description indicates that a cost matrix is required
+		"title" : "German Credit Dataset (Statlog)", # dat set description indicates that a cost matrix is required
 		"abstract" : "This dataset classifies people described by a set of attributes as good or bad credit risks.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data)",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data-numeric",		
@@ -68,7 +68,7 @@ ds_meta = {
 
 	"australian-credit": 
 	{
-		"title" : "Australian Credit Approval Data Set (Statlog (",
+		"title" : "Australian Credit Approval Dataset (Statlog (",
 		"abstract" : "his file concerns credit card applications. ",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval)",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/statlog/australian/australian.dat",		
@@ -88,7 +88,7 @@ ds_meta = {
 
 	"audit": 
 	{
-		"title" : "Audit Data Set",
+		"title" : "Audit Dataset",
 		"abstract" : "To build a predictor for classifying suspicious firms.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Audit+Data",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/00475/audit_data.zip",
@@ -108,7 +108,7 @@ ds_meta = {
 
 	"spambase": 
 	{
-		"title" : "Spambase Data Set",
+		"title" : "Spambase Dataset",
 		"abstract" : "Classifying Email as Spam or Non-Spam.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Spambase",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/spambase/spambase.data",
@@ -129,7 +129,7 @@ ds_meta = {
 
 	"heart-disease": 
 	{
-		"title" : "Heart Disease Data Set",
+		"title" : "Heart Disease Dataset",
 		"abstract" : "Classifying Email as Spam or Non-Spam.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/heart+disease",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data",
@@ -149,7 +149,7 @@ ds_meta = {
 
 	"heart-failure": 
 	{
-		"title" : "Heart Failure Data Set",
+		"title" : "Heart Failure Dataset",
 		"abstract" : "This dataset contains the medical records of 299 patients who had heart failure.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Heart+failure+clinical+records",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/00519/heart_failure_clinical_records_dataset.csv",
@@ -170,7 +170,7 @@ ds_meta = {
 
 	"parkinsons": 
 	{
-		"title" : "Parkinson's Data Set",
+		"title" : "Parkinson's Dataset",
 		"abstract" : "Oxford Parkinson's Disease Detection Dataset.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Parkinsons",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/parkinsons/parkinsons.data",
@@ -190,7 +190,7 @@ ds_meta = {
 
 	"habermans-survival": 
 	{
-		"title" : "Haberman's Survival Data Set",
+		"title" : "Haberman's Survival Dataset",
 		"abstract" : "Dataset contains cases from study conducted on the survival of patients who had undergone surgery for breast cancer.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Haberman%27s+Survival",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/haberman/haberman.data",
@@ -210,7 +210,7 @@ ds_meta = {
 
 	"mushroom": 
 	{
-		"title" : "Mushroom Data Set",
+		"title" : "Mushroom Dataset",
 		"abstract" : "From Audobon Society Field Guide; mushrooms described in terms of physical characteristics; classification: poisonous or edible.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Mushroom",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/mushroom/agaricus-lepiota.data",
@@ -230,7 +230,7 @@ ds_meta = {
 
 	"raisin": 
 	{
-		"title" : "Raisin Data Set",
+		"title" : "Raisin Dataset",
 		"abstract" : "Images of the Kecimen and Besni raisin varieties were obtained with CVS. A total of 900 raisins were used, including 450 from both varieties, and 7 morphological features were extracted.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Raisin+Dataset",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/00617/Raisin_Dataset.zip",
@@ -251,7 +251,7 @@ ds_meta = {
 
 	"climate-model-crashes": 
 	{
-		"title" : "Climate Model Simulation Crashes Data Set",
+		"title" : "Climate Model Simulation Crashes Dataset",
 		"abstract" : "Given Latin hypercube samples of 18 climate model input parameter values, predict climate model simulation crashes and determine the parameter value combinations that cause the failures.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/climate+model+simulation+crashes",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/00252/pop_failures.dat",
@@ -271,7 +271,7 @@ ds_meta = {
 
 	"ionosphere":
 	{
-		"title" : "Ionosphere Data Set",
+		"title" : "Ionosphere Dataset",
 		"abstract" : "Classification of radar returns from the ionosphere.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Ionosphere",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/ionosphere/ionosphere.data",
@@ -291,7 +291,7 @@ ds_meta = {
 
 	"tic-tac-toe":
 	{
-		"title" : "Tic-Tac-Toe Endgame Data Set",
+		"title" : "Tic-Tac-Toe Endgame Dataset",
 		"abstract" : "Binary classification task on possible configurations of tic-tac-toe game.",
 		"home-url" : "https://archive.ics.uci.edu/ml/datasets/Tic-Tac-Toe+Endgame",
 		"url" : "https://archive.ics.uci.edu/ml/machine-learning-databases/tic-tac-toe/tic-tac-toe.data",

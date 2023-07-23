@@ -1,7 +1,7 @@
-# Experiments on synthetic data sets
+# Experiments on synthetic datasets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 import tqdm
 import numpy as np
@@ -108,15 +108,15 @@ def run_experiments(ds_meta):
     '''
     '''
     dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing
-    original_cls_distr = dict(zip(dataset_descriptions['Data Set'], dataset_descriptions['Class Balance']))
-    ds_keys = list(dataset_descriptions['Data Set'])
+    original_cls_distr = dict(zip(dataset_descriptions['Dataset'], dataset_descriptions['Class Balance']))
+    ds_keys = list(dataset_descriptions['Dataset'])
     
     performance_df = pd.DataFrame(columns=(
         'Repeats',
         'Train Ratio',
         'Validation Ratio',
         'Test Ratio',
-        'Data Set',
+        'Dataset',
         'Test Size',
         'Train Class Distr.',
         'Test to Train Class Distr. Ratio',
@@ -133,8 +133,8 @@ def run_experiments(ds_meta):
         'Avg. Cramer-von Mises Criterion',
         'No. Test Instances',
         'Split No.',
-        'Optimal FPR (ROCCH Method)',
-        'Optimal TPR (ROCCH Method)',
+        'Optimal FPR (ROCCH method)',
+        'Optimal TPR (ROCCH method)',
         'Isoperformance_df Line Slope',
         'Isoperformance_df Line Intercept',
         'Classifier',
@@ -295,7 +295,7 @@ def run_experiments(ds_meta):
         'Train Ratio',
         'Validation Ratio',
         'Test Ratio',
-        'Data Set',
+        'Dataset',
         'Train Class Distr.',
         'Test to Train Class Distr. Ratio',
         'Test Class Distr.',
@@ -310,10 +310,10 @@ def run_experiments(ds_meta):
         'Avg. Phi',
         'Avg. Cramer-von Mises Criterion',
         'Split No.',
-        'Optimal FPR (ROCCH Method)',
-        'Optimal TPR (ROCCH Method)',
-        'Optimal Point Normalized Cost (ROCCH Method)',
-        'Optimal Point Expected Cost (ROCCH Method)',
+        'Optimal FPR (ROCCH method)',
+        'Optimal TPR (ROCCH method)',
+        'Optimal Point Normalized Cost (ROCCH method)',
+        'Optimal Point Expected Cost (ROCCH method)',
         'Optimal FPR (Norm-Cost-Min)',
         'Optimal TPR (Norm-Cost-Min)',
         'Optimal Point Normalized Cost (Norm-Cost-Min)',
@@ -371,7 +371,7 @@ def run_experiments(ds_meta):
                                             (performance_df['Train Ratio'] == train_ratio) &
                                             (performance_df['Validation Ratio'] == validation_ratio) &
                                             (performance_df['Test Ratio'] == test_ratio) &
-                                            (performance_df['Data Set'] == ds_key) &
+                                            (performance_df['Dataset'] == ds_key) &
                                             (performance_df['Split No.'] == split_num) &
                                             (performance_df['Test to Train Class Distr. Ratio'] == environment[0]) &
                                             (performance_df['FP cost'] == environment[1]) &
@@ -384,10 +384,10 @@ def run_experiments(ds_meta):
                             current_df = performance_df.loc[current_slice_idx]
 
 
-                            # Cost of Optimal Point selected by ROCCH Method
+                            # Cost of Optimal Point selected by ROCCH method
                             current_optimal_df = current_df[
-                                            (current_df['Optimal FPR (ROCCH Method)'] == current_df['FPR']) & 
-                                            (current_df['Optimal TPR (ROCCH Method)'] == current_df['TPR'])
+                                            (current_df['Optimal FPR (ROCCH method)'] == current_df['FPR']) & 
+                                            (current_df['Optimal TPR (ROCCH method)'] == current_df['TPR'])
                                         ]
                             
                             # We might get multiple discrete classifiers, if they come from different continuous classifeirs, but with same FPR and TPR values
@@ -447,8 +447,8 @@ def run_experiments(ds_meta):
 
 
 
-                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Oracle Optimal Point based on Normalized Cost
-                            rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH method and Oracle Optimal Point based on Normalized Cost
+                            rocchm_optimal = [current_df['Optimal FPR (ROCCH method)'].iloc[0], current_df['Optimal TPR (ROCCH method)'].iloc[0]] 
                             distance_rocchm_oracle_norm = np.linalg.norm (np.array(rocchm_optimal)-np.array(oracle_norm_optimal))
 
                             # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Oracle Optimal Point based on Normalized Cost
@@ -464,8 +464,8 @@ def run_experiments(ds_meta):
                             distance_fonemax_oracle_norm = np.linalg.norm (np.array(fonemax_optimal)-np.array(oracle_norm_optimal))
 
 
-                            # Distance (in ROC space) between Optimal Point selected by ROCCH Method and Oracle Optimal Point based on Expected Cost
-                            rocchm_optimal = [current_df['Optimal FPR (ROCCH Method)'].iloc[0], current_df['Optimal TPR (ROCCH Method)'].iloc[0]] 
+                            # Distance (in ROC space) between Optimal Point selected by ROCCH method and Oracle Optimal Point based on Expected Cost
+                            rocchm_optimal = [current_df['Optimal FPR (ROCCH method)'].iloc[0], current_df['Optimal TPR (ROCCH method)'].iloc[0]] 
                             distance_rocchm_oracle_exp = np.linalg.norm (np.array(rocchm_optimal)-np.array(oracle_norm_optimal))
 
                             # Distance (in ROC space) between Optimal Point based on Norm-Cost-Min and Oracle Optimal Point based on Expected Cost
@@ -505,8 +505,8 @@ def run_experiments(ds_meta):
                                         current_df['Avg. Phi'].iloc[0],
                                         current_df['Avg. Cramer-von Mises Criterion'].iloc[0],
                                         split_num,
-                                        current_df['Optimal FPR (ROCCH Method)'].iloc[0],
-                                        current_df['Optimal TPR (ROCCH Method)'].iloc[0],
+                                        current_df['Optimal FPR (ROCCH method)'].iloc[0],
+                                        current_df['Optimal TPR (ROCCH method)'].iloc[0],
                                         rocchm_optimal_point_norm_cost,
                                         rocchm_optimal_point_exp_cost,
                                         normcostmin_optimal[0],

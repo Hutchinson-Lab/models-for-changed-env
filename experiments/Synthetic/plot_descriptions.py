@@ -1,7 +1,7 @@
-# Description of plots on synthetic data sets
+# Description of plots on synthetic datasets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 metrics_plots_metadata = {
     'os=rnd_us=rnd_repeats=30_train=0.4_validation=0.2_test=0.4_fnc=1.0': {

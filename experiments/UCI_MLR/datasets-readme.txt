@@ -1,5 +1,5 @@
 
-Data Sets:
+Datasets:
 
 	1. Banknote Authentication Data Set
 		URL: https://archive.ics.uci.edu/ml/datasets/banknote+authentication

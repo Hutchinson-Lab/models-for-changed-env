@@ -1,7 +1,7 @@
-# Plot all results on synthetic data sets
+# Plot all results on synthetic datasets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 import os
 import shutil
@@ -54,7 +54,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
 
     for i, ax in enumerate(fig.axes):
         
-        current_df = df[df['Data Set']==ds_keys[i]]
+        current_df = df[df['Dataset']==ds_keys[i]]
 
         current_df = pd.melt(
             current_df, 
@@ -65,7 +65,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
                 f'Optimal Point {cost_type} Cost (Exp-Cost-Min)',
                 f'Optimal Point {cost_type} Cost (Accuracy-Max)', 
                 f'Optimal Point {cost_type} Cost (F1-score-Max)',
-                f'Optimal Point {cost_type} Cost (ROCCH Method)',
+                f'Optimal Point {cost_type} Cost (ROCCH method)',
             ]
         )
 
@@ -76,7 +76,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
             f'Optimal Point {cost_type} Cost (Exp-Cost-Min)' : 'orange',
             f'Optimal Point {cost_type} Cost (Accuracy-Max)' : 'sienna', 
             f'Optimal Point {cost_type} Cost (F1-score-Max)' : 'mediumpurple',
-            f'Optimal Point {cost_type} Cost (ROCCH Method)' : 'red',
+            f'Optimal Point {cost_type} Cost (ROCCH method)' : 'red',
 
         }
         sns.boxplot(y='value', x=plot_metadata['varying'], hue='variable', data=current_df,  orient='v', linewidth=0.5, fliersize=1, palette=palette, ax=ax)
@@ -98,7 +98,7 @@ def plot_general_cost_boxplots (df, plot_metadata, ds_keys, cost_type):
     # Format legend
     fig.legend(
         handles, 
-        ['Oracle',  'Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
+        ['Oracle',  'Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH method',],
         title='Cost Incurred by Selected Points',
         title_fontsize=8,
         loc='lower center', 
@@ -137,7 +137,7 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
 
     for i, ax in enumerate(fig.axes):
         
-        current_df = df[df['Data Set']==ds_keys[i]]
+        current_df = df[df['Dataset']==ds_keys[i]]
 
         current_df = pd.melt(
             current_df, 
@@ -178,7 +178,7 @@ def plot_general_dist_boxplots(df, plot_metadata, ds_keys, cost_type):
     # Format legend
     fig.legend(
         handles, 
-        ['Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH Method',],
+        ['Norm-Cost-Min', 'Exp-Cost-Min', 'Accuracy-Max', 'F1-score-Max', 'ROCCH method',],
         title='Distance to Oracle Optimal Point',
         title_fontsize=8,
         loc='lower center', 
@@ -217,7 +217,7 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
 
     subplot_column_titles = [ 0.5, 0.75, 1.0, 1.25]
 
-    df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH Method)'] - df[f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})']
+    df['Cost Difference'] =  df[f'Optimal Point {cost_type} Cost (ROCCH method)'] - df[f'Optimal Point {cost_type} Cost (Oracle-{cost_type_abr})']
     df.reset_index(drop=True)
 
 
@@ -251,10 +251,10 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
         df_t['Avg. '+subplot_row_titles[r]] = 0
         order = []
 
-        for ds_key in list(descriptions_df['Data Set']):
+        for ds_key in list(descriptions_df['Dataset']):
 
-            order.append(df_t.loc[df['Data Set']==ds_key, subplot_row_titles[r]].mean())
-            df_t.loc[df['Data Set']==ds_key, 'Avg. '+subplot_row_titles[r]] = order[-1]
+            order.append(df_t.loc[df['Dataset']==ds_key, subplot_row_titles[r]].mean())
+            df_t.loc[df['Dataset']==ds_key, 'Avg. '+subplot_row_titles[r]] = order[-1]
 
 
         sns.lineplot(
@@ -339,8 +339,8 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
     # Format legend
     fig.legend(
         handles, 
-        descriptions_df['Data Set'],
-        title='Data Sets',
+        descriptions_df['Dataset'],
+        title='Datasets',
         title_fontsize=6,
         loc='lower center', 
         bbox_to_anchor=(0.5, -0.1), 
@@ -350,7 +350,7 @@ def plot_metrics_pointplot(df, descriptions_df, plot_metadata, identifier, cost_
     # Format suplabels and title
     fig.supylabel(f'{cost_type} Cost Difference (ROCCH - Oracle)', x=0.04, fontsize=8)
     fig.supxlabel('', fontsize=1)
-    fig.suptitle(f'Covariate Shift and Efficacy of ROCCH Method', y =0.9675, fontsize=8)
+    fig.suptitle(f'Covariate Shift and Efficacy of ROCCH method', y =0.9675, fontsize=8)
     fig.tight_layout()
 
     
@@ -409,7 +409,7 @@ def plot_results():
 
 
     dataset_descriptions = pd.read_csv(f'{output_table_dir}dataset_descriptons.csv') # Saved during preprocessing
-    ds_keys = list(dataset_descriptions['Data Set'])
+    ds_keys = list(dataset_descriptions['Dataset'])
 
     performance_df_summarized = pd.read_csv(f'{output_table_dir}performance_summarized.csv')
 

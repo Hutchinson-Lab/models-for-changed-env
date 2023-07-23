@@ -1,7 +1,7 @@
-# Generate and preprocess synthetic data sets
+# Generate and preprocess synthetic datasets
 
 # Nahian Ahmed
-# May 27, 2023
+# July 23, 2023
 
 
 import os, tqdm
@@ -13,8 +13,6 @@ from sklearn.model_selection import StratifiedShuffleSplit
 import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
-# from rocchmethod.class_utils import class_distance_ratio
-
 
 ds_main_dir = './experiments/Synthetic/datasets/'
 output_table_main_dir = './experiments/Synthetic/tables/'
@@ -23,7 +21,7 @@ output_plot_main_dir = './experiments/Synthetic/plots/'
 
 def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     
-    print("\nGenerating data sets:")
+    print("\nGenerating datasets:")
     
     if not os.path.isdir(ds_main_dir):
         os.makedirs(ds_main_dir)
@@ -31,7 +29,7 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     if not os.path.exists(output_table_main_dir):
         os.makedirs(output_table_main_dir)
 
-    dataset_descriptions = pd.DataFrame(columns=('Data Set','Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance', 'Added Noise'))
+    dataset_descriptions = pd.DataFrame(columns=('Dataset','Instances', 'Features', 'Categorical Features', 'Features After One-Hot', 'Class Balance', 'Added Noise'))
     i = 0
     
 
@@ -40,7 +38,7 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     for c in (pbar := tqdm.tqdm(ds_meta.keys())):
         pbar.set_description(f'Generating "{c}"')
 
-        np.random.seed(0)
+        np.random.seed(random_state)
 
         n_cont_features = ds_meta[c]["n_features"] - ds_meta[c]["n_cat_features"]
 
