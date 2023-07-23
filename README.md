@@ -13,7 +13,7 @@ Discrete classifiers on the ROC convex hull are selected based on the following 
 * `Accuracy-Max`: This appraoch selects discrete classifier that maximizes accuracy on the validation data.
 * `F1-score-Max`: This appraoch selects discrete classifier that maximizes F1-score on the validation data
 
-Construcitng ROC convex hull and applying `ROCCH Method`:
+Construcitng ROC convex hull and applying `ROCCH method`:
 <p align="center">
   <img src="figures/rocch_method.png"  width="650">
 </p>
@@ -35,7 +35,7 @@ Construcitng ROC convex hull and applying `ROCCH Method`:
 
 ## Overview
 
-`rocchmethod` contains implementation of the `ROCCH Method`, and other relevant utilities, e.g., for calculating expected cost, constructing ROC curves and ROC convex hulls, etc. `experiments` contains code for running all experiments. `experiments/UCI_MLR` contains code for running experiments on UCI Machine Learning Repository data sets, and `experiments/Synthetic` contains code for running experiments on synthetic data sets.
+`rocchmethod` contains implementation of the `ROCCH method`, and other relevant utilities, e.g., for calculating expected cost, constructing ROC curves and ROC convex hulls, etc. `experiments` contains code for running all experiments. `experiments/UCI_MLR` contains code for running experiments on UCI Machine Learning Repository data sets, and `experiments/Synthetic` contains code for running experiments on synthetic data sets.
 
 ## Experiments
 
@@ -54,7 +54,7 @@ Experimental methodology of learning, inference, evaluation, and selection:
 
 ### Changed Class Distributions
 
-In these experimental settings, cost distributions are fixed and class distributions were changed. `Norm-Cost-Min` performs well on almost data sets. `Exp-Cost-Min` does not perform as well. `Accuracy-Max` and `F1-score-Max` do not perfom competitively because they can not factor class distributions of changed test environnments. `ROCCH Method` performs better when relative frequency of negatives is higher in the test set than the trainig set, but performs very poorly when the opposite happens.
+In these experimental settings, cost distributions are fixed and class distributions were changed. `Norm-Cost-Min` performs well on almost data sets. `Exp-Cost-Min` does not perform as well. `Accuracy-Max` and `F1-score-Max` do not perfom competitively because they can not factor class distributions of changed test environnments. `ROCCH method` performs better when relative frequency of negatives is higher in the test set than the trainig set, but performs very poorly when the opposite happens.
 
 Normalized cost while varying test to trian class distribution ratio:
 <p align="center">
