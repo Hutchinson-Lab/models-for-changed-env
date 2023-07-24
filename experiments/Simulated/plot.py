@@ -1,4 +1,4 @@
-# Plot all results on synthetic datasets
+# Plot all results on simulated datasets
 
 # Nahian Ahmed
 # July 23, 2023
@@ -13,21 +13,21 @@ import statsmodels.api as sm
 
 from .plot_descriptions import general_plots_metadata, metrics_plots_metadata
 
-output_table_dir = './experiments/Synthetic/tables/'
+output_table_dir = './experiments/Simulated/tables/'
 
-output_plot_main_dir = './experiments/Synthetic/plots/'
+output_plot_main_dir = './experiments/Simulated/plots/'
 
-output_plot_general_dir = './experiments/Synthetic/plots/general/'
-output_plot_general_c_dir = './experiments/Synthetic/plots/general/cost/'
-output_plot_general_c_n_dir = './experiments/Synthetic/plots/general/cost/norm/'
-output_plot_general_c_e_dir = './experiments/Synthetic/plots/general/cost/exp/'
-output_plot_general_d_dir = './experiments/Synthetic/plots/general/distance/'
-output_plot_general_d_n_dir = './experiments/Synthetic/plots/general/distance/norm/'
-output_plot_general_d_e_dir = './experiments/Synthetic/plots/general/distance/exp/'
+output_plot_general_dir = './experiments/Simulated/plots/general/'
+output_plot_general_c_dir = './experiments/Simulated/plots/general/cost/'
+output_plot_general_c_n_dir = './experiments/Simulated/plots/general/cost/norm/'
+output_plot_general_c_e_dir = './experiments/Simulated/plots/general/cost/exp/'
+output_plot_general_d_dir = './experiments/Simulated/plots/general/distance/'
+output_plot_general_d_n_dir = './experiments/Simulated/plots/general/distance/norm/'
+output_plot_general_d_e_dir = './experiments/Simulated/plots/general/distance/exp/'
 
-output_plot_metrics_dir = './experiments/Synthetic/plots/metrics/'
-output_plot_metrics_n_dir = './experiments/Synthetic/plots/metrics/norm/'
-output_plot_metrics_e_dir = './experiments/Synthetic/plots/metrics/exp/'
+output_plot_metrics_dir = './experiments/Simulated/plots/metrics/'
+output_plot_metrics_n_dir = './experiments/Simulated/plots/metrics/norm/'
+output_plot_metrics_e_dir = './experiments/Simulated/plots/metrics/exp/'
 
 
 ds_markers = ['o', 'v', '^', '<', '>', '8', 's', 'p', 'P', '*', 'h', 'H']

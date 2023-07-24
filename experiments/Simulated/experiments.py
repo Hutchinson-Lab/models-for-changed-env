@@ -1,4 +1,4 @@
-# Experiments on synthetic datasets
+# Experiments on simulated datasets
 
 # Nahian Ahmed
 # July 23, 2023
@@ -98,7 +98,7 @@ random_state = 0
 environments_cls_distr = unique_cls_distr(environments)
 
 
-output_table_dir = './experiments/Synthetic/tables/'
+output_table_dir = './experiments/Simulated/tables/'
 
 
 
@@ -554,7 +554,7 @@ def run_experiments(ds_meta):
     performance_summarized_df.to_csv(f'{output_table_dir}performance_summarized.csv')
 
 
-    print("Experiments on Synthetic Data completed.")
+    print("Experiments on Simulated Data completed.")
 
 
 

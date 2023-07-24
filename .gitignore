@@ -4,11 +4,11 @@
 /.vscode/
 
 
-/experiments/Synthetic/datasets/
-/experiments/Synthetic/tables/
-/experiments/Synthetic/plots/general/
-/experiments/Synthetic/plots/characteristics/
-/experiments/Synthetic/plots/metrics/
+/experiments/Simulated/datasets/
+/experiments/Simulated/tables/
+/experiments/Simulated/plots/general/
+/experiments/Simulated/plots/characteristics/
+/experiments/Simulated/plots/metrics/
 
 /experiments/UCI_MLR/datasets/
 /experiments/UCI_MLR/tables/

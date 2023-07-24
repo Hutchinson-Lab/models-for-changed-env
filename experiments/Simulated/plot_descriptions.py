@@ -1,4 +1,4 @@
-# Description of plots on synthetic datasets
+# Description of plots on simulated datasets
 
 # Nahian Ahmed
 # July 23, 2023

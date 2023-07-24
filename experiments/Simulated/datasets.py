@@ -1,4 +1,4 @@
-# Configurations of synthetic datasets
+# Configurations of simulated datasets
 
 # Nahian Ahmed
 # July 23, 2023

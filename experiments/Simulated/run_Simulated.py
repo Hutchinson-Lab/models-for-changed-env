@@ -1,4 +1,4 @@
-# Main script for running experiments on synthetic datasets
+# Main script for running experiments on simulated datasets
 
 # Nahian Ahmed
 # July 23, 2023
@@ -9,11 +9,11 @@ from .preprocess import generate_datasets
 from .experiments import run_experiments
 from .plot import plot_results
 
-def run_Synthetic():
+def run_Simulated():
     
     print('\n')
     print('-'*33)
-    print('Experiments on Synthetic Datasets')
+    print('Experiments on Simulated Datasets')
     print('-'*33)
 
     # Generate all datasets

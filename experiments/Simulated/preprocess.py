@@ -1,4 +1,4 @@
-# Generate and preprocess synthetic datasets
+# Generate and preprocess simulated datasets
 
 # Nahian Ahmed
 # July 23, 2023
@@ -14,9 +14,9 @@ import sys
 sys.path.append(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')))
 
 
-ds_main_dir = './experiments/Synthetic/datasets/'
-output_table_main_dir = './experiments/Synthetic/tables/'
-output_plot_main_dir = './experiments/Synthetic/plots/'
+ds_main_dir = './experiments/Simulated/datasets/'
+output_table_main_dir = './experiments/Simulated/tables/'
+output_plot_main_dir = './experiments/Simulated/plots/'
 
 
 def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
@@ -115,7 +115,7 @@ def generate_datasets (ds_meta, theta = [1.0, 1.0, 1.0, 1.0], random_state=0):
     dataset_descriptions.to_csv(f'{output_table_main_dir}dataset_descriptons.csv')
 
         
-    print("Synthetic data generation completed.")
+    print("Simulated data generation completed.")
 
 
 
