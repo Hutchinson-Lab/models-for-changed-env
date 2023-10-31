@@ -90,8 +90,4 @@ Foster Provost and Tom Fawcett. Robust classification for imprecise environments
 
 ## Acknowledgements
 
-Funding information
-
-## BibTex
-
-ArXiv/OpenReview
+This research was supported by the National Science Foundation (NSF) under Grant No. III-2046678.
